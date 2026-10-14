@@ -1,0 +1,103 @@
+# The Critical Four
+
+**Rad-Lad: The Final Read.** *Four examiners. One champion. Every finding counts.*
+
+This is an embeddable, top-down pixel-art game in the style of the 90s Pokémon games, made for the Rad-Lad website. The player is a newly graduated radiographer sitting their final assessment. Instead of battling creatures, they identify clinically urgent findings on X-rays and scrollable CT and MRI studies.
+
+## How it plays
+
+1. **Registration.** The player enters a name and picks one of four graduate sprites.
+2. **The examination hall.** The lecturer explains the rules (and never mentions the champion), then the door at the back opens.
+3. **Four examiner rooms, then the champion.** Each room has its own introduction, a shared battle transition and a defeat scene:
+
+| # | Opponent | Focus | Room | Intro | After defeat |
+|---|---|---|---|---|---|
+| 1 | Domonic | Chest, lines and tubes | City at night | Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
+| 2 | Matilda | Neuro emergencies | Fox-doll room | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
+| 3 | Hannah | Abdominal and vascular | Stone tournament ring | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
+| 4 | My-Vi | Musculoskeletal | Glyph chamber | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
+| 5 | The Lightbox | Mixed | Almost completely dark | Walk up and press A: *"What were you expecting—a radiologist?"*, then **CHAMPION LIGHTBOX** | Flickers and powers down; the lights come on, confetti falls, fanfare, and the banner **CONGRATULATIONS, RADIOGRAPHER!** |
+
+4. **The battle.** The screen flashes, then a pixelated wipe. The graduate slides in from the left (back view) and the opponent from the right. Three hearts and six case icons appear, then each study opens in the study panel:
+   - The study viewer handles single images, several views (tabs) and scrollable stacks. Scroll with the wheel, by dragging, with the slider or with ↑/↓. Zoom with Ctrl+wheel, pinch or +/−. **INV** inverts the image and **⛶** goes full screen.
+   - There are four answers (shuffled each time) and you answer by clicking or tapping, or with keys 1–4.
+   - **Correct:** the opponent loses a case icon ("It's super effective!"), then an explanation card shows *the finding*, *the key imaging clue* and *why it matters*, with a **Look again** option.
+   - **Wrong:** you lose a heart, that option is disabled and the same study stays open.
+   - **Out of hearts:** the encounter restarts with the same six studies in a new order. Rooms you've already cleared stay cleared.
+   - **Victory:** your hearts are restored and progress is saved.
+5. **Saving.** Progress saves after each examiner. The title screen offers **Continue** and **New game**. Markers are kept across new games.
+
+## Markers
+
+Markers use the Rad-Lad "Marker Unlocked" stamp animation. The **MARKERS** button in the header shows the full collection. The two Lightbox-related markers show as **???** until they're unlocked, so the champion stays a surprise.
+
+| Marker | Unlock |
+|---|---|
+| The Dark Lung Rises | Defeat Domonic |
+| Mind Over Matilda | Defeat Matilda |
+| Go With the Flow | Defeat Hannah |
+| Bone to Be Wild | Defeat My-Vi |
+| Thanks for the Enlightenment *(hidden)* | Defeat the Lightbox |
+| Qualified to Glow *(hidden)* | Complete the game (the marker shows the player's initials) |
+| Critical Hit! | First correct answer |
+| Six Appeal | Defeat any examiner without losing a heart |
+| First, Do No Guessing | All 30 studies right first time. Restarting an encounter doesn't clear earlier mistakes. |
+| Scroll Model | Solve a scrollable CT/MRI study on the first attempt |
+| A Heartbreaking Interpretation | Lose all three hearts for the first time |
+| Read Another Day | Defeat an examiner after losing to them |
+
+The marker icons are first drafts drawn in code (`MARK_ART` in `game.html`).
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `index.html` / `critical-four.embed.html` | Built, self-contained game. Embed this. |
+| `game.html` | Source page. The build fills in its placeholders. |
+| `build.py` | **The 30 cases** (questions, answers, explanations, image series), image credits and the build |
+| `assets/src/` | Original images, one folder per case |
+| `assets/cases/` | Generated greyscale JPEGs |
+
+## Adding the real studies
+
+Every case in `build.py` is a placeholder at the moment. The game draws a labelled stand-in film or fake CT stack for each one, so the whole game can be played end to end. To make a case real:
+
+1. Put its images in `assets/src/<case id>/`. Use one file per X-ray view, and one folder of slices per CT/MRI series.
+2. Replace its `ph(...)` line with a full entry:
+
+```python
+{
+    "id": "dom1", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, PA",
+    "history": "Sudden breathlessness after a fall.",
+    "question": "What is the urgent finding?",
+    "options": ["Right tension pneumothorax", "Right pleural effusion", "Left lower lobe collapse", "Normal study"],
+    "answer": 0,                       # index into options; the game shuffles the order on screen
+    "finding": "...", "clue": "...", "why": "...",
+    "series": [{"label": "PA", "file": "dom1/pa.png"}],
+    "source": None,                    # or a key into SOURCES for the image credit
+},
+```
+
+   For CT/MRI, list the series in viewing order. Slices load in natural filename order. Add `"reverse": True` if a stack runs the wrong way:
+
+```python
+    "series": [{"label": "Axial", "dir": "mat1/axial"}, {"label": "Coronal", "dir": "mat1/coronal"}],
+```
+
+3. Run `python build.py`. It checks that every opponent has six cases and every case has four options and a valid answer. `python build.py --preview` writes `_preview.html`, which loads images from `assets/` for quicker local testing.
+
+## Testing shortcut
+
+Add `?jump=domonic` (or `hall`, `matilda`, `hannah`, `myvi`, `lightbox`) to the URL to start in that room. This overwrites the saved progress in that browser.
+
+## Controls
+
+Arrow keys or WASD to move, Space/Enter/Z to talk or advance, 1–4 to answer, ↑/↓ to scroll slices. On touch screens there's a D-pad with A/B buttons, and you can tap to walk.
+
+## Still to come
+
+- The 30 clinical studies: images, four answer choices, the verified correct answer, explanations and series order
+- Final marker designs and character appearances
+- Optional: the lecturer and examiners joining the final celebration
+
+Educational use only; not for clinical decisions.
