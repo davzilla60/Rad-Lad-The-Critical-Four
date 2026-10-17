@@ -57,7 +57,10 @@ def ph(cid, opp, modality, label):
 #             The game shuffles the order on screen.
 #   finding / clue / why   the three-part explanation shown once the case is solved
 #   series    list of series in viewing order (see top of file)
-#   source    key into SOURCES for the image credit, or None
+#   source    key into SOURCES for the image credit (or a list of keys), or None
+#   reveal    optional: {"series": [...], "lines": [...]} shown after a correct answer,
+#             with the examiner talking the player through it (e.g. the AP that shows
+#             the fracture behind a soft-tissue sign)
 # ---------------------------------------------------------------------------------
 CASES = [
     # Domonic: chest pathology and chest lines/tubes
@@ -84,7 +87,28 @@ CASES = [
     # My-Vi: musculoskeletal
     ph("myv1", "myvi", "X-ray", "Pelvis, AP"),
     ph("myv2", "myvi", "X-ray", "Elbow, lateral"),
-    ph("myv3", "myvi", "X-ray", "Wrist, PA"),
+    {
+        "id": "myv3", "opponent": "myvi", "modality": "X-ray", "label": "Wrist, lateral",
+        "history": "Adult, fell onto an outstretched hand. Tender over the distal radius, no obvious deformity.",
+        "question": "What sign is this?",
+        "options": ["Pronator quadratus fat pad sign", "Spilled teacup sign", "Terry Thomas sign", "Sail sign"],
+        "answer": 0,
+        "finding": "Pronator quadratus fat pad sign: the thin fat stripe in front of the distal radius is bowed forwards, away from the bone (arrow).",
+        "clue": "Normally this fat stripe lies flat and close to the front of the radius. Blood and swelling under the pronator quadratus muscle push it forwards.",
+        "why": "It is an indirect sign of a distal radius fracture that can be very hard to see. The AP here shows an undisplaced fracture line running into the wrist joint. If the sign is present but no fracture is visible, treat it as a fracture and arrange follow-up imaging.",
+        "series": [{"label": "Lateral", "file": "myv3/lateral.png"}],
+        # shown after a correct answer, with the examiner talking it through
+        "reveal": {
+            "series": [{"label": "AP", "file": "myv3/ap.png"}],
+            "lines": [
+                "Now look at the AP view. Follow my arrow to the end of the radius.",
+                "See that fine dark line running down into the wrist joint? An undisplaced fracture of the distal radius, extending into the joint.",
+                "It barely shows on the AP. The lateral gave it away: bleeding under the pronator quadratus pushed the fat stripe off the bone.",
+                "Some breaks whisper. That's why you read the soft tissues, not just the bones.",
+            ],
+        },
+        "source": ["hellerhoff_pq_lat", "hellerhoff_pq_ap"],
+    },
     ph("myv4", "myvi", "X-ray", "Ankle, AP"),
     ph("myv5", "myvi", "CT", "CT cervical spine, sagittal"),
     ph("myv6", "myvi", "MRI", "MRI knee, sagittal PD"),
@@ -99,6 +123,18 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "hellerhoff_pq_lat": {
+        "citation": "Hellerhoff. Pronator quadratus - fatpad-sign pathologisch bei Fraktur Erwachsener (2010). Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png",
+        "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "changes": "converted to JPEG",
+    },
+    "hellerhoff_pq_ap": {
+        "citation": "Hellerhoff. Distale Radiusfraktur laengs zu Fatpadsign erwachsen. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png",
+        "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "changes": "converted to JPEG",
+    },
     # "example": {
     #     "citation": "Author (Year). Title. Publisher.",
     #     "url": "https://doi.org/...",
@@ -121,6 +157,13 @@ def series_files(s):
     return files[::-1] if s.get("reverse") else files
 
 
+def has_colour(im):
+    """True if the image has coloured annotation (an arrow, say), so it should not be greyscaled."""
+    sm = im.copy(); sm.thumbnail((256, 256))
+    b = sm.tobytes()
+    return any(max(b[i:i + 3]) - min(b[i:i + 3]) > 40 for i in range(0, len(b), 3))
+
+
 def data_uri(p):
     mime = "image/png" if p.suffix == ".png" else "image/jpeg"
     return f"data:{mime};base64," + base64.b64encode(p.read_bytes()).decode()
@@ -133,6 +176,8 @@ def check(c):
     if not 0 <= c["answer"] < len(c["options"]): errs.append("answer index out of range")
     if len(set(c["options"])) != len(c["options"]): errs.append("duplicate options")
     if not c.get("placeholder") and not c["series"]: errs.append("no series (add images or mark it a placeholder)")
+    for k in (c["source"] if isinstance(c.get("source"), list) else [c.get("source")]):
+        if k and k not in SOURCES: errs.append(f"unknown source {k!r}")
     return errs
 
 
@@ -147,26 +192,36 @@ def main():
         if n != 6: print(f"!! {o} has {n} case(s); the game expects 6"); bad = True
     if bad: sys.exit(1)
 
-    out_cases = []
-    for c in CASES:
-        e = {k: v for k, v in c.items() if k != "series"}
-        e["series"] = []
-        for si, s in enumerate(c["series"]):
+    def convert(c, series, prefix):
+        out = []
+        for si, s in enumerate(series):
             files = series_files(s)
             if not files: sys.exit(f"!! {c['id']}: series {s['label']!r} has no images")
             side = XRAY_SIDE if len(files) == 1 else STACK_SIDE
             d = A / "cases" / c["id"]; d.mkdir(parents=True, exist_ok=True)
             imgs = []
             for k, f in enumerate(files):
-                im = Image.open(f).convert("L")
+                im = Image.open(f).convert("RGB")
+                if not has_colour(im): im = im.convert("L")
                 if max(im.size) > side: im.thumbnail((side, side), Image.LANCZOS)
-                p = d / f"s{si}_{k:03d}.jpg"
-                im.save(p, "JPEG", quality=84 if len(files) == 1 else 80, optimize=True)
+                p = d / f"{prefix}{si}_{k:03d}.jpg"
+                im.save(p, "JPEG", quality=88 if len(files) == 1 else 80, optimize=True)
                 imgs.append(f"assets/cases/{c['id']}/{p.name}" if preview else data_uri(p))
-            e["series"].append({"label": s["label"], "images": imgs})
+            out.append({"label": s["label"], "images": imgs})
+        return out
+
+    out_cases = []
+    for c in CASES:
+        e = {k: v for k, v in c.items() if k not in ("series", "reveal")}
+        e["series"] = convert(c, c["series"], "s")
+        if c.get("reveal"):
+            e["reveal"] = {"lines": c["reveal"]["lines"], "series": convert(c, c["reveal"]["series"], "r")}
         out_cases.append(e)
 
-    used = {c["source"] for c in CASES if c.get("source")}
+    used = set()
+    for c in CASES:
+        src = c.get("source")
+        used.update(src if isinstance(src, list) else [src] if src else [])
     sources = {k: v for k, v in SOURCES.items() if k in used}
     assets = {"logo_mark": data_uri(A / "logo_mark.png")}
     src = (ROOT / "game.html").read_text(encoding="utf-8")

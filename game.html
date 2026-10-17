@@ -165,6 +165,12 @@ html,body{background:#08070d;height:100%}
 #rl .card dl{display:grid;gap:calc(var(--u)*3)}
 #rl .card dt{font-family:var(--pix);font-size:max(7px,calc(var(--u)*3.4));color:var(--gold);margin-bottom:calc(var(--u)*1)}
 #rl .card dd{font-size:max(13px,calc(var(--u)*5));line-height:1.45;color:#dde0ee}
+#rl .credit{margin-top:calc(var(--u)*4);font-size:max(10px,calc(var(--u)*3.4));color:var(--dim)}
+#rl .credit a{color:var(--dim)}
+#rl .talk{display:flex;gap:10px;align-items:flex-start;background:#16162a;border:2px solid var(--edge);border-radius:6px;padding:10px}
+#rl .talk canvas{width:48px;height:48px;flex:none;image-rendering:pixelated;border:2px solid #2a2c48}
+#rl .talk b{display:block;font-family:var(--pix);font-weight:400;font-size:9px;margin-bottom:6px}
+#rl .talk p{font-size:14px;line-height:1.45;min-height:4.4em}
 #rl .row{display:flex;gap:calc(var(--u)*4);margin-top:calc(var(--u)*6);flex-wrap:wrap}
 #rl .btn{flex:1;font-family:var(--pix) !important;font-size:max(8px,calc(var(--u)*4.2)) !important;padding:calc(var(--u)*4) !important;border:2px solid #4a4a70 !important;
   border-radius:5px;background:#1c1c34 !important;white-space:nowrap}
@@ -305,6 +311,7 @@ html,body{background:#08070d;height:100%}
           <div><dt>KEY IMAGING CLUE</dt><dd id="cClue"></dd></div>
           <div><dt>WHY IT MATTERS</dt><dd id="cWhy"></dd></div>
         </dl>
+        <p class="credit" id="cCred"></p>
         <div class="row"><button class="btn" id="cLook">Look again</button><button class="btn pri" id="cNext">Next study &#9654;</button></div>
       </div></div>
 
@@ -651,7 +658,9 @@ function gradOpts(i){
     extra:function(R, dir){ if (dir === "down") R(10,9,1,2,"#ffd34d"); } };
 }
 
-var DOM = { suit:"#40444f", suitD:"#2a2c36", cape:"#16161e", capeL:"#2c2c3a", cowl:"#1c1c24", belt:"#c8a040", skin:"#e8b896" };
+/* Domonic: a generic caped-hero parody (teal suit, purple cape, domino mask, lungs on the chest) */
+var DOM = { suit:"#1f7a7a", suitD:"#145252", cape:"#5a2a8a", capeL:"#8a4ac0", glove:"#e8e8f0", boot:"#2a1a3a", belt:"#e0b030",
+            skin:"#e8b896", hair:"#2a1a12", mask:"#14141c", lung:"#ffd25a" };
 function domonic(pose){
   // 24 x 22, body centred at x = 12
   return bake(24, 22, function(R){
@@ -661,21 +670,25 @@ function domonic(pose){
     else if (pose === "battle"){ R(X+2,8,12,10,C.cape); R(X+1,10,1,8,C.cape); R(X+14,10,1,8,C.cape); }
     else if (pose !== "swing"){ R(X+1,8,14,12,C.cape); R(X,11,1,9,C.cape); R(X+15,11,1,9,C.cape); R(X+1,19,14,1,C.capeL); }
     else { R(X+3,8,10,11,C.cape); R(X+12,12,4,6,C.cape); }
-    // cowl + jaw
-    R(X+4,1,8,7,C.cowl); R(X+4,0,2,2,C.cowl); R(X+10,0,2,2,C.cowl); R(X+4,-1,1,1,C.cowl); R(X+11,-1,1,1,C.cowl);
-    R(X+5,6,6,2,C.skin); R(X+6,7,4,1,shade(C.skin, .8));
-    if (pose === "nod"){ R(X+6,4,1,1,"#e8f0ff"); R(X+9,4,1,1,"#e8f0ff"); } else { R(X+5,4,2,1,"#e8f0ff"); R(X+9,4,2,1,"#e8f0ff"); }
-    // torso
-    R(X+4,8,8,5,C.suit); R(X+4,8,8,1,C.suitD); R(X+4,12,8,1,C.belt); R(X+7,12,2,1,"#f0d070");
-    R(X+6,9,4,2,C.suitD);
-    // arms
-    if (pose === "point"){ R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.cowl); R(X+12,8,6,2,C.suit); R(X+18,8,1,2,C.cowl); }
-    else if (pose === "spread"){ R(X,7,4,2,C.suit); R(X+12,7,4,2,C.suit); R(X-1,7,1,2,C.cowl); R(X+16,7,1,2,C.cowl); }
-    else if (pose === "battle" || pose === "nod"){ R(X+3,9,10,2,C.suit); R(X+3,10,2,1,C.cowl); R(X+11,10,2,1,C.cowl); }
-    else if (pose === "swing"){ R(X+12,0,2,9,C.suit); R(X+12,-1,2,1,C.cowl); R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.cowl); }
-    else { R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.cowl); R(X+12,8,2,4,C.suit); R(X+12,12,2,1,C.cowl); }
+    // face, swept-up hair, domino mask
+    R(X+4,1,8,7,C.skin);
+    R(X+4,0,8,2,C.hair); R(X+3,1,1,3,C.hair); R(X+12,1,1,3,C.hair);
+    R(X+4,-1,2,1,C.hair); R(X+7,-2,3,2,C.hair); R(X+11,-1,1,1,C.hair);
+    R(X+4,3,8,2,C.mask); R(X+3,3,1,1,C.mask); R(X+12,3,1,1,C.mask);
+    if (pose === "nod"){ R(X+5,4,2,1,"#5a5a70"); R(X+9,4,2,1,"#5a5a70"); } else { R(X+5,3,2,1,"#ffffff"); R(X+9,3,2,1,"#ffffff"); }
+    R(X+6,6,4,1,shade(C.skin, .78));
+    // cape clasps, torso with a lung emblem, belt
+    R(X+4,8,8,5,C.suit); R(X+4,8,8,1,C.suitD); R(X+3,8,1,1,C.belt); R(X+12,8,1,1,C.belt);
+    R(X+5,9,2,3,C.lung); R(X+9,9,2,3,C.lung); R(X+7,9,2,1,C.lung);
+    R(X+4,12,8,1,C.belt);
+    // arms (white gloves)
+    if (pose === "point"){ R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.glove); R(X+12,8,6,2,C.suit); R(X+18,8,1,2,C.glove); }
+    else if (pose === "spread"){ R(X,7,4,2,C.suit); R(X+12,7,4,2,C.suit); R(X-1,7,1,2,C.glove); R(X+16,7,1,2,C.glove); }
+    else if (pose === "battle" || pose === "nod"){ R(X+3,10,10,2,C.suit); R(X+3,11,2,1,C.glove); R(X+11,11,2,1,C.glove); }
+    else if (pose === "swing"){ R(X+12,0,2,9,C.suit); R(X+12,-1,2,1,C.glove); R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.glove); }
+    else { R(X+2,8,2,4,C.suit); R(X+2,12,2,1,C.glove); R(X+12,8,2,4,C.suit); R(X+12,12,2,1,C.glove); }
     // legs + boots
-    R(X+5,13,2,4,C.suit); R(X+9,13,2,4,C.suit); R(X+5,17,2,2,C.cowl); R(X+9,17,2,2,C.cowl);
+    R(X+5,13,2,4,C.suit); R(X+9,13,2,4,C.suit); R(X+5,17,2,2,C.boot); R(X+9,17,2,2,C.boot);
   });
 }
 
@@ -1554,7 +1567,7 @@ function vZoom(f, cx, cy){
   VW.tx = cx - (cx - VW.tx) * nz / VW.z; VW.ty = cy - (cy - VW.ty) * nz / VW.z; VW.z = nz; vApply();
 }
 function vShow(refit){
-  var ser = seriesOf(VW.c)[VW.si], im = vImg(), url = ser.images[VW.k];
+  var ser = VW.ser[VW.si], im = vImg(), url = ser.images[VW.k];
   var keep = !refit && im.naturalWidth;
   im.onload = function(){ if (!keep) vFit(); keep = true; };
   im.src = url;
@@ -1568,19 +1581,19 @@ function vShow(refit){
   $("vHelp").textContent = multi ? (TOUCH ? "Drag to scroll slices · pinch to zoom" : "Wheel or drag to scroll · Ctrl+wheel to zoom") : (TOUCH ? "Pinch to zoom · drag to pan" : "Wheel to zoom · drag to pan");
 }
 function vSlice(d){
-  var ser = seriesOf(VW.c)[VW.si]; if (ser.images.length < 2) return;
+  var ser = VW.ser[VW.si]; if (ser.images.length < 2) return;
   var k = Math.max(0, Math.min(ser.images.length - 1, VW.k + d));
   if (k !== VW.k){ VW.k = k; vShow(false); }
 }
 function vSeries(i){
-  var ss = seriesOf(VW.c); VW.si = i; VW.k = Math.floor((ss[i].images.length - 1) / 2);
+  var ss = VW.ser; VW.si = i; VW.k = Math.floor((ss[i].images.length - 1) / 2);
   Array.prototype.forEach.call($("vTabs").children, function(b, j){ b.setAttribute("aria-pressed", j === i ? "true" : "false"); });
   vShow(true);
 }
-function vOpen(c){
-  VW.c = c; VW.tool = "scroll"; $("vTool").textContent = "PAN"; $("vTool").setAttribute("aria-pressed", "false");
+function vOpen(c, series){
+  VW.c = c; VW.ser = series || seriesOf(c); VW.tool = "scroll"; $("vTool").textContent = "PAN"; $("vTool").setAttribute("aria-pressed", "false");
   $("vPort").classList.remove("inv"); $("vInv").setAttribute("aria-pressed", "false");
-  var ss = seriesOf(c), tabs = $("vTabs"); tabs.innerHTML = "";
+  var ss = VW.ser, tabs = $("vTabs"); tabs.innerHTML = "";
   if (ss.length > 1) ss.forEach(function(s, i){ var b = document.createElement("button"); b.className = "vb"; b.textContent = s.label; b.onclick = function(){ vSeries(i); }; tabs.appendChild(b); });
   else { var lab = document.createElement("span"); lab.className = "vb"; lab.style.border = "0"; lab.style.background = "none"; lab.textContent = ss[0].label; tabs.appendChild(lab); }
   // warm the cache so scrolling is smooth
@@ -1591,14 +1604,14 @@ function vOpen(c){
   var port = $("vPort");
   port.addEventListener("wheel", function(e){
     e.preventDefault();
-    var ser = VW.c && seriesOf(VW.c)[VW.si], r = port.getBoundingClientRect();
+    var ser = VW.c && VW.ser[VW.si], r = port.getBoundingClientRect();
     if (ser && ser.images.length > 1 && !e.ctrlKey){ VW.acc += e.deltaY; var st = Math.abs(e.deltaMode ? 1 : 40); while (Math.abs(VW.acc) >= st){ vSlice(VW.acc > 0 ? 1 : -1); VW.acc -= st * Math.sign(VW.acc); } return; }
     vZoom(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX - r.left, e.clientY - r.top);
   }, { passive:false });
   port.addEventListener("pointerdown", function(e){ port.setPointerCapture(e.pointerId); VW.ptrs[e.pointerId] = { x:e.clientX, y:e.clientY, sy:e.clientY }; port.classList.add("drag"); VW.pinch = null; });
   port.addEventListener("pointermove", function(e){
     var p = VW.ptrs[e.pointerId]; if (!p) return;
-    var ids = Object.keys(VW.ptrs), ser = seriesOf(VW.c)[VW.si];
+    var ids = Object.keys(VW.ptrs), ser = VW.ser[VW.si];
     if (ids.length === 1){
       if (ser.images.length > 1 && VW.tool === "scroll"){
         var step = Math.max(4, Math.min(12, port.clientHeight / ser.images.length));
@@ -1621,6 +1634,8 @@ function vOpen(c){
   $("vFit").onclick = vFit;
   $("vInv").onclick = function(){ var on = $("vPort").classList.toggle("inv"); this.setAttribute("aria-pressed", on ? "true" : "false"); };
   $("vTool").onclick = function(){ VW.tool = VW.tool === "scroll" ? "pan" : "scroll"; this.setAttribute("aria-pressed", VW.tool === "pan" ? "true" : "false"); vShow(false); };
+  // refit whenever the viewer box changes size, unless the player has zoomed in
+  if (window.ResizeObserver) new ResizeObserver(function(){ if (studyOpen() && Math.abs(VW.z - VW.fit) < 1e-6) vFit(); }).observe(port);
   $("vExp").onclick = function(){ var on = $("study").classList.toggle("full"); this.setAttribute("aria-pressed", on ? "true" : "false"); setTimeout(vFit, 30); };
 })();
 /* ======================================================================
@@ -1715,9 +1730,9 @@ function runStudy(c, num){
     openStudy(c);
   });
 }
-function openStudy(c){
+function openStudy(c, series){
   $("study").classList.add("on"); $("rl").classList.add("nopad"); layout();
-  vOpen(c); setTimeout(vFit, 300); SFX.play("open"); say_live("Study: " + c.label + ". " + (c.question || ""));
+  vOpen(c, series); setTimeout(vFit, 300); SFX.play("open"); say_live("Study: " + c.label + ". " + (c.question || ""));
   setTimeout(function(){ var b = $("sOpts").querySelector("button:not(:disabled)"); if (b) b.focus({ preventScroll:true }); }, 40);
 }
 function closeStudy(){
@@ -1729,9 +1744,38 @@ function reviewStudy(c){
   return new Promise(function(res){
     var box = $("sOpts"); box.innerHTML = "";
     c.options.forEach(function(o, i){ var b = document.createElement("button"); b.className = "opt" + (i === c.answer ? " good" : ""); b.disabled = true; b.innerHTML = "<kbd>" + (i === c.answer ? "&#10003;" : "&middot;") + "</kbd><span>" + esc(o) + "</span>"; box.appendChild(b); });
+    $("sMeta").innerHTML = "REVIEW <span>&middot; " + esc(c.modality) + "</span><br>" + esc(c.label);
+    $("sHist").textContent = c.history || ""; $("sQ").textContent = c.question || "What is the urgent finding?";
     $("sFb").textContent = ""; $("sBack").hidden = false;
     S.study = { c:c, choose:null, review:res };
-    openStudy(c); setTimeout(function(){ $("sBack").focus({ preventScroll:true }); }, 50);
+    openStudy(c, seriesOf(c).concat(c.reveal ? c.reveal.series : [])); setTimeout(function(){ $("sBack").focus({ preventScroll:true }); }, 50);
+  });
+}
+function revealStudy(c){
+  return new Promise(function(res){
+    var sp = SPEAK[c.opponent] || SPEAK.sys, lines = c.reveal.lines, i = -1, typing = null;
+    $("sMeta").innerHTML = "TAKE A CLOSER LOOK <span>&middot; " + esc(c.reveal.series.map(function(s){ return s.label; }).join(", ")) + " view</span><br>" + esc(c.label.split(",")[0]);
+    $("sHist").textContent = ""; $("sQ").textContent = ""; $("sFb").textContent = ""; $("sBack").hidden = true;
+    var box = $("sOpts");
+    box.innerHTML = '<div class="talk"><canvas width="24" height="24"></canvas><div><b></b><p aria-live="polite"></p></div></div><button class="btn pri">Next &#9654;</button>';
+    var port = box.querySelector("canvas"), nm = box.querySelector("b"), para = box.querySelector("p"), btn = box.querySelector("button");
+    nm.textContent = sp.name; nm.style.color = sp.col;
+    if (sp.spr){ var x = port.getContext("2d"), cr = sp.crop; x.imageSmoothingEnabled = false; x.fillStyle = "#181828"; x.fillRect(0, 0, 24, 24); x.drawImage(sp.spr(), cr[0], cr[1], cr[2], cr[3], 1, 2, 22, 22 * cr[3] / cr[2]); }
+    function next(){
+      if (typing){ clearInterval(typing); typing = null; para.textContent = lines[i]; return; }
+      i++;
+      if (i >= lines.length){ S.study.reveal = null; closeStudy(); res(); return; }
+      if (i) SFX.play("select");
+      btn.innerHTML = i === lines.length - 1 ? "Continue &#9654;" : "Next &#9654;";
+      var t = lines[i], n = 0; para.textContent = ""; say_live(sp.name + ": " + t);
+      if (REDUCED){ para.textContent = t; return; }
+      typing = setInterval(function(){ n += 2; para.textContent = t.slice(0, n); if (n % 6 === 0) SFX.play(sp.voice || "blip"); if (n >= t.length){ clearInterval(typing); typing = null; } }, 40);
+    }
+    btn.onclick = next;
+    S.study = { c:c, choose:null, reveal:next };
+    openStudy(c, c.reveal.series);
+    next();
+    setTimeout(function(){ btn.focus({ preventScroll:true }); }, 60);
   });
 }
 $("sBack").onclick = function(){ var r = S.study && S.study.review; if (!r) return; S.study.review = null; closeStudy(); r(); };
@@ -1739,6 +1783,8 @@ $("sBack").onclick = function(){ var r = S.study && S.study.review; if (!r) retu
 function showCard(c){
   return new Promise(function(res){
     $("cTitle").textContent = c.options[c.answer];
+    var src = [].concat(c.source || []).map(function(k){ return SOURCES[k]; }).filter(Boolean);
+    $("cCred").innerHTML = src.length ? "Images: " + src.map(function(s2){ return esc(s2.citation.split(".")[0]) + ', <a href="' + s2.url + '" target="_blank" rel="noopener">Wikimedia Commons</a>, <a href="' + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>"; }).join("; ") : "";
     $("cFind").textContent = c.finding || ""; $("cClue").textContent = c.clue || ""; $("cWhy").textContent = c.why || "";
     $("cNext").innerHTML = B.hp > 0 ? "Next study &#9654;" : "Continue &#9654;";
     $("card").classList.add("on"); S.cardRes = res;
@@ -1791,6 +1837,7 @@ async function battle(id, retry){
     award("crit");
     if (B.lastFirstTry && isScroll(c)) award("scroll");
     await say("sys", pick(HIT_LINES));
+    if (c.reveal) await revealStudy(c);
     S.cardCase = c; await showCard(c);
   }
   // victory

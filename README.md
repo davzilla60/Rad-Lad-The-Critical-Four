@@ -12,7 +12,7 @@ This is an embeddable, top-down pixel-art game in the style of the 90s Pokémon 
 
 | # | Opponent | Focus | Room | Intro | After defeat |
 |---|---|---|---|---|---|
-| 1 | Domonic | Chest, lines and tubes | City at night | Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
+| 1 | Domonic | Chest, lines and tubes | City at night | A parody caped hero (teal suit, purple cape, domino mask, lungs on his chest). Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
 | 2 | Matilda | Neuro emergencies | Fox-doll room | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
 | 3 | Hannah | Abdominal and vascular | Stone tournament ring | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
 | 4 | My-Vi | Musculoskeletal | Glyph chamber | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
@@ -84,7 +84,24 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
     "series": [{"label": "Axial", "dir": "mat1/axial"}, {"label": "Coronal", "dir": "mat1/coronal"}],
 ```
 
+   A case can also have a **reveal**: more images shown after a correct answer, while the examiner explains them line by line (see `myv3`, where the lateral shows the pronator quadratus fat pad sign and the AP reveal shows the fracture):
+
+```python
+    "reveal": {"series": [{"label": "AP", "file": "myv3/ap.png"}],
+               "lines": ["Now look at the AP view...", "..."]},
+```
+
+   Images with coloured annotation, such as a red arrow, are kept in colour. Everything else is converted to greyscale.
+
 3. Run `python build.py`. It checks that every opponent has six cases and every case has four options and a valid answer. `python build.py --preview` writes `_preview.html`, which loads images from `assets/` for quicker local testing.
+
+## Cases so far
+
+| Case | Opponent | Study | Answer | Images |
+|---|---|---|---|---|
+| myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
+
+Image credits appear on each case's explanation card and in the page footer. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
 
 ## Testing shortcut
 
