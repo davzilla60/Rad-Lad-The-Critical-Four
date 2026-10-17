@@ -1593,12 +1593,15 @@ function vSlice(d){
   if (k !== VW.k){ VW.k = k; vShow(false); }
 }
 function vSeries(i){
-  var ss = VW.ser; VW.si = i; VW.k = Math.floor((ss[i].images.length - 1) / 2);
+  var ss = VW.ser, prev = ss[VW.si], same = VW.c === VW.lastC && prev && prev !== ss[i] && prev.images.length === ss[i].images.length;
+  VW.lastC = VW.c;
+  if (same){ VW.si = i; Array.prototype.forEach.call($("vTabs").children, function(b, j){ b.setAttribute("aria-pressed", j === i ? "true" : "false"); }); vShow(true); return; }   // linked scrolling
+  VW.si = i; VW.k = ss[i].start !== undefined ? Math.min(ss[i].start, ss[i].images.length - 1) : Math.floor((ss[i].images.length - 1) / 2);
   Array.prototype.forEach.call($("vTabs").children, function(b, j){ b.setAttribute("aria-pressed", j === i ? "true" : "false"); });
   vShow(true);
 }
 function vOpen(c, series){
-  VW.c = c; VW.ser = series || seriesOf(c); VW.ov = true; VW.tool = "scroll"; $("vTool").textContent = "PAN"; $("vTool").setAttribute("aria-pressed", "false");
+  VW.lastC = null; VW.si = 0; VW.c = c; VW.ser = series || seriesOf(c); VW.ov = true; VW.tool = "scroll"; $("vTool").textContent = "PAN"; $("vTool").setAttribute("aria-pressed", "false");
   $("vPort").classList.remove("inv"); $("vInv").setAttribute("aria-pressed", "false");
   var ss = VW.ser, tabs = $("vTabs"); tabs.innerHTML = "";
   if (ss.length > 1) ss.forEach(function(s, i){ var b = document.createElement("button"); b.className = "vb"; b.textContent = s.label; b.onclick = function(){ vSeries(i); }; tabs.appendChild(b); });
@@ -1968,6 +1971,8 @@ var INTRO = {
     await say("lightbox", "What were you expecting—a radiologist?");
     S.lbNamed = true;
     await say("lightbox", "I've been showing people images since before PACS.");
+    await say("lightbox", "What, did you think I'd only give you cases from one part of the body? Or one type of imaging?");
+    await say("lightbox", "Who builds an entire team around one type? That would be pretty dumb.");
     await say("lightbox", "Six studies stand between you and graduation. Get past me, and I'll be satisfied.");
   }
 };

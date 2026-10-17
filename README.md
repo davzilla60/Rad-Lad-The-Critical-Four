@@ -102,10 +102,21 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 | Case | Opponent | Study | Answer | Images |
 |---|---|---|---|---|
 | dom1 | Domonic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
+| mat1 | Matilda | MRI brain, scrollable DWI + FLAIR (72 axial slices; lesion shaded after a correct answer) | Acute left MCA territory infarct | ISLES 2022, sub-strokecase0003 (Hernandez Petzsche et al. 2022), [Zenodo](https://doi.org/10.5281/zenodo.7153326), CC BY 4.0. FLAIR resampled onto the DWI planes with `tools/prep_mr_stack.py`. ADC not used. |
 | myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
 | myv4 | My-Vi | Ankle, lateral (lateral and AP with the fracture outlined, shown after a correct answer) | Distal fibula fracture | FracAtlas IMG0002348 (lateral) and IMG0002347 (AP), Abedeen et al. 2023, [figshare](https://doi.org/10.6084/m9.figshare.22363012), CC BY 4.0. The overlay is the dataset's own fracture outline. |
 
 Image credits appear on each case's explanation card and in the page footer. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
+
+## Scrollable MR from DICOM
+
+`tools/prep_mr_stack.py` turns a DICOM MR case into slice images. It resamples every series, and the lesion mask, onto the reference series' axial planes, crops to the head and windows to 8-bit:
+
+```bash
+python tools/prep_mr_stack.py "<case folder>" assets/src/<id> --ref DWI --series DWI FLAIR --mask Lesion_Mask
+```
+
+The series then scroll in step: switching tabs keeps the same slice. Use `overlay_dir` for the per-slice masks and `start` for the slice the reveal opens on (see `mat1`).
 
 ## Testing shortcut
 

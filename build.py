@@ -60,6 +60,8 @@ def ph(cid, opp, modality, label):
 #   source    key into SOURCES for the image credit (or a list of keys), or None
 #   overlay   optional, on a single-image series: a white-on-black mask (same framing as
 #             the image) shown as a tinted overlay the player can switch on and off
+#   overlay_dir  the same for a stack: a folder with one mask per slice
+#   start     optional: slice to open a stack on (0 = first)
 #   reveal    optional: {"series": [...], "lines": [...]} shown after a correct answer,
 #             with the examiner talking the player through it (e.g. the AP that shows
 #             the fracture behind a soft-tissue sign)
@@ -93,7 +95,28 @@ CASES = [
     ph("dom5", "domonic", "X-ray", "Chest X-ray, PA"),
     ph("dom6", "domonic", "CT", "CT chest, axial"),
     # Matilda: neurological emergencies
-    ph("mat1", "matilda", "CT", "CT head, non-contrast"),
+    {
+        "id": "mat1", "opponent": "matilda", "modality": "MRI", "label": "MRI brain, DWI and FLAIR",
+        "history": "Adult with sudden right arm weakness and difficulty getting words out.",
+        "question": "What is the urgent finding?",
+        "options": ["Acute left MCA territory infarct", "Acute right MCA territory infarct", "Intracerebral haemorrhage", "No acute abnormality"],
+        "answer": 0,
+        "finding": "Acute infarct in the left frontal lobe (left middle cerebral artery territory), seen over several slices.",
+        "clue": "The area is very bright on DWI (restricted diffusion). On FLAIR the same area is only faintly bright. Remember the image's right side is the patient's left.",
+        "why": "Restricted diffusion means the brain tissue is acutely infarcting. A bright DWI with little FLAIR change suggests a recent stroke, which may still be treatable, so the stroke team needs to know immediately.",
+        "series": [{"label": "DWI", "dir": "mat1/DWI"}, {"label": "FLAIR", "dir": "mat1/FLAIR"}],
+        "reveal": {
+            "series": [{"label": "DWI, marked", "dir": "mat1/DWI", "overlay_dir": "mat1/DWI_mask", "start": 38},
+                       {"label": "FLAIR, marked", "dir": "mat1/FLAIR", "overlay_dir": "mat1/FLAIR_mask", "start": 38}],
+            "lines": [
+                "Nice catch! That bright patch on DWI is restricted diffusion in the left frontal lobe. It's an acute infarct.",
+                "I've shaded the lesion for you. Scroll up and down: it runs over several slices in the left MCA territory.",
+                "Now switch to FLAIR. Same spot, but only faintly bright. Bright DWI with a quiet FLAIR means the stroke is recent.",
+                "Recent can mean treatable. On a real stroke call, every minute counts, so you tell the team straight away.",
+            ],
+        },
+        "source": "isles2022",
+    },
     ph("mat2", "matilda", "CT", "CT head, non-contrast"),
     ph("mat3", "matilda", "CT", "CT angiogram, circle of Willis"),
     ph("mat4", "matilda", "MRI", "MRI brain, DWI"),
@@ -168,6 +191,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "isles2022": {
+        "short": "Hernandez Petzsche et al. (2022), ISLES 2022, Zenodo",
+        "citation": "Hernandez Petzsche, M. R., de la Rosa, E., Wiest, R., Hanning, U., Wiestler, B., & Kirschke, J. S. (2022). "
+                    "ISLES 2022: A multi-center magnetic resonance imaging stroke lesion segmentation dataset [Data set]. Zenodo. "
+                    "Described in Scientific Data, doi:10.1038/s41597-022-01875-5.",
+        "url": "https://doi.org/10.5281/zenodo.7153326",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "FLAIR resampled onto the DWI's axial planes, windowed to 8-bit and cropped; lesion mask drawn as an overlay",
+    },
     "fracatlas": {
         "short": "Abedeen et al. (2023), FracAtlas, figshare",
         "citation": "Abedeen, I., Rahman, M. A., Zohra Prottyasha, F., Ahmed, T., Mohmud Chowdhury, T., & Shatabda, S. (2023). "
@@ -286,6 +318,16 @@ def main():
                 im.save(p, "JPEG", quality=88 if len(files) == 1 else 80, optimize=True)
                 imgs.append(f"assets/cases/{c['id']}/{p.name}" if preview else data_uri(p))
             entry = {"label": s["label"], "images": imgs}
+            if "start" in s: entry["start"] = s["start"]
+            if s.get("overlay_dir"):
+                mfiles = sorted((f for f in (A / "src" / s["overlay_dir"]).iterdir() if f.suffix.lower() in IMG_EXT), key=natural)
+                if len(mfiles) != len(files): sys.exit(f"!! {c['id']}: {s['overlay_dir']} has {len(mfiles)} masks for {len(files)} slices")
+                ovs = []
+                for k, mf in enumerate(mfiles):
+                    if Image.open(mf).convert("L").getextrema()[1] < 128: ovs.append(None); continue   # nothing on this slice
+                    op = make_overlay(mf, Image.open(files[k]).size, d / f"{prefix}{si}_ov{k:03d}.png")
+                    ovs.append(f"assets/cases/{c['id']}/{op.name}" if preview else data_uri(op))
+                entry["overlays"] = ovs
             if s.get("overlay"):
                 if len(files) != 1: sys.exit(f"!! {c['id']}: an overlay needs a single-image series")
                 op = make_overlay(A / "src" / s["overlay"], im.size, d / f"{prefix}{si}_overlay.png")
