@@ -131,7 +131,30 @@ CASES = [
         },
         "source": ["hellerhoff_pq_lat", "hellerhoff_pq_ap"],
     },
-    ph("myv4", "myvi", "X-ray", "Ankle, AP"),
+    {
+        "id": "myv4", "opponent": "myvi", "modality": "X-ray", "label": "Ankle, lateral",
+        "history": "Adult, twisted the left ankle stepping off a kerb. Swollen and tender over the outer ankle.",
+        "question": "What is the injury?",
+        "options": ["Distal fibula fracture", "Distal tibia fracture", "Calcaneal fracture", "No fracture"],
+        "answer": 0,
+        "finding": "A short oblique fracture of the distal fibula, just above the ankle joint.",
+        "clue": "On the lateral view the fibula overlaps the back of the tibia. Look there for a fine oblique line and a small step or spike on the back edge of the fibula. On the AP view the same fracture is only a faint line.",
+        "why": "Ankle fractures can be unstable, and a fibula fracture may come with a medial or ligament injury that is easy to miss. Check the mortise and the medial side, and make sure the patient has orthopaedic assessment before weight-bearing.",
+        "series": [{"label": "Lateral", "file": "myv4/lateral_IMG0002348.jpg"}],
+        "reveal": {
+            "series": [
+                {"label": "Lateral, marked", "file": "myv4/lateral_IMG0002348.jpg", "overlay": "myv4/lateral_IMG0002348_mask.png"},
+                {"label": "AP, marked", "file": "myv4/ap_IMG0002347.jpg", "overlay": "myv4/ap_IMG0002347_mask.png"},
+            ],
+            "lines": [
+                "Here it is. The fibula sits over the back of the tibia on a lateral view, and that is where the break hides.",
+                "See the little spike on the fibula's back edge? That step is the fracture, running obliquely just above the joint.",
+                "Now open the AP tab. The same break is there, but it's only a faint oblique line.",
+                "Always read both views. A fracture can whisper on one and announce itself on the other.",
+            ],
+        },
+        "source": "fracatlas",
+    },
     ph("myv5", "myvi", "CT", "CT cervical spine, sagittal"),
     ph("myv6", "myvi", "MRI", "MRI knee, sagittal PD"),
     # The Lightbox (champion): mixed
@@ -145,7 +168,16 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "fracatlas": {
+        "short": "Abedeen et al. (2023), FracAtlas, figshare",
+        "citation": "Abedeen, I., Rahman, M. A., Zohra Prottyasha, F., Ahmed, T., Mohmud Chowdhury, T., & Shatabda, S. (2023). "
+                    "FracAtlas: A Dataset for Fracture Classification, Localization and Segmentation of Musculoskeletal Radiographs. figshare. Dataset.",
+        "url": "https://doi.org/10.6084/m9.figshare.22363012",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG and resized; the dataset's fracture annotation drawn as an overlay",
+    },
     "ptx498": {
+        "short": "Wang (2021), PTX-498, Zenodo",
         "citation": "Wang, Y. (2021). PTX-498: A multi-center pneumothorax segmentation chest X-ray image dataset [Data set]. "
                     "In Neurocomputing (Version v2-fix, Vol. 454, pp. 201-211). Zenodo.",
         "url": "https://doi.org/10.5281/zenodo.8266529",
@@ -153,12 +185,14 @@ SOURCES = {
         "changes": "converted to greyscale JPEG; segmentation mask rendered as a coloured overlay",
     },
     "hellerhoff_pq_lat": {
+        "short": "Hellerhoff, Wikimedia Commons",
         "citation": "Hellerhoff. Pronator quadratus - fatpad-sign pathologisch bei Fraktur Erwachsener (2010). Wikimedia Commons.",
         "url": "https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png",
         "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
         "changes": "converted to JPEG",
     },
     "hellerhoff_pq_ap": {
+        "short": "Hellerhoff, Wikimedia Commons",
         "citation": "Hellerhoff. Distale Radiusfraktur laengs zu Fatpadsign erwachsen. Wikimedia Commons.",
         "url": "https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png",
         "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",

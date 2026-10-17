@@ -1762,7 +1762,7 @@ function reviewStudy(c){
 function revealStudy(c){
   return new Promise(function(res){
     var sp = SPEAK[c.opponent] || SPEAK.sys, lines = c.reveal.lines, i = -1, typing = null;
-    $("sMeta").innerHTML = "TAKE A CLOSER LOOK <span>&middot; " + esc(c.reveal.series.map(function(s){ return s.label; }).join(", ")) + " view</span><br>" + esc(c.label.split(",")[0]);
+    $("sMeta").innerHTML = "TAKE A CLOSER LOOK<br>" + esc(c.label.split(",")[0]);
     $("sHist").textContent = ""; $("sQ").textContent = ""; $("sFb").textContent = ""; $("sBack").hidden = true;
     var box = $("sOpts");
     box.innerHTML = '<div class="talk"><canvas width="24" height="24"></canvas><div><b></b><p aria-live="polite"></p></div></div><button class="btn pri">Next &#9654;</button>';
@@ -1792,7 +1792,7 @@ function showCard(c){
   return new Promise(function(res){
     $("cTitle").textContent = c.options[c.answer];
     var src = [].concat(c.source || []).map(function(k){ return SOURCES[k]; }).filter(Boolean);
-    $("cCred").innerHTML = src.length ? "Images: " + src.map(function(s2){ return esc(s2.citation.split(".")[0]) + ', <a href="' + s2.url + '" target="_blank" rel="noopener">Wikimedia Commons</a>, <a href="' + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>"; }).join("; ") : "";
+    $("cCred").innerHTML = src.length ? "Images: " + src.map(function(s2){ return esc(s2.short || s2.citation) + ' (<a href="' + s2.url + '" target="_blank" rel="noopener">source</a>), <a href="'  + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>"; }).join("; ") : "";
     $("cFind").textContent = c.finding || ""; $("cClue").textContent = c.clue || ""; $("cWhy").textContent = c.why || "";
     $("cNext").innerHTML = B.hp > 0 ? "Next study &#9654;" : "Continue &#9654;";
     $("card").classList.add("on"); S.cardRes = res;

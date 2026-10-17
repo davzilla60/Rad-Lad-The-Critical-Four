@@ -103,6 +103,7 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 |---|---|---|---|---|
 | dom1 | Domonic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
 | myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
+| myv4 | My-Vi | Ankle, lateral (lateral and AP with the fracture outlined, shown after a correct answer) | Distal fibula fracture | FracAtlas IMG0002348 (lateral) and IMG0002347 (AP), Abedeen et al. 2023, [figshare](https://doi.org/10.6084/m9.figshare.22363012), CC BY 4.0. The overlay is the dataset's own fracture outline. |
 
 Image credits appear on each case's explanation card and in the page footer. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
 
