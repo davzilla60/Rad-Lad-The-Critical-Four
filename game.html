@@ -208,6 +208,8 @@ html,body{background:#08070d;height:100%}
 #rl .looks{display:flex;gap:calc(var(--u)*3);justify-content:center;margin:calc(var(--u)*3) 0 calc(var(--u)*7);flex-wrap:wrap}
 #rl .looks button{padding:calc(var(--u)*2) !important;border:2px solid #34345a !important;border-radius:6px;background:#141428 !important}
 #rl .looks button[aria-pressed="true"]{border-color:var(--gold) !important;box-shadow:0 0 12px rgba(255,210,90,.4)}
+#rl .looks button{display:flex;align-items:flex-end;gap:calc(var(--u)*2)}
+#rl .looks .lk-art{height:calc(var(--u)*27);width:auto}
 #rl .looks canvas{display:block;width:calc(var(--u)*22);height:calc(var(--u)*27);image-rendering:pixelated}
 
 /* markers panel */
@@ -299,6 +301,7 @@ html,body{background:#08070d;height:100%}
     <div class="stage" id="stage">
       <canvas id="cv" width="256" height="224" role="img" aria-label="Game view"></canvas>
       <img class="foe" id="foeArt" alt="" hidden>
+      <img class="foe" id="meArt" alt="" hidden>
       <div class="hint" id="hint"></div>
       <div class="banner" id="banner"><b id="bannerT"></b><small id="bannerS"></small></div>
 
@@ -664,9 +667,9 @@ function person(o, dir, f, pose){
 /* the graduate: four looks, all in scrubs with a dosimeter badge */
 var LOOKS = [
   { name:"Short and dark", skin:"#f2c09a", hair:"#3a2418", style:"short" },
-  { name:"Long and fair",  skin:"#f6d2b4", hair:"#e8c060", style:"long" },
+  { name:"Blonde ponytail", skin:"#f6d2b4", hair:"#e8c060", style:"pony" },
   { name:"Curly",          skin:"#8a5a3a", hair:"#1a1414", style:"curly" },
-  { name:"Copper bun",     skin:"#eab48c", hair:"#c0582a", style:"bun" }
+  { name:"Copper",         skin:"#eab48c", hair:"#c0582a", style:"short" }
 ];
 function gradOpts(i){
   var L = LOOKS[i] || LOOKS[0];
@@ -1313,6 +1316,19 @@ function foeArt(){
   el.hidden = false;
   return true;
 }
+// the player's graduate, seen from behind (cropped at the waist, so the bottom sits under the text box)
+function meArt(){
+  var el = $("meArt"), src = ART.grad && ART.grad[String((GAME && GAME.look) || 0)];
+  if (!src || S.mode !== "battle" || !B){ if (!el.hidden) el.hidden = true; return false; }
+  if (el.dataset.src !== src){ el.src = src; el.dataset.src = src; }
+  var nw = el.naturalWidth || 440, nh = el.naturalHeight || 420, h = 96, w = h * nw / nh;
+  var cx = 70 + B.meX + (B.meShake > 0 ? Math.sin(S.t * 80) * 3 : 0), bottom = 198 + B.meDrop;
+  el.style.left = ((cx - w / 2) / W * 100) + "%"; el.style.top = ((bottom - h) / H * 100) + "%";
+  el.style.width = (w / W * 100) + "%"; el.style.height = (h / H * 100) + "%";
+  el.style.visibility = B.meBlink > 0 && Math.floor(S.t * 20) % 2 ? "hidden" : "visible";
+  el.hidden = false;
+  return true;
+}
 function setPose(p){ if (B) B.pose = p; }
 function cutIn(){
   var art = B && ART[B.opp], el = $("cutin"); if (!art || !art.attack || REDUCED) return;
@@ -1320,7 +1336,7 @@ function cutIn(){
   clearTimeout(el._t); el._t = setTimeout(function(){ el.hidden = true; el.classList.remove("go"); }, 1300);
 }
 function renderBattle(){
-  var id = B.opp, hasArt = foeArt();
+  var id = B.opp, hasArt = foeArt(), hasMe = meArt();
   g.drawImage(BATBG[id], 0, 0);
   // opponent (3x), feet on the far platform
   var os = battleSprite(id), osc = 3, ow = os.width * osc, oh = os.height * osc;
@@ -1338,7 +1354,7 @@ function renderBattle(){
   // the graduate, back view (3x), on the near platform
   var ms = battleSprite("me"), msc = 3, mw = ms.width * msc, mh = ms.height * msc;
   var mx = 72 - mw / 2 + B.meX + (B.meShake > 0 ? Math.round(Math.sin(S.t * 80) * 3) : 0), my = 170 - mh + B.meDrop;
-  if (!(B.meBlink > 0 && Math.floor(S.t * 20) % 2)){
+  if (!hasMe && !(B.meBlink > 0 && Math.floor(S.t * 20) % 2)){
     g.save(); g.beginPath(); g.rect(0, 0, W, 172); g.clip(); blit(ms, mx, my, false, msc); g.restore();
   }
   if (B.hitFx > 0){ // impact star on the opponent
@@ -1353,7 +1369,7 @@ function render(){
   var sh = S.shake > 0 && !REDUCED ? Math.round((Math.random() - .5) * 5) : 0, sv = S.shake > 0 && !REDUCED ? Math.round((Math.random() - .5) * 3) : 0;
   g.setTransform(1, 0, 0, 1, sh, sv);
   g.fillStyle = "#000"; g.fillRect(-4, -4, W + 8, H + 8);
-  if (S.mode === "battle" && B) renderBattle(); else { renderRoom(); if (!$("foeArt").hidden) $("foeArt").hidden = true; }
+  if (S.mode === "battle" && B) renderBattle(); else { renderRoom(); if (!$("foeArt").hidden) $("foeArt").hidden = true; if (!$("meArt").hidden) $("meArt").hidden = true; }
   g.setTransform(1, 0, 0, 1, 0, 0);
   if (S.wipe > 0){ // pixelated wipe: 16x16 blocks in a shuffled order
     if (!S.wipeOrder){ var o = []; for (var i = 0; i < 16 * 14; i++) o.push(i); S.wipeOrder = shuffle(o); }
@@ -1878,7 +1894,7 @@ async function battle(id, retry){
     if (!ok){
       // out of hearts: the graduate faints
       SFX.play("faint");
-      await tween(function(k){ B.meDrop = 60 * k; }, 700);
+      await tween(function(k){ B.meDrop = 90 * k; }, 700);
       await say("sys", playerName() + " is out of hearts!");
       if (!UNLOCKED.heartbreak) award("heartbreak");
       GAME.lost[id] = true; saveGame();
@@ -2156,7 +2172,8 @@ function showSetup(){
   LOOKS.forEach(function(L, i){
     var b = document.createElement("button"), c2 = document.createElement("canvas"); c2.width = 18; c2.height = 20;
     var x = c2.getContext("2d"); x.drawImage(SPR.grad[i].down[0], 0, 0);
-    b.appendChild(c2); b.setAttribute("aria-label", L.name); b.setAttribute("aria-pressed", i === lookSel ? "true" : "false");
+    b.appendChild(c2);
+    if (ART.grad && ART.grad[String(i)]){ var im = document.createElement("img"); im.src = ART.grad[String(i)]; im.alt = ""; im.className = "lk-art"; b.appendChild(im); } b.setAttribute("aria-label", L.name); b.setAttribute("aria-pressed", i === lookSel ? "true" : "false");
     b.onclick = function(){ lookSel = i; SFX.play("select"); Array.prototype.forEach.call(box.children, function(o, j){ o.setAttribute("aria-pressed", j === i ? "true" : "false"); }); };
     box.appendChild(b);
   });

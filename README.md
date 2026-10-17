@@ -116,7 +116,7 @@ The examiners' battle sprites come from the character sheets in `assets/src/art/
 - **Attack:** while each new study is sent out, when you run out of hearts, and as a quick cut-in across the study panel when you lose a heart.
 - **Defeat:** after their last study.
 
-The Lightbox has no sheet, so it stays pixel art. The characters in the rooms are still the small pixel sprites.
+The player's graduate uses `assets/src/art/grad_sheet.webp`: one back-view panel per look (01 short brown, 02 blonde ponytail, 03 dark curly, 04 copper), cut to `grad_0`–`grad_3` and matched to the look chosen at registration. The registration screen shows them too. The Lightbox has no sheet, so it stays pixel art. The characters in the rooms are still the small pixel sprites.
 
 A case can carry `"patient": "patient 4"`, which shows as a small heading above the study.
 
