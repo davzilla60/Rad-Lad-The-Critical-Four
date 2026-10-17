@@ -112,11 +112,17 @@ html,body{background:#08070d;height:100%}
 #rl .s-head .cases i{width:12px;height:14px}
 #rl .s-head .hearts i{width:14px;height:12px}
 #rl .s-body{flex:1;min-height:0;display:flex;gap:8px;padding:8px}
-#rl .s-view{flex:1.6;min-width:0;display:flex;flex-direction:column;background:#000;border-radius:4px;border:1px solid #22223a}
+#rl .foe{position:absolute;z-index:3;pointer-events:none;transform-origin:50% 100%;filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}
+#rl .foe[hidden],#rl .cutin[hidden]{display:none}
+#rl .cutin{position:absolute;right:2%;bottom:4%;height:62%;max-width:70%;object-fit:contain;z-index:5;pointer-events:none;filter:drop-shadow(0 0 12px rgba(0,0,0,.8))}
+#rl .cutin.go{animation:rl-cutin 1.25s ease-out forwards}
+@keyframes rl-cutin{0%{transform:translateX(60%);opacity:0}14%{transform:translateX(0);opacity:1}72%{transform:translateX(0);opacity:1}100%{transform:translateX(-15%);opacity:0}}
+#rl .s-view{position:relative;flex:1.6;min-width:0;display:flex;flex-direction:column;background:#000;border-radius:4px;border:1px solid #22223a}
 #rl .s-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;overflow:auto}
 #rl .study.col .s-body{flex-direction:column}
 #rl .study.col .s-view{flex:1 1 55%}
 #rl .study.col .s-side{flex:0 1 auto;max-height:48%}
+#rl .s-pt{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.5px;color:var(--dim);text-transform:lowercase;margin-bottom:2px}
 #rl .s-meta{font-family:var(--pix);font-size:8px;color:var(--gold);line-height:1.6}
 #rl .s-meta span{color:var(--dim)}
 #rl .s-hist{font-size:13px;line-height:1.4;color:#cfd3e6}
@@ -292,6 +298,7 @@ html,body{background:#08070d;height:100%}
   <main class="arena" id="arena">
     <div class="stage" id="stage">
       <canvas id="cv" width="256" height="224" role="img" aria-label="Game view"></canvas>
+      <img class="foe" id="foeArt" alt="" hidden>
       <div class="hint" id="hint"></div>
       <div class="banner" id="banner"><b id="bannerT"></b><small id="bannerS"></small></div>
 
@@ -364,6 +371,7 @@ html,body{background:#08070d;height:100%}
             <button class="vb" id="vInv" aria-pressed="false" aria-label="Invert">INV</button>
             <button class="vb" id="vExp" aria-pressed="false" aria-label="Expand">&#x26F6;</button>
           </div>
+          <img class="cutin" id="cutin" alt="" hidden>
           <div class="vport" id="vPort"><img id="vImg" alt="Imaging study"><img id="vOv" alt="" hidden></div>
           <div class="vfoot">
             <div class="slice" id="vSlice"><input type="range" id="vRange" min="0" max="0" value="0" aria-label="Slice"><output id="vNum"></output></div>
@@ -419,6 +427,12 @@ html,body{background:#08070d;height:100%}
 var CASES = /*__CASES__*/[];
 var SOURCES = /*__SOURCES__*/{};
 var ASSETS = /*__ASSETS__*/{};
+var POOL = /*__POOL__*/[];
+CASES.forEach(function(c){
+  function fix(list){ (list || []).forEach(function(se){ se.images = se.images.map(function(u){ return typeof u === "number" ? POOL[u] : u; });
+    if (se.overlays) se.overlays = se.overlays.map(function(u){ return typeof u === "number" ? POOL[u] : u; }); }); }
+  fix(c.series); if (c.reveal) fix(c.reveal.series);
+});
 var W = 256, H = 224;
 function $(id){ return document.getElementById(id); }
 var REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -577,7 +591,7 @@ function person(o, dir, f, pose){
   pose = pose || "walk";
   return bake(16, 18, function(R){
     var sk = o.skin, hr = o.hair, hd = o.hairD || shade(o.hair, .7), tp = o.top, td = o.topD || shade(o.top, .72), lg = o.leg, sh = o.shoe || "#2a2030";
-    var arm = o.sleeve === false ? sk : tp;
+    var arm = o.sleeve === false ? sk : (o.arm || tp);
     if (dir === "up"){
       if (o.style === "long" || o.style === "streak") R(3,4,10,8,hd);
       if (o.style === "pony") { R(7,0,2,1,hd); R(11,2,3,2,hd); R(12,4,2,5,hd); }
@@ -702,8 +716,12 @@ var MATILDA = { skin:"#f0c4a4", hair:"#22182a", style:"streak", top:"#1c1c24", l
       [[2,9,"#3aa0e0"],[2,10,"#e04a6a"],[3,11,"#3ac07a"],[12,9,"#e0b03a"],[13,10,"#3aa0e0"],[12,11,"#b058e0"]].forEach(function(p){ R(p[0],p[1],1,1,p[2]); });
     } else { R(7,10,1,1,"#3aa0e0"); R(6,11,1,1,"#e04a6a"); }
   } };
-var HANNAH = { skin:"#7a4a2e", hair:"#141018", style:"pony", top:"#e8742a", topD:"#a84a14", leg:"#e8742a", shoe:"#2a3a8a",
-  extra:function(R, dir){ if (dir !== "side"){ R(4,12,8,1,"#2a3a8a"); if (dir === "down"){ R(6,8,4,2,"#2a3a8a"); } } } };
+var HANNAH = { skin:"#f6d8c0", hair:"#f0c860", hairD:"#c89a38", style:"pony", glasses:true, top:"#1e2a4a", topD:"#141c34", arm:"#c8283a", leg:"#26324f", shoe:"#3050c0",
+  extra:function(R, dir){
+    if (dir === "down"){ R(4,8,2,4,"#c8283a"); R(10,8,2,4,"#c8283a"); R(7,9,1,3,"#e04848"); R(8,9,1,3,"#5a9ae8"); R(5,17,1,1,"#e04848"); R(10,17,1,1,"#e04848"); }
+    else if (dir === "up"){ R(4,8,8,4,"#c8283a"); R(4,8,8,1,"#a01c2c"); }
+    else R(5,8,6,4,"#c8283a");
+  } };
 var MYVI = { skin:"#f2cfa8", hair:"#0e0c18", style:"long", top:"#2a3a7a", topD:"#1a2450", shoe:"#1a1a2a", robe:true,
   extra:function(R, dir){ if (dir === "down"){ R(7,9,2,2,"#7ff3ff"); R(3,16,10,1,"#e0b030"); R(5,1,6,1,"#e0b030"); } else if (dir === "up") R(3,16,10,1,"#e0b030"); } };
 
@@ -939,6 +957,15 @@ function doorFrame(x, col){
   x.fillStyle = "#e0c060"; x.fillRect(124, 40, 2, 3); x.fillRect(130, 40, 2, 3);
 }
 
+function grassland(x, rnd, horizon){
+  // distant blue-green hills, then rolling grass with tufts and a few boulders
+  for (var i = 0; i < 6; i++){ var mx = rnd() * W, mw = 60 + rnd() * 90, mh = 10 + rnd() * 18;
+    for (var yy = 0; yy < mh; yy++){ var hw = mw / 2 * Math.sqrt(yy / mh); x.fillStyle = shade("#6a9a8a", .85 + (yy / mh) * .2); x.fillRect(mx - hw, horizon + 4 - mh + yy, hw * 2, 1); } }
+  x.fillStyle = "#5aa040"; x.fillRect(0, horizon, W, H - horizon);
+  for (i = 0; i < 900; i++){ var gx = rnd() * W | 0, gy = horizon + rnd() * (H - horizon) | 0; x.fillStyle = rnd() < .5 ? "#4a8a34" : "#6ab44c"; x.fillRect(gx, gy, 1, 2); }
+  for (i = 0; i < 70; i++){ var tx = rnd() * W | 0, ty = horizon + 4 + rnd() * (H - horizon - 4) | 0; x.fillStyle = "#3a7a2a"; x.fillRect(tx, ty, 1, 3); x.fillRect(tx + 2, ty + 1, 1, 2); x.fillStyle = "#7acc5a"; x.fillRect(tx + 1, ty - 1, 1, 3); }
+  for (i = 0; i < 6; i++){ var bx2 = rnd() * W | 0, by2 = horizon + 8 + rnd() * (H - horizon - 12) | 0; x.fillStyle = "#8a8a80"; x.fillRect(bx2, by2, 7, 4); x.fillStyle = "#b0b0a4"; x.fillRect(bx2 + 1, by2, 4, 1); }
+}
 var ROOMS = {}, SKY = { wins:[] }, GLYPHS = [], DOLLS = [];
 function buildRooms(){
   var rnd, c, x, i;
@@ -1014,12 +1041,10 @@ function buildRooms(){
 
   /* ----- Hannah: the tournament ring ----- */
   rnd = mulberry(37); c = mk(W, H); x = c.getContext("2d");
-  var sk2 = x.createLinearGradient(0, 0, 0, 70); sk2.addColorStop(0, "#7ab8e8"); sk2.addColorStop(1, "#d8ecf8");
+  var sk2 = x.createLinearGradient(0, 0, 0, 70); sk2.addColorStop(0, "#6aaee8"); sk2.addColorStop(1, "#d8eef8");
   x.fillStyle = sk2; x.fillRect(0, 0, W, 70);
-  for (i = 0; i < 6; i++){ var mx = rnd() * W, mw = 40 + rnd() * 60, mh = 20 + rnd() * 26;
-    for (var yy = 0; yy < mh; yy++){ var hw = mw / 2 * (yy / mh); x.fillStyle = shade("#9a8a7a", .9 + (yy / mh) * .2); x.fillRect(mx - hw, 60 - mh + yy, hw * 2, 1); } }
-  x.fillStyle = "#b8a488"; x.fillRect(0, 56, W, H - 56);
-  rocks(x, 0, 56, W, H - 56, "#a89478", rnd, 140);
+  for (i = 0; i < 5; i++){ x.fillStyle = "rgba(255,255,255,.85)"; var cx0 = rnd() * W, cy0 = 6 + rnd() * 20; x.fillRect(cx0, cy0, 18 + rnd() * 16, 3); x.fillRect(cx0 + 4, cy0 - 2, 10, 2); }
+  grassland(x, rnd, 56);
   // the ring, raised
   var RX = 40, RY = 66, RW = 176, RH = 128;
   x.fillStyle = "#8a8070"; x.fillRect(RX - 2, RY + RH, RW + 4, 8);
@@ -1083,8 +1108,8 @@ function buildBattleBGs(){
       var g2 = x.createLinearGradient(0, 0, 0, 120); g2.addColorStop(0, "#6aa8e0"); g2.addColorStop(1, "#d8ecf8");
       x.fillStyle = g2; x.fillRect(0, 0, W, 120);
       for (i = 0; i < 5; i++){ var mx = rnd() * W, mw = 70 + rnd() * 90, mh = 40 + rnd() * 50;
-        for (var yy = 0; yy < mh; yy++){ var hw = mw / 2 * (yy / mh); x.fillStyle = shade("#8a7a68", .85 + (yy / mh) * .25); x.fillRect(mx - hw, 120 - mh + yy, hw * 2, 1); } }
-      x.fillStyle = "#b8a488"; x.fillRect(0, 120, W, H - 120); rocks(x, 0, 120, W, 104, "#a89478", rnd, 70);
+        for (var yy = 0; yy < mh; yy++){ var hw = mw / 2 * (yy / mh); x.fillStyle = shade("#7a8a9a", .85 + (yy / mh) * .25); x.fillRect(mx - hw, 120 - mh + yy, hw * 2, 1); } }
+      grassland(x, rnd, 116);
       for (i = 0; i < 7; i++){ x.fillStyle = shade("#e0d8c8", .9 + rnd() * .15); x.fillRect(0, 150 + i * 11, W, 10); }
     } else if (id === "myvi"){
       x.fillStyle = "#14142a"; x.fillRect(0, 0, W, H);
@@ -1274,17 +1299,37 @@ function battleSprite(who){
     case "myvi": return SPR.myv.down; case "lightbox": return B && !B.lbOn ? SPR.lbOff : SPR.lbOn;
   }
 }
+var ART = ASSETS.art || {}, POSE_H = { challenge:90, attack:82, defeat:76 };
+function foeArt(){
+  var el = $("foeArt"), art = B && ART[B.opp];
+  if (!art || S.mode !== "battle"){ if (!el.hidden) el.hidden = true; return false; }
+  var pose = B.pose || "challenge", src = art[pose] || art.challenge;
+  if (el.dataset.src !== src){ el.src = src; el.dataset.src = src; }
+  var nw = el.naturalWidth || 400, nh = el.naturalHeight || 420, h = POSE_H[pose] || 90, w = h * nw / nh;
+  var cx = 186 + B.oppX + (B.oppShake > 0 ? Math.sin(S.t * 80) * 3 : 0), feet = 103;
+  el.style.left = ((cx - w / 2) / W * 100) + "%"; el.style.top = ((feet - h) / H * 100) + "%";
+  el.style.width = (w / W * 100) + "%"; el.style.height = (h / H * 100) + "%";
+  el.style.opacity = B.oppAlpha; el.style.visibility = B.oppBlink > 0 && Math.floor(S.t * 20) % 2 ? "hidden" : "visible";
+  el.hidden = false;
+  return true;
+}
+function setPose(p){ if (B) B.pose = p; }
+function cutIn(){
+  var art = B && ART[B.opp], el = $("cutin"); if (!art || !art.attack || REDUCED) return;
+  el.src = art.attack; el.hidden = false; el.classList.remove("go"); void el.offsetWidth; el.classList.add("go");
+  clearTimeout(el._t); el._t = setTimeout(function(){ el.hidden = true; el.classList.remove("go"); }, 1300);
+}
 function renderBattle(){
-  var id = B.opp;
+  var id = B.opp, hasArt = foeArt();
   g.drawImage(BATBG[id], 0, 0);
   // opponent (3x), feet on the far platform
   var os = battleSprite(id), osc = 3, ow = os.width * osc, oh = os.height * osc;
   var ox = 186 - ow / 2 + B.oppX + (B.oppShake > 0 ? Math.round(Math.sin(S.t * 80) * 3) : 0), oy = 102 - oh + B.oppDrop;
-  if (!(B.oppBlink > 0 && Math.floor(S.t * 20) % 2)){
+  if (!hasArt && !(B.oppBlink > 0 && Math.floor(S.t * 20) % 2)){
     g.save(); g.beginPath(); g.rect(0, 0, W, 104); g.clip();
     g.globalAlpha = B.oppAlpha; blit(os, ox, oy, false, osc);
     if (id === "lightbox" && B.lbOn) lbFace(g, ox, oy, osc, B.talk && Math.floor(S.t * 9) % 2 === 0, B.lbMood);
-    if (id === "matilda") blit(SPR.buddy.front, ox + 12 * osc, oy + 1 * osc, false, osc);
+    if (id === "matilda" && !hasArt) blit(SPR.buddy.front, ox + 12 * osc, oy + 1 * osc, false, osc);
     g.restore(); g.globalAlpha = 1;
   }
   if (id === "lightbox" && B.lbOn){ g.save(); g.globalCompositeOperation = "lighter";
@@ -1308,7 +1353,7 @@ function render(){
   var sh = S.shake > 0 && !REDUCED ? Math.round((Math.random() - .5) * 5) : 0, sv = S.shake > 0 && !REDUCED ? Math.round((Math.random() - .5) * 3) : 0;
   g.setTransform(1, 0, 0, 1, sh, sv);
   g.fillStyle = "#000"; g.fillRect(-4, -4, W + 8, H + 8);
-  if (S.mode === "battle" && B) renderBattle(); else renderRoom();
+  if (S.mode === "battle" && B) renderBattle(); else { renderRoom(); if (!$("foeArt").hidden) $("foeArt").hidden = true; }
   g.setTransform(1, 0, 0, 1, 0, 0);
   if (S.wipe > 0){ // pixelated wipe: 16x16 blocks in a shuffled order
     if (!S.wipeOrder){ var o = []; for (var i = 0; i < 16 * 14; i++) o.push(i); S.wipeOrder = shuffle(o); }
@@ -1681,7 +1726,7 @@ async function battleTransition(id){
   await flashes(3);
   SFX.play("wipe"); S.wipeOrder = null;
   await tween(function(k){ S.wipe = k; }, 650);
-  B = { opp:id, hp:6, hearts:3, k:0, oppX:170, meX:-170, oppDrop:0, oppAlpha:1, meDrop:0, oppShake:0, meShake:0, oppBlink:0, meBlink:0, hitFx:0, lbOn:true, lbMood:"", talk:false };
+  B = { opp:id, pose:"challenge", hp:6, hearts:3, k:0, oppX:170, meX:-170, oppDrop:0, oppAlpha:1, meDrop:0, oppShake:0, meShake:0, oppBlink:0, meBlink:0, hitFx:0, lbOn:true, lbMood:"", talk:false };
   S.mode = "battle"; S.parts = []; S.confetti = false; layout();
   S.wipeOrder = null; await sleep(120);
   await tween(function(k){ S.wipe = 1 - k; }, 450);
@@ -1704,7 +1749,7 @@ var BATTLE_INTRO = {
 function runStudy(c, num){
   return new Promise(function(res){
     var order = shuffle([0, 1, 2, 3]), wrong = 0, done = false;
-    $("sMeta").innerHTML = "STUDY " + num + " OF 6 <span>&middot; " + esc(c.modality) + "</span><br>" + esc(c.label);
+    $("sMeta").innerHTML = (c.patient ? '<span class="s-pt">' + esc(c.patient) + "</span>" : "") + "STUDY " + num + " OF 6 <span>&middot; " + esc(c.modality) + "</span><br>" + esc(c.label);
     $("sHist").textContent = c.history || ""; $("sQ").textContent = c.question || "What is the urgent finding?";
     $("sFb").textContent = ""; $("sFb").className = "s-fb"; $("sBack").hidden = true;
     var box = $("sOpts"); box.innerHTML = "";
@@ -1727,7 +1772,7 @@ function runStudy(c, num){
       wrong++; b.classList.add("bad"); b.disabled = true;
       B.hearts--; GAME.clean = false; saveGame();
       SFX.play("wrong"); setTimeout(function(){ SFX.play("heart"); }, 150);
-      battleHud(undefined, B.hearts); B.meShake = .4; B.meBlink = .6;
+      battleHud(undefined, B.hearts); B.meShake = .4; B.meBlink = .6; cutIn();
       var st = $("study"); st.classList.remove("shake"); void st.offsetWidth; st.classList.add("shake");
       if (B.hearts <= 0){
         done = true; S.study.choose = null; Array.prototype.forEach.call(box.children, function(x){ x.disabled = true; });
@@ -1755,7 +1800,7 @@ function reviewStudy(c){
   return new Promise(function(res){
     var box = $("sOpts"); box.innerHTML = "";
     c.options.forEach(function(o, i){ var b = document.createElement("button"); b.className = "opt" + (i === c.answer ? " good" : ""); b.disabled = true; b.innerHTML = "<kbd>" + (i === c.answer ? "&#10003;" : "&middot;") + "</kbd><span>" + esc(o) + "</span>"; box.appendChild(b); });
-    $("sMeta").innerHTML = "REVIEW <span>&middot; " + esc(c.modality) + "</span><br>" + esc(c.label);
+    $("sMeta").innerHTML = (c.patient ? '<span class="s-pt">' + esc(c.patient) + "</span>" : "") + "REVIEW <span>&middot; " + esc(c.modality) + "</span><br>" + esc(c.label);
     $("sHist").textContent = c.history || ""; $("sQ").textContent = c.question || "What is the urgent finding?";
     $("sFb").textContent = ""; $("sBack").hidden = false;
     S.study = { c:c, choose:null, review:res };
@@ -1828,7 +1873,7 @@ async function battle(id, retry){
   else for (var i = 0; i < BATTLE_INTRO[id].length; i++) await say("sys", BATTLE_INTRO[id][i]);
   for (B.k = 0; B.k < cases.length; B.k++){
     var c = cases[B.k];
-    if (B.k > 0) await say("sys", (id === "lightbox" ? "LIGHTBOX switches on study " : o.name + " sends out study ") + (B.k + 1) + "!");
+    if (B.k > 0){ setPose("attack"); await say("sys", (id === "lightbox" ? "LIGHTBOX switches on study " : o.name + " sends out study ") + (B.k + 1) + "!"); setPose("challenge"); }
     var ok = await runStudy(c, B.k + 1);
     if (!ok){
       // out of hearts: the graduate faints
@@ -1837,6 +1882,7 @@ async function battle(id, retry){
       await say("sys", playerName() + " is out of hearts!");
       if (!UNLOCKED.heartbreak) award("heartbreak");
       GAME.lost[id] = true; saveGame();
+      setPose("attack");
       await say(id === "lightbox" ? "lightbox" : id, LOSE_LINES[id]);
       boxes(false);
       return false;
@@ -1854,6 +1900,7 @@ async function battle(id, retry){
   // victory
   SFX.play("faint");
   if (id === "lightbox"){ B.lbMood = "sad"; await tween(function(k){ B.oppAlpha = 1 - k * .6; }, 700); }
+  else if (ART[id]){ B.oppBlink = .5; await sleep(350); setPose("defeat"); S.flash = .5; tween(function(k){ S.flash = .5 * (1 - k); }, 300); await sleep(400); }
   else await tween(function(k){ B.oppDrop = 70 * k; }, 700);
   await say("sys", o.tag + " has no studies left!");
   SFX.play("victory");

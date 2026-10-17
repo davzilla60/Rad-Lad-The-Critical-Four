@@ -126,7 +126,27 @@ CASES = [
     ph("han1", "hannah", "X-ray", "Abdominal X-ray, supine"),
     ph("han2", "hannah", "X-ray", "Chest X-ray, erect"),
     ph("han3", "hannah", "CT", "CT abdomen and pelvis, portal venous"),
-    ph("han4", "hannah", "CT", "CT aortogram"),
+    {
+        "id": "han4", "opponent": "hannah", "modality": "CT", "label": "CT aortogram, axial", "patient": "patient 4",
+        "history": "Adult with sudden tearing chest pain going through to the back.",
+        "question": "What is the urgent finding?",
+        "options": ["Stanford type A aortic dissection", "Stanford type B aortic dissection", "Abdominal aortic aneurysm", "Pulmonary embolism"],
+        "answer": 0,
+        "finding": "Aortic dissection involving the ascending aorta (Stanford type A), extending around the arch and down the descending and abdominal aorta.",
+        "clue": "Scroll from the top. The aorta has two channels: a brightly enhancing true lumen and a crescent of lower-density false lumen beside it. The ascending aorta, just above the heart, is involved, which makes it type A.",
+        "why": "Type A dissection is a surgical emergency. It can rupture, or extend into the coronary arteries or the aortic valve, and the risk of death rises by the hour without surgery. Phone the result through to the team immediately.",
+        "series": [{"label": "CTA", "dir": "han4/CTA"}],
+        "reveal": {
+            "series": [{"label": "CTA, aorta marked", "dir": "han4/CTA", "overlay_dir": "han4/CTA_mask", "start": 28}],
+            "lines": [
+                "There it is. Look at the ascending aorta: a bright true lumen with a darker crescent wrapped around it. That's the false lumen.",
+                "I've shaded the whole aorta so you can follow it. Scroll down and the false lumen keeps going, past the diaphragm and into the abdomen.",
+                "The ascending aorta is involved, so it's Stanford type A. Type B spares the ascending aorta.",
+                "Type A goes straight to the cardiothoracic surgeons. Pressure's on: phone it through now.",
+            ],
+        },
+        "source": "aortaseg60",
+    },
     ph("han5", "hannah", "CT", "CT abdomen and pelvis"),
     ph("han6", "hannah", "CT", "CT abdomen, arterial phase"),
     # My-Vi: musculoskeletal
@@ -191,6 +211,13 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "aortaseg60": {
+        "short": "El Rahal, Rotzinger & Fahrni (2026), AortaSeg-60, Zenodo",
+        "citation": "El Rahal, D., Rotzinger, D. C., & Fahrni, G. (2026). AortaSeg-60 (Version 1.1) [Data set]. Zenodo.",
+        "url": "https://doi.org/10.5281/zenodo.18147026",
+        "licence": "CC0 1.0", "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "changes": "averaged into 3 mm axial slabs, windowed and resized; the dataset's aorta segmentation drawn as an overlay",
+    },
     "isles2022": {
         "short": "Hernandez Petzsche et al. (2022), ISLES 2022, Zenodo",
         "citation": "Hernandez Petzsche, M. R., de la Rosa, E., Wiest, R., Hanning, U., Wiestler, B., & Kirschke, J. S. (2022). "
@@ -275,7 +302,7 @@ def make_overlay(mask_path, size, out_path):
 
 
 def data_uri(p):
-    mime = "image/png" if p.suffix == ".png" else "image/jpeg"
+    mime = {".png": "image/png", ".webp": "image/webp"}.get(p.suffix, "image/jpeg")
     return f"data:{mime};base64," + base64.b64encode(p.read_bytes()).decode()
 
 
@@ -302,6 +329,12 @@ def main():
         if n != 6: print(f"!! {o} has {n} case(s); the game expects 6"); bad = True
     if bad: sys.exit(1)
 
+    pool, pool_ix = [], {}
+    def ref(uri):
+        if preview: return uri
+        if uri not in pool_ix: pool_ix[uri] = len(pool); pool.append(uri)
+        return pool_ix[uri]
+
     def convert(c, series, prefix):
         out = []
         for si, s in enumerate(series):
@@ -315,8 +348,8 @@ def main():
                 if not has_colour(im): im = im.convert("L")
                 if max(im.size) > side: im.thumbnail((side, side), Image.LANCZOS)
                 p = d / f"{prefix}{si}_{k:03d}.jpg"
-                im.save(p, "JPEG", quality=88 if len(files) == 1 else 80, optimize=True)
-                imgs.append(f"assets/cases/{c['id']}/{p.name}" if preview else data_uri(p))
+                im.save(p, "JPEG", quality=88 if len(files) == 1 else 74, optimize=True)
+                imgs.append(f"assets/cases/{c['id']}/{p.name}" if preview else ref(data_uri(p)))
             entry = {"label": s["label"], "images": imgs}
             if "start" in s: entry["start"] = s["start"]
             if s.get("overlay_dir"):
@@ -326,7 +359,7 @@ def main():
                 for k, mf in enumerate(mfiles):
                     if Image.open(mf).convert("L").getextrema()[1] < 128: ovs.append(None); continue   # nothing on this slice
                     op = make_overlay(mf, Image.open(files[k]).size, d / f"{prefix}{si}_ov{k:03d}.png")
-                    ovs.append(f"assets/cases/{c['id']}/{op.name}" if preview else data_uri(op))
+                    ovs.append(f"assets/cases/{c['id']}/{op.name}" if preview else ref(data_uri(op)))
                 entry["overlays"] = ovs
             if s.get("overlay"):
                 if len(files) != 1: sys.exit(f"!! {c['id']}: an overlay needs a single-image series")
@@ -348,11 +381,15 @@ def main():
         src = c.get("source")
         used.update(src if isinstance(src, list) else [src] if src else [])
     sources = {k: v for k, v in SOURCES.items() if k in used}
-    assets = {"logo_mark": data_uri(A / "logo_mark.png")}
+    assets = {"logo_mark": data_uri(A / "logo_mark.png"), "art": {}}
+    for f in sorted((A / "art").glob("*_*.webp")):          # battle poses cut by tools/cut_poses.py
+        who, pose = f.stem.split("_", 1)
+        assets["art"].setdefault(who, {})[pose] = f"assets/art/{f.name}" if preview else data_uri(f)
     src = (ROOT / "game.html").read_text(encoding="utf-8")
     out = (src.replace("/*__CASES__*/[]", json.dumps(out_cases))
               .replace("/*__SOURCES__*/{}", json.dumps(sources))
-              .replace("/*__ASSETS__*/{}", json.dumps(assets)))
+              .replace("/*__ASSETS__*/{}", json.dumps(assets))
+              .replace("/*__POOL__*/[]", json.dumps(pool)))
     names = ["_preview.html"] if preview else ["index.html", "critical-four.embed.html"]
     for n in names:
         (ROOT / n).write_text(out, encoding="utf-8")

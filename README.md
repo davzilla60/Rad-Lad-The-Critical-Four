@@ -14,7 +14,7 @@ This is an embeddable, top-down pixel-art game in the style of the 90s Pokémon 
 |---|---|---|---|---|---|
 | 1 | Domonic | Chest, lines and tubes | City at night | A parody caped hero (teal suit, purple cape, domino mask, lungs on his chest). Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
 | 2 | Matilda | Neuro emergencies | Fox-doll room | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
-| 3 | Hannah | Abdominal and vascular | Stone tournament ring | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
+| 3 | Hannah | Abdominal and vascular | Stone tournament ring on a grassy plain | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
 | 4 | My-Vi | Musculoskeletal | Glyph chamber | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
 | 5 | The Lightbox | Mixed | Almost completely dark | Walk up and press A: *"What were you expecting—a radiologist?"*, then **CHAMPION LIGHTBOX** | Flickers and powers down; the lights come on, confetti falls, fanfare, and the banner **CONGRATULATIONS, RADIOGRAPHER!** |
 
@@ -102,11 +102,27 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 | Case | Opponent | Study | Answer | Images |
 |---|---|---|---|---|
 | dom1 | Domonic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
+| han4 | Hannah | **patient 4**: CT aortogram, 144 scrollable 3 mm axial slabs (aorta shaded after a correct answer) | Stanford type A aortic dissection | AortaSeg-60, Dissec_04 (El Rahal, Rotzinger & Fahrni 2026), [Zenodo](https://doi.org/10.5281/zenodo.18147026), CC0 1.0. Made with `tools/prep_ct_stack.py`. The overlay is the dataset's TotalSegmentator aorta mask, not the flap. |
 | mat1 | Matilda | MRI brain, scrollable DWI + FLAIR (72 axial slices; lesion shaded after a correct answer) | Acute left MCA territory infarct | ISLES 2022, sub-strokecase0003 (Hernandez Petzsche et al. 2022), [Zenodo](https://doi.org/10.5281/zenodo.7153326), CC BY 4.0. FLAIR resampled onto the DWI planes with `tools/prep_mr_stack.py`. ADC not used. |
 | myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
 | myv4 | My-Vi | Ankle, lateral (lateral and AP with the fracture outlined, shown after a correct answer) | Distal fibula fracture | FracAtlas IMG0002348 (lateral) and IMG0002347 (AP), Abedeen et al. 2023, [figshare](https://doi.org/10.6084/m9.figshare.22363012), CC BY 4.0. The overlay is the dataset's own fracture outline. |
 
 Image credits appear on each case's explanation card and in the page footer. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
+
+## Battle art
+
+The examiners' battle sprites come from the character sheets in `assets/src/art/`. `python tools/cut_poses.py` cuts the **challenge**, **attack** and **defeat** poses out of each sheet into `assets/art/`, and the build embeds them.
+- **Challenge:** standing in battle.
+- **Attack:** while each new study is sent out, when you run out of hearts, and as a quick cut-in across the study panel when you lose a heart.
+- **Defeat:** after their last study.
+
+The Lightbox has no sheet, so it stays pixel art. The characters in the rooms are still the small pixel sprites.
+
+A case can carry `"patient": "patient 4"`, which shows as a small heading above the study.
+
+## Scrollable CT from DICOM
+
+`tools/prep_ct_stack.py` averages a thin-slice CT into slabs (3 mm by default), windows it (600/150 for CTA), limits it to the labelled structure plus a margin, and writes per-slice masks from a matching SEG series.
 
 ## Scrollable MR from DICOM
 
