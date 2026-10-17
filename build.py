@@ -24,7 +24,7 @@ Usage:  python build.py            -> index.html + critical-four.embed.html (sel
 """
 import base64, json, re, sys
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = Path(__file__).parent
 A = ROOT / "assets"
@@ -58,13 +58,35 @@ def ph(cid, opp, modality, label):
 #   finding / clue / why   the three-part explanation shown once the case is solved
 #   series    list of series in viewing order (see top of file)
 #   source    key into SOURCES for the image credit (or a list of keys), or None
+#   overlay   optional, on a single-image series: a white-on-black mask (same framing as
+#             the image) shown as a tinted overlay the player can switch on and off
 #   reveal    optional: {"series": [...], "lines": [...]} shown after a correct answer,
 #             with the examiner talking the player through it (e.g. the AP that shows
 #             the fracture behind a soft-tissue sign)
 # ---------------------------------------------------------------------------------
 CASES = [
     # Domonic: chest pathology and chest lines/tubes
-    ph("dom1", "domonic", "X-ray", "Chest X-ray, PA"),
+    {
+        "id": "dom1", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, PA",
+        "history": "Young adult with sudden right-sided chest pain and shortness of breath.",
+        "question": "What is the urgent finding?",
+        "options": ["Right pneumothorax", "Left pneumothorax", "Skin fold", "Normal chest X-ray"],
+        "answer": 0,
+        "finding": "Right pneumothorax: air between the lung and the chest wall, from the apex down the lateral chest.",
+        "clue": "A thin white line (the visceral pleura) runs parallel to the chest wall, with no lung markings beyond it. A skin fold usually runs past the edge of the chest and has lung markings on both sides.",
+        "why": "A pneumothorax can enlarge, and a tension pneumothorax compromises breathing and circulation. The mediastinum here is central, so there is no sign of tension, but the finding still needs escalating straight away.",
+        "series": [{"label": "PA", "file": "dom1/xray.jpg"}],
+        "reveal": {
+            "series": [{"label": "PA, marked", "file": "dom1/xray.jpg", "overlay": "dom1/mask.jpg"}],
+            "lines": [
+                "This is where it was hiding. I've shaded the air outside the right lung.",
+                "Trace the thin white pleural line from the apex down the side of the chest. Beyond it, there are no lung markings at all.",
+                "Switch the overlay off with the OVERLAY button and find the edge yourself.",
+                "The trachea and heart haven't shifted, so there's no tension. It still gets escalated straight away. Nothing slips past me.",
+            ],
+        },
+        "source": "ptx498",
+    },
     ph("dom2", "domonic", "X-ray", "Chest X-ray, AP supine"),
     ph("dom3", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
     ph("dom4", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
@@ -123,6 +145,13 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "ptx498": {
+        "citation": "Wang, Y. (2021). PTX-498: A multi-center pneumothorax segmentation chest X-ray image dataset [Data set]. "
+                    "In Neurocomputing (Version v2-fix, Vol. 454, pp. 201-211). Zenodo.",
+        "url": "https://doi.org/10.5281/zenodo.8266529",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG; segmentation mask rendered as a coloured overlay",
+    },
     "hellerhoff_pq_lat": {
         "citation": "Hellerhoff. Pronator quadratus - fatpad-sign pathologisch bei Fraktur Erwachsener (2010). Wikimedia Commons.",
         "url": "https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png",
@@ -162,6 +191,21 @@ def has_colour(im):
     sm = im.copy(); sm.thumbnail((256, 256))
     b = sm.tobytes()
     return any(max(b[i:i + 3]) - min(b[i:i + 3]) > 40 for i in range(0, len(b), 3))
+
+
+OV_FILL, OV_EDGE = (255, 70, 90), (255, 230, 120)   # same look as Pneumo Patrol / Spot the Pneumothorax
+
+
+def make_overlay(mask_path, size, out_path):
+    """White-on-black mask -> transparent PNG: tinted fill plus a bright outline of the edge."""
+    m = Image.open(mask_path).convert("L").resize(size, Image.LANCZOS)
+    m = m.point(lambda v: 255 if v > 127 else 0).filter(ImageFilter.MedianFilter(5))
+    edge = ImageChops.subtract(m.filter(ImageFilter.MaxFilter(7)), m.filter(ImageFilter.MinFilter(3)))
+    out = Image.new("RGBA", m.size, OV_FILL + (0,))
+    out.putalpha(m.point(lambda v: int(v * 0.42)))
+    e = Image.new("RGBA", m.size, OV_EDGE + (0,)); e.putalpha(edge)
+    Image.alpha_composite(out, e).save(out_path, optimize=True)
+    return out_path
 
 
 def data_uri(p):
@@ -207,7 +251,12 @@ def main():
                 p = d / f"{prefix}{si}_{k:03d}.jpg"
                 im.save(p, "JPEG", quality=88 if len(files) == 1 else 80, optimize=True)
                 imgs.append(f"assets/cases/{c['id']}/{p.name}" if preview else data_uri(p))
-            out.append({"label": s["label"], "images": imgs})
+            entry = {"label": s["label"], "images": imgs}
+            if s.get("overlay"):
+                if len(files) != 1: sys.exit(f"!! {c['id']}: an overlay needs a single-image series")
+                op = make_overlay(A / "src" / s["overlay"], im.size, d / f"{prefix}{si}_overlay.png")
+                entry["overlays"] = [f"assets/cases/{c['id']}/{op.name}" if preview else data_uri(op)]
+            out.append(entry)
         return out
 
     out_cases = []

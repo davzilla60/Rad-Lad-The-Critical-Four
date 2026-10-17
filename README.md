@@ -91,6 +91,8 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
                "lines": ["Now look at the AP view...", "..."]},
 ```
 
+   A single-image series can carry an `"overlay"`: a white-on-black mask, framed the same as the image (see `dom1`). It's drawn as a red fill with a gold edge, the same look as Pneumo Patrol, and the player can switch it on and off with the **OVERLAY** button.
+
    Images with coloured annotation, such as a red arrow, are kept in colour. Everything else is converted to greyscale.
 
 3. Run `python build.py`. It checks that every opponent has six cases and every case has four options and a valid answer. `python build.py --preview` writes `_preview.html`, which loads images from `assets/` for quicker local testing.
@@ -99,6 +101,7 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 
 | Case | Opponent | Study | Answer | Images |
 |---|---|---|---|---|
+| dom1 | Domonic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
 | myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
 
 Image credits appear on each case's explanation card and in the page footer. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
