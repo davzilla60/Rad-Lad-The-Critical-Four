@@ -128,8 +128,8 @@ CASES = [
         "why": "Glioblastoma is the commonest primary malignant brain tumour in adults and grows quickly. Swelling and mass effect can raise the pressure inside the skull, so it needs prompt referral to neurosurgery and oncology.",
         "series": [{"label": "T1 post-contrast", "dir": "mat2/T1c"}, {"label": "FLAIR", "dir": "mat2/FLAIR"}],
         "reveal": {
-            "series": [{"label": "T1 post-contrast, marked", "dir": "mat2/T1c", "overlay_dir": "mat2/T1c_mask", "start": 52},
-                       {"label": "FLAIR, marked", "dir": "mat2/FLAIR", "overlay_dir": "mat2/FLAIR_mask", "start": 52}],
+            "series": [{"label": "T1 post-contrast, marked", "dir": "mat2/T1c", "overlay_dir": "mat2/T1c_mask", "start": 105},
+                       {"label": "FLAIR, marked", "dir": "mat2/FLAIR", "overlay_dir": "mat2/FLAIR_mask", "start": 105}],
             "lines": [
                 "There it is, in the left parietal lobe. See that thick, ragged ring of enhancement on the post-contrast T1?",
                 "The dark middle is necrosis: the tumour has outgrown its blood supply. That's a big hint it's high grade.",
@@ -258,7 +258,7 @@ SOURCES = {
                     "The University of California San Francisco Preoperative Diffuse Glioma MRI (UCSF-PDGM) (Version 5) [dataset]. The Cancer Imaging Archive.",
         "url": "https://doi.org/10.7937/tcia.bdgf-8v37",
         "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
-        "changes": "every second 1 mm axial slice, windowed to 8-bit and cropped; tumour segmentation drawn as an overlay; diagnosis from the collection's clinical metadata",
+        "changes": "all 155 axial slices (1 mm), windowed to 8-bit and cropped; tumour segmentation drawn as an overlay; diagnosis from the collection's clinical metadata",
     },
     "kidneystone_axial": {
         "short": "Abdalla, Mahmood & Hama (2025), Mendeley Data",
