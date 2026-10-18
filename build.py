@@ -124,7 +124,27 @@ CASES = [
     ph("mat6", "matilda", "MRI", "MRI spine, sagittal T2"),
     # Hannah: abdominal and vascular emergencies
     ph("han1", "hannah", "X-ray", "Abdominal X-ray, supine"),
-    ph("han2", "hannah", "X-ray", "Chest X-ray, erect"),
+    {
+        "id": "han2", "opponent": "hannah", "modality": "CT", "label": "CT kidneys, ureters and bladder (non-contrast), axial", "patient": "image 23",
+        "history": "Adult with left loin pain coming in waves, spreading to the groin, and blood in the urine.",
+        "question": "What is the finding?",
+        "options": ["Left renal calculi", "Right ureteric calculus", "Gallstones", "Normal study"],
+        "answer": 0,
+        "finding": "Stones in the collecting system of the left kidney. There is also a tiny stone in the right kidney.",
+        "clue": "With no contrast given, stones are the brightest things in the kidney, almost as bright as bone. The cluster sits in the left kidney (on the image's right). Check the other kidney too.",
+        "why": "Most kidney stones are managed without emergency treatment, but a stone that blocks the kidney is urgent, and a blocked kidney with infection is an emergency needing drainage. Look for a dilated collecting system and follow the ureter down to the bladder.",
+        "series": [{"label": "Axial", "file": "han2/image23.jpg"}],
+        "reveal": {
+            "series": [{"label": "Axial, marked", "file": "han2/image23.jpg", "overlay": "han2/image23_mask.png"}],
+            "lines": [
+                "Spot on. Those bright clumps in the left kidney are stones sitting in the collecting system.",
+                "No contrast was given, so anything that bright inside the kidney is calcium. Here, that means stones.",
+                "Did you catch the tiny one in the right kidney too? Always check both sides.",
+                "Next, look for a swollen, blocked kidney and follow the ureter down. A blocked, infected kidney can't wait.",
+            ],
+        },
+        "source": "kidneystone_axial",
+    },
     ph("han3", "hannah", "CT", "CT abdomen and pelvis, portal venous"),
     {
         "id": "han4", "opponent": "hannah", "modality": "CT", "label": "CT aortogram, axial", "patient": "patient 4",
@@ -211,6 +231,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "kidneystone_axial": {
+        "short": "Abdalla, Mahmood & Hama (2025), Mendeley Data",
+        "citation": "Abdalla, P. A., Mahmood, B. S., & Hama, N. R. (2025). Axial CT Imaging Dataset for AI-Powered Kidney Stone Detection: "
+                    "A Resource for Deep Learning Research. Mendeley Data, V1.",
+        "url": "https://doi.org/10.17632/fwhytt5mzd.1",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG; stones outlined as an overlay (drawn for this game, not part of the dataset)",
+    },
     "aortaseg60": {
         "short": "El Rahal, Rotzinger & Fahrni (2026), AortaSeg-60, Zenodo",
         "citation": "El Rahal, D., Rotzinger, D. C., & Fahrni, G. (2026). AortaSeg-60 (Version 1.1) [Data set]. Zenodo.",
