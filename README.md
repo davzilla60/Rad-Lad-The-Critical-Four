@@ -115,9 +115,9 @@ Each study shows its own full image credit while it's on screen: under the answe
 ## After the credits (spoilers)
 
 Once the Champion is beaten, the hall can be explored, and the title screen's **Continue** returns to it.
-1. **The switch:** a small plate on the back wall, at the far right next to the last alcove. Walk up to it and press Space/A, or tap it. No hint is ever shown.
+1. **The switch:** a small switch box on a post just right of the Lightbox's podium. It looks like the Lightbox's own on/off switch, and it's visible from the start, but it only does anything after the Champion is beaten. Walk up and press Space/A, or tap it. No hint is shown.
 2. **The passage:** a doorway opens in the left wall and leads to a vast hidden chamber with a giant decorated Easter egg and a thank-you plaque.
-3. **The egg:** walk to the door at its base. Inside, the hooded **Altrad** fades in, says "No, not yet." and "Soon.", then fades away. A thank-you card follows.
+3. **The egg:** walk to the door at its base. Inside, the hooded **Altrad** fades in (his illustration, `assets/src/art/altrad_source.webp`, fades in behind the dialogue), says "No, not yet." and "Soon.", then fades away. A thank-you card follows.
 4. **Beyond the Lightbox:** a hidden marker for entering the egg. It doesn't appear in the Markers menu at all until it's unlocked.
 
 ## Battle art
