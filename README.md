@@ -13,10 +13,10 @@ This is an embeddable, top-down pixel-art game in the style of the 90s Pokémon 
 | # | Opponent | Focus | Room | Intro | After defeat |
 |---|---|---|---|---|---|
 | 1 | Domonic | Chest, lines and tubes | City at night | A parody caped hero (teal suit, purple cape, domino mask, lungs on his chest). Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
-| 2 | Matilda | Neuro emergencies | Fox-doll room | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
+| 2 | Matilda | Neuro emergencies | Enchanted purple parlour: chandelier, candles, potion shelf, crystal ball, moonlit windows; four original plush fox-like creatures | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
 | 3 | Hannah | Abdominal and vascular | Stone tournament ring on a grassy plain | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
-| 4 | My-Vi | Musculoskeletal | Glyph chamber | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
-| 5 | The Lightbox | Mixed | Almost completely dark | Walk up and press A: *"What were you expecting—a radiologist?"*, then **CHAMPION LIGHTBOX** | Flickers and powers down; the lights come on, confetti falls, fanfare, and the banner **CONGRATULATIONS, RADIOGRAPHER!** |
+| 4 | My-Vi | Musculoskeletal | Star chamber: constellation mural, emerald braziers, floating crystals, a glowing rune circle and drifting motes | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
+| 5 | The Lightbox | Mixed | Pitch dark except the Lightbox; after the win, the alcove lightboxes and chandeliers light up one by one, revealing a grand hall | Walk up and press A: *"What were you expecting—a radiologist?"*, then **CHAMPION LIGHTBOX** | Flickers and powers down; the lights come on, confetti falls, fanfare, and the banner **CONGRATULATIONS, RADIOGRAPHER!** |
 
 4. **The battle.** The screen flashes, then a pixelated wipe. The graduate slides in from the left (back view) and the opponent from the right. Three hearts and six case icons appear, then each study opens in the study panel:
    - The study viewer handles single images, several views (tabs) and scrollable stacks. Scroll with the wheel, by dragging, with the slider or with ↑/↓. Zoom with Ctrl+wheel, pinch or +/−. **INV** inverts the image and **⛶** goes full screen.
@@ -45,6 +45,7 @@ Markers use the Rad-Lad "Marker Unlocked" stamp animation. The **MARKERS** butto
 | Scroll Model | Solve a scrollable CT/MRI study on the first attempt |
 | A Heartbreaking Interpretation | Lose all three hearts for the first time |
 | Read Another Day | Defeat an examiner after losing to them |
+| Beyond the Lightbox *(hidden entirely)* | Enter the concealed room inside the giant Easter egg |
 
 The marker icons are first drafts drawn in code (`MARK_ART` in `game.html`).
 
@@ -110,6 +111,14 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 | myv4 | My-Vi | Ankle, lateral (lateral and AP with the fracture outlined, shown after a correct answer) | Distal fibula fracture | FracAtlas IMG0002348 (lateral) and IMG0002347 (AP), Abedeen et al. 2023, [figshare](https://doi.org/10.6084/m9.figshare.22363012), CC BY 4.0. The overlay is the dataset's own fracture outline. |
 
 Each study shows its own full image credit while it's on screen: under the answers, on the explanation card and in the page footer. Outside a battle, the footer just says credits are shown with each study. Both files are CC BY-SA 3.0, so the converted copies in `assets/cases/` stay under that licence.
+
+## After the credits (spoilers)
+
+Once the Champion is beaten, the hall can be explored, and the title screen's **Continue** returns to it.
+1. **The switch:** a small plate on the back wall, at the far right next to the last alcove. Walk up to it and press Space/A, or tap it. No hint is ever shown.
+2. **The passage:** a doorway opens in the left wall and leads to a vast hidden chamber with a giant decorated Easter egg and a thank-you plaque.
+3. **The egg:** walk to the door at its base. Inside, the hooded **Altrad** fades in, says "No, not yet." and "Soon.", then fades away. A thank-you card follows.
+4. **Beyond the Lightbox:** a hidden marker for entering the egg. It doesn't appear in the Markers menu at all until it's unlocked.
 
 ## Battle art
 

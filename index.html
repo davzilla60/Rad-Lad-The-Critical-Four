@@ -524,6 +524,9 @@ var SFX = {
       case "power":   T(880, 55, 1.6, "sawtooth", .045); N(.3, .2, 1.3); break;
       case "buzz":    T(120, 120, .12, "sawtooth", .03); break;
       case "pop":     T(500, 1400, .07, "sine", .06); break;
+      case "click":   T(1500, 1500, .025, "square", .05); T(700, 700, .04, "square", .04, .05); break;
+      case "lamp":    T(90, 70, .1, "square", .06); T(1200, 1600, .12, "sine", .04, .04); break;
+      case "eerie":   T(110, 104, 2.4, "sine", .07); T(165, 158, 2.4, "sine", .04, .2); T(330, 300, 2, "triangle", .015, .5); break;
       case "fanfare": [[392,0],[523,.15],[659,.3],[784,.45],[659,.75],[784,.9],[1047,1.05]].forEach(function(p){ T(p[0], p[0], .26, "square", .05, p[1]); });
                       [[196,0],[262,.45],[330,.9],[523,1.05]].forEach(function(p){ T(p[0], p[0], .45, "triangle", .08, p[1]); });
                       [1319, 1568, 2093].forEach(function(f, i){ T(f, f, .5, "square", .035, 1.4 + i * .12); }); break;
@@ -753,41 +756,52 @@ function lbFace(ctx, x, y, s, talk, mood){
   if (talk) { F(9,11,4,3,c); } else { F(9,12,4,1,c); F(8,11,1,1,c); F(13,11,1,1,c); }
 }
 
-/* Eevee-inspired fox dolls (big, in Matilda's room) and her shoulder companion */
-var FOX = { b:"#a8703a", l:"#d89a58", d:"#6a4220", cr:"#f2e2c0", crD:"#d4c09a", ear:"#4a2a14" };
+/* Matilda's plush creatures: original fox-like designs (cream fur, lavender ruff,
+   purple-tipped ears and tail, a gold crescent on the brow, button eyes and stitching) */
+var FOX = { b:"#f4e8d6", l:"#fffaf0", d:"#c8b4a0", ruff:"#d8c0f0", ruffD:"#b49ad8", tip:"#9a5ad8", tipL:"#c890ff", moon:"#ffd25a", stitch:"#b8a690" };
 function foxDoll(view, twitch){
   return bake(22, 24, function(R){
     var F = FOX;
     if (view === "side"){
-      R(13,9,7,7,F.b); R(15,7,5,3,F.b); R(17,6,4,2,F.cr); // tail
-      R.tri(2,0,7,8,F.b,true); R(4,4,1,3,F.ear);
-      R(1,6,10,8,F.b); R(0,10,2,3,F.l); R(0,10,1,1,EYE); R(4,9,2,2,EYE); R(4,9,1,1,"#fff");
-      R(4,14,10,3,F.cr); R(3,13,2,2,F.cr); R(13,14,2,2,F.cr);
-      R(5,16,9,5,F.b); R(5,21,3,2,F.l); R(11,21,3,2,F.l);
+      R(13,9,7,7,F.b); R(15,7,5,3,F.b); R(17,5,4,3,F.tip); R(18,5,2,1,F.tipL);           // bushy tail, purple tip
+      R.tri(2,0,7,8,F.b,true); R(3,0,4,3,F.tip); R(4,4,1,3,F.tipL);
+      R(1,6,10,8,F.b); R(0,10,2,3,F.l); R(0,10,1,1,F.tip); R(4,8,3,3,EYE); R(4,8,1,1,"#fff"); R(6,6,2,1,F.moon);
+      R(4,14,10,3,F.ruff); R(3,13,2,2,F.ruff); R(13,14,2,2,F.ruff); R(4,16,10,1,F.ruffD);
+      R(5,17,9,4,F.b); R(9,17,1,4,F.stitch); R(5,21,3,2,F.l); R(11,21,3,2,F.l);
       return;
     }
-    R(16,11,5,7,F.b); R(18,9,4,3,F.cr); // tail behind
-    if (twitch){ R(1,4,6,3,F.b); R(2,5,3,1,F.ear); } else { R.tri(2,0,8,9,F.b,true); R(5,4,1,4,F.ear); }
-    R.tri(14,0,20,9,F.b,true); R(17,4,1,4,F.ear);
-    R(5,6,12,8,F.b); R(5,6,12,1,F.l);
-    R(7,9,2,2,EYE); R(13,9,2,2,EYE); R(7,9,1,1,"#fff"); R(13,9,1,1,"#fff"); R(10,12,2,1,EYE);
-    R(3,14,16,3,F.cr); R(2,13,2,2,F.cr); R(18,13,2,2,F.cr); R(6,16,10,1,F.crD);
-    R(6,17,10,4,F.b); R(6,21,3,2,F.l); R(13,21,3,2,F.l);
+    R(16,10,5,8,F.b); R(18,7,4,4,F.tip); R(19,7,2,1,F.tipL);                             // tail behind, purple tip
+    if (twitch){ R(1,4,6,3,F.b); R(1,4,2,3,F.tip); R(3,5,3,1,F.tipL); } else { R.tri(2,0,8,9,F.b,true); R(3,0,4,3,F.tip); R(5,4,1,4,F.tipL); }
+    R.tri(14,0,20,9,F.b,true); R(15,0,4,3,F.tip); R(17,4,1,4,F.tipL);
+    R(5,6,12,8,F.b); R(5,6,12,1,F.l); R(10,6,2,1,F.moon); R(9,7,1,1,F.moon); R(12,7,1,1,F.moon);   // gold crescent
+    R(7,9,3,3,EYE); R(12,9,3,3,EYE); R(7,9,1,1,"#fff"); R(12,9,1,1,"#fff"); R(10,12,2,1,F.tip);    // button eyes, little nose
+    R(3,14,16,3,F.ruff); R(2,13,2,2,F.ruff); R(18,13,2,2,F.ruff); R(6,16,10,1,F.ruffD);
+    R(6,17,10,4,F.b); R(11,17,1,4,F.stitch); R(6,21,3,2,F.l); R(13,21,3,2,F.l);
   });
 }
 function foxBuddy(view, f){
   return bake(10, 8, function(R){
     var F = FOX;
     if (view === "side"){
-      R(0,2,3,3,F.b); R(0,1,2,1,F.cr);       // tail
-      R(3,3,4,3,F.b); R(5,3,2,1,F.cr);
-      R(6,0,1,2,F.b); R(8,0,1,2,F.b); R(6,1,4,3,F.b); R(9,2,1,1,EYE);
+      R(0,2,3,3,F.b); R(0,1,2,2,F.tip);                     // tail
+      R(3,3,4,3,F.b); R(5,3,2,1,F.ruff);
+      R(6,0,1,2,F.tip); R(8,0,1,2,F.tip); R(6,1,4,3,F.b); R(9,2,1,1,EYE);
       if (f){ R(3,6,1,2,F.d); R(6,6,1,2,F.d); } else { R(4,6,1,2,F.d); R(5,6,1,2,F.d); }
       return;
     }
-    R(1,0,2,3,F.b); R(7,0,2,3,F.b); R(2,1,1,1,F.ear); R(7,1,1,1,F.ear);
-    R(2,2,6,4,F.b); R(3,3,1,1,EYE); R(6,3,1,1,EYE); R(4,5,2,1,F.cr); R(1,5,8,1,F.cr);
-    R(3,6,4,2,F.b); R(8,5,2,2,F.b);
+    R(1,0,2,3,F.b); R(7,0,2,3,F.b); R(1,0,2,1,F.tip); R(7,0,2,1,F.tip);
+    R(2,2,6,4,F.b); R(3,3,1,1,EYE); R(6,3,1,1,EYE); R(4,2,2,1,F.moon); R(1,5,8,1,F.ruff);
+    R(3,6,4,2,F.b); R(8,4,2,2,F.tip);
+  });
+}
+
+/* Altrad: a black hooded cloak, the face lost in shadow */
+function altrad(){
+  return bake(16, 24, function(R){
+    var K = "#0e0b14", E = "#2a2238", H2 = "#000000";
+    R(5,0,6,2,K); R(3,2,10,8,K); R(2,5,12,4,K); R(4,3,8,7,H2); R(4,3,8,1,E); R(3,4,1,5,E); R(12,4,1,5,E);  // hood + empty face
+    R(3,10,10,4,K); R(2,14,12,6,K); R(1,19,14,5,K); R(3,10,1,13,E); R(12,10,1,13,E); R(1,23,14,1,E);         // cloak
+    R(7,11,2,10,"#161220");
   });
 }
 
@@ -846,6 +860,12 @@ var MARK_ART = {
     for (var y = 11; y < 18; y++){ var w = 17 - y; R(10 - w + 1, y, w * 2 - 2, 1, "#d83a5a"); }
     R.line([[10,5],[9,8],[11,11],[9,14],[10,17]], "#14101e"); R(5,6,2,2,"#ff9ab0");
   },
+  beyond: function(R){
+    for (var y = 0; y < 18; y++){ var w = Math.round(Math.sqrt(1 - Math.pow((y - 10) / 10, 2)) * (y < 10 ? 6.5 : 8)); R(10 - w, y + 1, w * 2, 1, "#2a1a40"); }
+    R(5,8,10,2,"#e0b040"); R(5,12,10,1,"#9a5ad8"); R(6,14,8,1,"#e0b040");
+    R(9,10,2,3,"#ffe9a8"); R(8,13,4,4,"#ffe9a8"); R(9,14,2,3,"#120a1a");            // a little glowing door
+    [[3,3],[16,5],[2,15],[17,16]].forEach(function(q){ R(q[0],q[1],1,1,"#ffd25a"); });
+  },
   readagain: function(R){
     tile(R, "#8a5a2a", "#4a2a10");
     for (var a = 40; a < 320; a += 8){ R(Math.round(10 + Math.cos(a * Math.PI / 180) * 5), Math.round(10 + Math.sin(a * Math.PI / 180) * 5), 1, 1, "#ffe0a0"); }
@@ -862,7 +882,7 @@ function buildSprites(){
   SPR.mat = { down:person(MATILDA,"down",0), stance:person(MATILDA,"down",0,"stance"), side:person(MATILDA,"side",0), wave:person(MATILDA,"down",0,"wave") };
   SPR.han = { down:person(HANNAH,"down",0), stance:person(HANNAH,"down",0,"stance"), hand:person(HANNAH,"down",0,"hand"), cross:person(HANNAH,"down",0,"cross") };
   SPR.myv = { down:person(MYVI,"down",0), up:person(MYVI,"down",0,"up"), wave:person(MYVI,"down",0,"wave") };
-  SPR.lbOn = lightbox(true); SPR.lbOff = lightbox(false);
+  SPR.lbOn = lightbox(true); SPR.lbOff = lightbox(false); SPR.altrad = altrad();
   SPR.doll = { side:foxDoll("side"), front:foxDoll("front"), twitch:foxDoll("front", true) };
   SPR.buddy = { front:foxBuddy("front"), side:[foxBuddy("side",0), foxBuddy("side",1)] };
   Object.keys(MARK_ART).forEach(function(k){ SPR["m_" + k] = bake(20, 20, MARK_ART[k]); });
@@ -895,7 +915,9 @@ var MARKERS = [
   { id:"noguess",   title:"First, Do No Guessing",          how:"Complete all 30 cases correctly on the first attempt", bonus:true },
   { id:"scroll",    title:"Scroll Model",                   how:"Solve a scrollable CT or MRI case on the first attempt", bonus:true },
   { id:"heartbreak",title:"A Heartbreaking Interpretation", how:"Lose all three hearts for the first time", bonus:true },
-  { id:"readagain", title:"Read Another Day",               how:"Defeat an examiner after losing to them", bonus:true }
+  { id:"readagain", title:"Read Another Day",               how:"Defeat an examiner after losing to them", bonus:true },
+  // completely invisible in the Markers menu until it is unlocked
+  { id:"beyond",    title:"Beyond the Lightbox",            how:"You weren't supposed to find this yet.", sub:"Secret achievement \u2022 Hidden marker \u2022 You weren't supposed to find this yet.", hidden:true }
 ];
 function markerById(id){ return MARKERS.filter(function(m){ return m.id === id; })[0]; }
 
@@ -973,7 +995,7 @@ function grassland(x, rnd, horizon){
   for (i = 0; i < 70; i++){ var tx = rnd() * W | 0, ty = horizon + 4 + rnd() * (H - horizon - 4) | 0; x.fillStyle = "#3a7a2a"; x.fillRect(tx, ty, 1, 3); x.fillRect(tx + 2, ty + 1, 1, 2); x.fillStyle = "#7acc5a"; x.fillRect(tx + 1, ty - 1, 1, 3); }
   for (i = 0; i < 6; i++){ var bx2 = rnd() * W | 0, by2 = horizon + 8 + rnd() * (H - horizon - 12) | 0; x.fillStyle = "#8a8a80"; x.fillRect(bx2, by2, 7, 4); x.fillStyle = "#b0b0a4"; x.fillRect(bx2 + 1, by2, 4, 1); }
 }
-var ROOMS = {}, SKY = { wins:[] }, GLYPHS = [], DOLLS = [];
+var ROOMS = {}, SKY = { wins:[] }, GLYPHS = [], DOLLS = [], MATROOM = {}, MYROOM = {}, LBROOM = {};
 function buildRooms(){
   var rnd, c, x, i;
   /* ----- examination hall ----- */
@@ -1026,25 +1048,62 @@ function buildRooms(){
   [[30, 44], [210, 44]].forEach(function(g){ x.fillStyle = "#4a4e5e"; x.fillRect(g[0], g[1], 14, 7); x.fillRect(g[0] + 2, g[1] - 5, 8, 6); x.fillRect(g[0] + 1, g[1] - 7, 2, 3); x.fillRect(g[0] + 9, g[1] - 7, 2, 3); x.fillStyle = "#ff4040"; x.fillRect(g[0] + 4, g[1] - 3, 1, 1); x.fillRect(g[0] + 7, g[1] - 3, 1, 1); });
   ROOMS.domonic = { bg:c, ambient:.55, floor:[18, 60, 238, 206], lights:[{ x:128, y:30, r:60, c:"120,140,255", steady:1 }] };
 
-  /* ----- Matilda: the doll room ----- */
+  /* ----- Matilda: the enchanted parlour ----- */
   rnd = mulberry(23); c = mk(W, H); x = c.getContext("2d");
-  x.fillStyle = "#5a3a6a"; x.fillRect(16, 56, 224, 152);
-  for (i = 0; i < 260; i++){ x.fillStyle = rnd() < .5 ? "#64427a" : "#52345e"; x.fillRect(16 + rnd() * 224 | 0, 56 + rnd() * 152 | 0, 2, 1); }
-  x.fillStyle = "#7a4a8a";
-  for (var a = 0; a < 360; a += 1){ x.fillRect(128 + Math.cos(a * Math.PI / 180) * 54 | 0, 136 + Math.sin(a * Math.PI / 180) * 34 | 0, 2, 2); }
-  x.fillStyle = "#e8a0d0"; for (a = 0; a < 360; a += 10){ x.fillRect(128 + Math.cos(a * Math.PI / 180) * 50 | 0, 136 + Math.sin(a * Math.PI / 180) * 30 | 0, 1, 1); }
-  bricks(x, 0, 0, W, 56, "#c8a0d8", rnd, 32, 14);
-  for (i = 0; i < 14; i++){ x.fillStyle = i % 2 ? "#d8b8e8" : "#c8a0d8"; x.fillRect(i * 20, 0, 10, 50); }
-  x.fillStyle = "#8a5a4a"; x.fillRect(20, 30, 60, 3); x.fillRect(176, 30, 60, 3);
-  [[24, "#e8a0c0"], [36, "#a0d0e8"], [50, "#f0e090"], [64, "#a8703a"], [182, "#a8703a"], [196, "#c0e0a0"], [212, "#e8a0c0"], [224, "#a0a0e8"]].forEach(function(t){
-    x.fillStyle = t[1]; x.fillRect(t[0], 22, 8, 8); x.fillRect(t[0] + 1, 19, 2, 3); x.fillRect(t[0] + 5, 19, 2, 3); x.fillStyle = EYE; x.fillRect(t[0] + 2, 25, 1, 1); x.fillRect(t[0] + 5, 25, 1, 1); });
-  x.fillStyle = "#6a3a5a"; x.fillRect(0, 50, W, 6); x.fillStyle = "#8a5a7a"; x.fillRect(0, 50, W, 1);
-  doorFrame(x, "#8a5a4a");
-  frameWalls(x, rnd, "#c8a0d8", "#8a6a9a");
+  // parquet border, plush carpet with a gold-edged medallion rug
+  for (i = 0; i < 19; i++){ x.fillStyle = i % 2 ? "#4a2c50" : "#42264a"; x.fillRect(16, 56 + i * 8, 224, 8); x.fillStyle = "#2e1834"; x.fillRect(16 + (i * 53 % 200), 56 + i * 8, 1, 8); }
+  x.fillStyle = "#5a2e78"; x.fillRect(26, 62, 204, 140);
+  for (i = 0; i < 600; i++){ x.fillStyle = rnd() < .5 ? "#663688" : "#4e2868"; x.fillRect(26 + rnd() * 204 | 0, 62 + rnd() * 140 | 0, 1, 1); }
+  x.strokeStyle = "#e0b040"; x.lineWidth = 1; x.strokeRect(28.5, 64.5, 199, 135); x.strokeStyle = "#9a6ad0"; x.strokeRect(31.5, 67.5, 193, 129);
+  [[36, 72], [220, 72], [36, 192], [220, 192]].forEach(function(q){ x.fillStyle = "#e0b040"; x.fillRect(q[0] - 3, q[1], 7, 1); x.fillRect(q[0], q[1] - 3, 1, 7); x.fillRect(q[0] - 1, q[1] - 1, 3, 3); });
+  for (var rr = 0; rr < 5; rr++){ x.fillStyle = ["#e0b040", "#6a2490", "#b058d8", "#4a1868", "#2e0e44"][rr]; x.beginPath(); x.ellipse(128, 138, 64 - rr * 7, 40 - rr * 5, 0, 0, Math.PI * 2); x.fill(); }
+  x.fillStyle = "#ffd25a"; for (var a = 0; a < 360; a += 30){ x.fillRect(128 + Math.cos(a * Math.PI / 180) * 44 | 0, 138 + Math.sin(a * Math.PI / 180) * 27 | 0, 2, 2); }
+  x.fillStyle = "#f0c8ff"; x.fillRect(124, 138, 9, 1); x.fillRect(128, 134, 1, 9); x.fillRect(126, 136, 5, 5);
+  // back wall: damask wallpaper, gold dado rail, panelled wainscot
+  x.fillStyle = "#3a1a52"; x.fillRect(0, 0, W, 56);
+  for (var yy = 0; yy < 40; yy += 8) for (var xx = (yy / 8 % 2) * 8; xx < W; xx += 16){ x.fillStyle = "#4e2a6a"; x.fillRect(xx + 3, yy + 1, 2, 6); x.fillRect(xx + 1, yy + 3, 6, 2); x.fillStyle = "#7a4a9a"; x.fillRect(xx + 3, yy + 3, 2, 2); }
+  x.fillStyle = "#2a1238"; x.fillRect(0, 40, W, 16); for (xx = 0; xx < W; xx += 12){ x.fillStyle = "#3a1a4a"; x.fillRect(xx + 1, 42, 10, 12); x.fillStyle = "#4a2a5a"; x.fillRect(xx + 1, 42, 10, 1); }
+  x.fillStyle = "#e0b040"; x.fillRect(0, 39, W, 1); x.fillRect(0, 55, W, 1);
+  // arched windows onto a starry night (stars twinkle at run time)
+  MATROOM.stars = [];
+  [[30, 6], [194, 6]].forEach(function(wn, k){
+    var wx = wn[0], wy = wn[1];
+    x.fillStyle = "#e0b040"; x.fillRect(wx - 2, wy + 4, 36, 31); x.beginPath(); x.ellipse(wx + 16, wy + 5, 18, 9, 0, Math.PI, 0); x.fill();
+    x.fillStyle = "#0a0824"; x.fillRect(wx, wy + 5, 32, 28); x.beginPath(); x.ellipse(wx + 16, wy + 5, 16, 7, 0, Math.PI, 0); x.fill();
+    var sg = x.createLinearGradient(0, wy, 0, wy + 33); sg.addColorStop(0, "rgba(40,30,110,0)"); sg.addColorStop(1, "rgba(90,50,150,.6)"); x.fillStyle = sg; x.fillRect(wx, wy + 5, 32, 28);
+    if (!k){ x.fillStyle = "#fff4d0"; x.beginPath(); x.arc(wx + 9, wy + 11, 4, 0, Math.PI * 2); x.fill(); x.fillStyle = "#0a0824"; x.beginPath(); x.arc(wx + 11, wy + 10, 3.5, 0, Math.PI * 2); x.fill(); }
+    for (var st = 0; st < 9; st++) MATROOM.stars.push([wx + 2 + rnd() * 28 | 0, wy + 3 + rnd() * 26 | 0, rnd() * 6]);
+    x.fillStyle = "#e0b040"; x.fillRect(wx + 15, wy - 2, 2, 35); x.fillRect(wx, wy + 18, 32, 2);
+    x.fillStyle = "#7a2aa0"; x.fillRect(wx - 6, wy - 2, 5, 38); x.fillRect(wx + 33, wy - 2, 5, 38); x.fillStyle = "#9a4ac8"; x.fillRect(wx - 6, wy - 2, 1, 38); x.fillRect(wx + 33, wy - 2, 1, 38);   // velvet curtains
+  });
+  // the door, in an ornate gold arch
+  doorFrame(x, "#5a2a6a");
+  x.strokeStyle = "#e0b040"; x.lineWidth = 2; x.beginPath(); x.ellipse(128, 24, 19, 9, 0, Math.PI, 0); x.stroke();
+  x.fillStyle = "#ffd25a"; x.fillRect(127, 12, 2, 4); x.fillRect(125, 13, 6, 2);
+  frameWalls(x, rnd, "#3a1a52", "#4a2a5e");
+  // velvet chaise (left), bookshelf of potions (right), crystal-ball table and candelabra by the door, glowing plants
+  x.fillStyle = "#1e0c24"; x.fillRect(22, 70, 42, 3);
+  x.fillStyle = "#c09030"; x.fillRect(25, 66, 2, 6); x.fillRect(58, 66, 2, 6);
+  x.fillStyle = "#7a2aa0"; x.fillRect(22, 56, 40, 7); x.fillRect(22, 62, 40, 6); x.fillStyle = "#9a4ac8"; x.fillRect(22, 62, 40, 2);
+  x.fillStyle = "#5a1a80"; for (var q = 26; q < 62; q += 8) x.fillRect(q, 58, 1, 1);
+  x.fillStyle = "#7a2aa0"; x.fillRect(19, 53, 6, 14); x.fillStyle = "#e0b040"; x.fillRect(19, 53, 6, 1); x.fillRect(22, 62, 40, 1);
+  x.fillStyle = "#2a1018"; x.fillRect(196, 36, 38, 38); x.fillStyle = "#4a2424"; x.fillRect(198, 38, 34, 34);
+  x.fillStyle = "#e0b040"; x.fillRect(195, 35, 40, 2);
+  [48, 60, 72].forEach(function(sy){ x.fillStyle = "#7a4030"; x.fillRect(198, sy, 34, 2);
+    for (var bx2 = 200; bx2 < 230; bx2 += 3){ if (rnd() < .2) continue; var bh = 6 + (rnd() * 4 | 0); x.fillStyle = pick(["#8a2a4a", "#2a5a8a", "#4a8a3a", "#8a6a2a", "#5a2a8a"]); x.fillRect(bx2, sy - bh, 2, bh); } });
+  MATROOM.potions = [[203, 44, "200,120,255"], [226, 44, "120,255,200"], [214, 56, "255,140,200"], [205, 68, "255,210,120"], [224, 68, "140,180,255"]];
+  MATROOM.potions.forEach(function(pt){ x.fillStyle = "rgba(" + pt[2] + ",1)"; x.fillRect(pt[0] - 1, pt[1] - 3, 3, 3); x.fillStyle = "#e8e0f0"; x.fillRect(pt[0], pt[1] - 5, 1, 2); });
+  x.fillStyle = "#c09030"; x.fillRect(91, 62, 2, 9); x.fillRect(87, 70, 10, 2); x.fillStyle = "#3a1a40"; x.fillRect(85, 60, 14, 3); x.fillStyle = "#e0b040"; x.fillRect(85, 60, 14, 1);
+  x.fillStyle = "#c09030"; x.fillRect(165, 56, 2, 15); x.fillRect(161, 70, 10, 2); x.fillRect(160, 55, 12, 2); x.fillRect(160, 52, 2, 3); x.fillRect(165, 51, 2, 4); x.fillRect(170, 52, 2, 3);
+  [[26, 198], [230, 198]].forEach(function(pl){ x.fillStyle = "#8a4a2a"; x.fillRect(pl[0] - 5, pl[1] - 6, 10, 7); x.fillStyle = "#e0b040"; x.fillRect(pl[0] - 5, pl[1] - 6, 10, 1);
+    for (var lf = 0; lf < 7; lf++){ x.fillStyle = lf % 2 ? "#3a8a5a" : "#5a3a8a"; x.fillRect(pl[0] - 6 + lf * 2, pl[1] - 12 - (lf % 3) * 2, 2, 6 + (lf % 3) * 2); } });
   DOLLS = [{ x:46, y:104, flip:false }, { x:210, y:104, flip:true }, { x:46, y:176, flip:false }, { x:210, y:176, flip:true }];
   DOLLS.forEach(function(d){ d.on = 0; d.bounce = 0; d.ear = 0; });
-  ROOMS.matilda = { bg:c, ambient:.12, floor:[18, 60, 238, 206],
-    solids: DOLLS.map(function(d){ return [d.x - 11, d.y - 8, d.x + 11, d.y]; }), lights:[] };
+  ROOMS.matilda = { bg:c, ambient:.3, floor:[18, 60, 238, 206],
+    solids: DOLLS.map(function(d){ return [d.x - 11, d.y - 8, d.x + 11, d.y]; }).concat([[18, 54, 64, 72], [194, 54, 236, 74], [84, 58, 100, 72], [158, 58, 174, 72], [18, 186, 34, 206], [222, 186, 238, 206]]),
+    lights:[{ x:128, y:12, r:84, c:"255,200,140", ph:.4 }, { x:76, y:26, r:40, c:"255,170,90", ph:1.1 }, { x:180, y:26, r:40, c:"255,170,90", ph:2.3 },
+            { x:92, y:56, r:32, c:"200,120,255", steady:1 }, { x:166, y:52, r:34, c:"255,170,90", ph:3.1 }, { x:46, y:22, r:34, c:"140,150,255", steady:1 },
+            { x:210, y:22, r:34, c:"140,150,255", steady:1 }, { x:215, y:56, r:30, c:"200,140,255", steady:1 }] };
 
   /* ----- Hannah: the tournament ring ----- */
   rnd = mulberry(37); c = mk(W, H); x = c.getContext("2d");
@@ -1066,28 +1125,100 @@ function buildRooms(){
   ROOMS.hannah = { bg:c, ambient:0, walk:[[RX + 2, RY + 6, RX + RW - 2, RY + RH], [114, RY + RH - 4, 142, 226]], lights:[] };
   ROOMS.hannah.ring = [RX, RY, RW, RH];
 
-  /* ----- My-Vi: the glyph chamber ----- */
+  /* ----- My-Vi: the observatory of runes ----- */
   rnd = mulberry(51); c = mk(W, H); x = c.getContext("2d");
-  slabs(x, 16, 56, 224, 152, "#2a2a48", rnd);
-  bricks(x, 0, 0, W, 56, "#3a3a62", rnd, 20, 10);
-  x.fillStyle = "#1a1a30"; x.fillRect(0, 50, W, 6);
-  frameWalls(x, rnd, "#2a2a48", "#30305a");
-  x.strokeStyle = "rgba(127,243,255,.12)"; x.lineWidth = 1;
-  x.beginPath(); x.arc(128, 136, 44, 0, Math.PI * 2); x.stroke(); x.beginPath(); x.arc(128, 136, 30, 0, Math.PI * 2); x.stroke();
-  for (i = 0; i < 6; i++){ var an = i * Math.PI / 3; x.beginPath(); x.moveTo(128 + Math.cos(an) * 30, 136 + Math.sin(an) * 30); x.lineTo(128 + Math.cos(an + Math.PI * 2 / 3) * 30, 136 + Math.sin(an + Math.PI * 2 / 3) * 30); x.stroke(); }
-  GLYPHS = [[30, 22], [62, 30], [98, 18], [158, 18], [194, 30], [226, 22], [28, 96], [228, 96], [28, 160], [228, 160], [84, 136], [172, 136]].map(function(p, k){
-    return { x:p[0], y:p[1], hx:p[0], hy:p[1], kind:k % 6, lit:0 };
+  slabs(x, 16, 56, 224, 152, "#22263c", rnd);
+  // back wall: a night-sky mural with constellations (one of them is a bone)
+  var sky2 = x.createLinearGradient(0, 0, 0, 56); sky2.addColorStop(0, "#04060f"); sky2.addColorStop(1, "#141a34"); x.fillStyle = sky2; x.fillRect(0, 0, W, 56);
+  MYROOM.stars = [];
+  for (i = 0; i < 90; i++){ var sx0 = rnd() * W | 0, sy0 = rnd() * 50 | 0; x.fillStyle = rnd() < .3 ? "#ffffff" : "#8a90c0"; x.fillRect(sx0, sy0, 1, 1); if (rnd() < .3) MYROOM.stars.push([sx0, sy0, rnd() * 6]); }
+  var CONST = [ [[16, 10], [24, 6], [34, 9], [40, 16], [52, 14]], [[58, 30], [66, 24], [74, 28], [70, 36], [58, 30]],
+                [[178, 8], [186, 12], [200, 12], [208, 8], [204, 16], [200, 12]], [[214, 30], [222, 26], [234, 32], [242, 26]],
+                // the bone: two knuckles joined by a shaft
+                [[76, 6], [80, 3], [84, 6], [80, 9], [76, 6]], [[80, 6], [98, 10]], [[98, 10], [102, 7], [106, 10], [102, 13], [98, 10]] ];
+  x.strokeStyle = "rgba(255,210,120,.35)"; x.lineWidth = 1;
+  CONST.forEach(function(L){ x.beginPath(); x.moveTo(L[0][0] + .5, L[0][1] + .5); for (var k = 1; k < L.length; k++) x.lineTo(L[k][0] + .5, L[k][1] + .5); x.stroke();
+    L.forEach(function(q){ x.fillStyle = "#fff6d0"; x.fillRect(q[0], q[1], 2, 2); MYROOM.stars.push([q[0], q[1], rnd() * 6, 1]); }); });
+  x.fillStyle = "#c8a040"; x.fillRect(0, 48, W, 1); x.fillStyle = "#14182c"; x.fillRect(0, 49, W, 7);
+  for (xx = 0; xx < W; xx += 10){ x.fillStyle = "#1e2440"; x.fillRect(xx + 1, 50, 8, 5); }
+  frameWalls(x, rnd, "#22263c", "#2a2e4a");
+  // pillars beside the doorway, each topped with a floating crystal (drawn at run time)
+  [100, 150].forEach(function(px0){ x.fillStyle = "#3a3e5a"; x.fillRect(px0, 18, 6, 40); x.fillStyle = "#5a5e7a"; x.fillRect(px0, 18, 1, 40); x.fillStyle = "#c8a040"; x.fillRect(px0 - 1, 16, 8, 2); x.fillRect(px0 - 1, 56, 8, 2); });
+  // the rune circle inlaid in the floor
+  x.strokeStyle = "rgba(200,160,64,.55)"; x.lineWidth = 1;
+  [50, 44, 30].forEach(function(r0){ x.beginPath(); x.ellipse(128, 136, r0, r0 * .62, 0, 0, Math.PI * 2); x.stroke(); });
+  for (i = 0; i < 6; i++){ var an = i * Math.PI / 3; x.beginPath(); x.moveTo(128 + Math.cos(an) * 30, 136 + Math.sin(an) * 30 * .62); x.lineTo(128 + Math.cos(an + Math.PI * 2 / 3) * 30, 136 + Math.sin(an + Math.PI * 2 / 3) * 30 * .62); x.stroke(); }
+  MYROOM.ring = [];
+  for (i = 0; i < 16; i++){ var ra = i / 16 * Math.PI * 2; MYROOM.ring.push({ x:128 + Math.cos(ra) * 47, y:136 + Math.sin(ra) * 47 * .62, kind:i % 6 }); }
+  // braziers (emerald flames at run time)
+  [[60, 72], [196, 72]].forEach(function(bz){ x.fillStyle = "#2a2a3a"; x.fillRect(bz[0] - 2, bz[1] - 10, 4, 10); x.fillStyle = "#c8a040"; x.fillRect(bz[0] - 6, bz[1] - 12, 12, 3); x.fillRect(bz[0] - 4, bz[1] - 1, 8, 2); });
+  GLYPHS = [[30, 22], [62, 30], [98, 18], [158, 18], [194, 30], [226, 22], [28, 96], [228, 96], [28, 160], [228, 160], [84, 136], [172, 136]].map(function(q, k){
+    return { x:q[0], y:q[1], hx:q[0], hy:q[1], kind:k % 6, lit:0 };
   });
-  ROOMS.myvi = { bg:c, ambient:.62, floor:[18, 60, 238, 206], lights:[] };
+  ROOMS.myvi = { bg:c, ambient:.6, floor:[18, 60, 238, 206], solids:[[52, 60, 68, 72], [188, 60, 204, 72]],
+    lights:[{ x:60, y:58, r:46, c:"110,255,170", ph:.6 }, { x:196, y:58, r:46, c:"110,255,170", ph:1.9 }, { x:128, y:136, r:40, c:"110,255,170", steady:1 }] };
 
-  /* ----- the Lightbox's dark room (and the party it becomes) ----- */
+  /* ----- the Lightbox's hall: hidden in darkness until the champion falls ----- */
   rnd = mulberry(77); c = mk(W, H); x = c.getContext("2d");
-  slabs(x, 16, 56, 224, 152, "#3a3a44", rnd);
-  bricks(x, 0, 0, W, 56, "#4a4a58", rnd, 20, 10);
-  x.fillStyle = "#24242e"; x.fillRect(0, 50, W, 6);
-  frameWalls(x, rnd, "#3a3a44", "#34343e");
-  [[40, 8], [200, 8]].forEach(function(p){ x.fillStyle = "#c8c8d0"; x.fillRect(p[0], p[1], 16, 4); x.fillStyle = "#8a8a94"; x.fillRect(p[0] + 6, 0, 4, 8); });
-  ROOMS.lightbox = { bg:c, ambient:.97, floor:[18, 60, 238, 206], solids:[[116, 60, 140, 76]], lights:[] };
+  // polished marble floor, red carpet to the podium
+  for (var ty = 0; ty < 19; ty++) for (var tx = 0; tx < 14; tx++){ x.fillStyle = (tx + ty) % 2 ? "#d8d4e0" : "#a8a4b8"; x.fillRect(16 + tx * 16, 56 + ty * 8, 16, 8); }
+  for (i = 0; i < 160; i++){ x.fillStyle = "rgba(90,80,110,.35)"; x.fillRect(16 + rnd() * 224 | 0, 56 + rnd() * 152 | 0, 3, 1); }
+  x.fillStyle = "#8a1a2a"; x.fillRect(114, 76, 28, 132); x.fillStyle = "#e0b040"; x.fillRect(114, 76, 1, 132); x.fillRect(141, 76, 1, 132);
+  x.fillStyle = "#6a1020"; for (ty = 80; ty < 208; ty += 6) x.fillRect(116, ty, 24, 1);
+  // podium for the Lightbox
+  x.fillStyle = "#3a3448"; x.fillRect(110, 60, 36, 18); x.fillStyle = "#e0b040"; x.fillRect(110, 60, 36, 2); x.fillRect(110, 76, 36, 2);
+  // back wall: marble panels, four arched alcoves with wall lightboxes, gold cornice
+  x.fillStyle = "#cfcad8"; x.fillRect(0, 0, W, 56);
+  for (xx = 0; xx < W; xx += 32){ x.fillStyle = "#bdb8c8"; x.fillRect(xx + 2, 4, 28, 44); x.fillStyle = "#e8e4f0"; x.fillRect(xx + 2, 4, 28, 1); }
+  x.fillStyle = "#e0b040"; x.fillRect(0, 0, W, 3); x.fillRect(0, 50, W, 2); x.fillStyle = "#8a7aa0"; x.fillRect(0, 52, W, 4);
+  LBROOM.alcoves = [40, 84, 172, 216];
+  LBROOM.alcoves.forEach(function(ax){ x.fillStyle = "#6a6280"; x.fillRect(ax - 13, 12, 26, 38); x.beginPath(); x.ellipse(ax, 12, 13, 7, 0, Math.PI, 0); x.fill();
+    x.fillStyle = "#e0b040"; x.fillRect(ax - 13, 49, 26, 1); x.fillStyle = "#8a8e9a"; x.fillRect(ax - 9, 18, 18, 22); x.fillStyle = "#2a2e38"; x.fillRect(ax - 7, 20, 14, 18); });
+  // banners either side of the podium
+  [[100, "#5a2a8a"], [156, "#5a2a8a"]].forEach(function(bn){ x.fillStyle = bn[1]; x.fillRect(bn[0] - 5, 3, 10, 34); x.beginPath(); x.moveTo(bn[0] - 5, 37); x.lineTo(bn[0], 42); x.lineTo(bn[0] + 5, 37); x.fill();
+    x.fillStyle = "#e0b040"; x.fillRect(bn[0] - 5, 3, 10, 1); x.fillRect(bn[0] - 1, 14, 2, 8); x.fillRect(bn[0] - 3, 16, 6, 2); });
+  // pillars along the side walls
+  [[24, 92], [24, 160], [232, 92], [232, 160]].forEach(function(pl){ x.fillStyle = "#e8e4f0"; x.fillRect(pl[0] - 5, pl[1] - 34, 10, 34); x.fillStyle = "#bdb8c8"; x.fillRect(pl[0] + 2, pl[1] - 34, 3, 34);
+    x.fillStyle = "#e0b040"; x.fillRect(pl[0] - 6, pl[1] - 36, 12, 3); x.fillRect(pl[0] - 6, pl[1] - 2, 12, 3); });
+  frameWalls(x, rnd, "#cfcad8", "#a8a2b8");
+  // a buffet table with a cake (left) and a trophy (right)
+  x.fillStyle = "#f4f0f8"; x.fillRect(36, 182, 40, 10); x.fillStyle = "#e0b040"; x.fillRect(36, 191, 40, 1); x.fillStyle = "#8a6a4a"; x.fillRect(38, 192, 2, 6); x.fillRect(72, 192, 2, 6);
+  x.fillStyle = "#ff9ac0"; x.fillRect(48, 172, 16, 10); x.fillStyle = "#ffffff"; x.fillRect(48, 172, 16, 2); x.fillStyle = "#ff5a7a"; x.fillRect(55, 168, 2, 4);
+  x.fillStyle = "#e0b040"; x.fillRect(205, 186, 14, 6); x.fillRect(209, 176, 6, 10); x.fillRect(206, 168, 12, 8); x.fillRect(204, 169, 2, 4); x.fillRect(218, 169, 2, 4); x.fillStyle = "#fff3c0"; x.fillRect(208, 169, 2, 5);
+  ROOMS.lightbox = { bg:c, ambient:.97, floor:[18, 60, 238, 206], solids:[[108, 58, 148, 78], [34, 170, 78, 198], [202, 166, 222, 194], [18, 56, 30, 94], [18, 124, 30, 162], [226, 56, 238, 94], [226, 124, 238, 162]], lights:[] };
+
+  /* ----- the secret chamber beyond the Lightbox (a vast hall around a giant Easter egg) ----- */
+  rnd = mulberry(91); c = mk(W, H); x = c.getContext("2d");
+  var vg = x.createLinearGradient(0, 0, 0, 70); vg.addColorStop(0, "#05030f"); vg.addColorStop(1, "#1e1440"); x.fillStyle = vg; x.fillRect(0, 0, W, 70);
+  for (i = 0; i < 140; i++){ x.fillStyle = rnd() < .3 ? "#ffffff" : "#9a8ac8"; x.fillRect(rnd() * W | 0, rnd() * 46 | 0, 1, 1); }
+  x.fillStyle = "#2a2044"; x.fillRect(0, 44, W, 30);
+  for (i = 0; i < 16; i++){ var ax2 = i * 16 + 3; x.fillStyle = "#120a22"; x.fillRect(ax2, 54, 10, 20); x.beginPath(); x.ellipse(ax2 + 5, 54, 5, 4, 0, Math.PI, 0); x.fill(); x.fillStyle = "rgba(255,210,90,.35)"; x.fillRect(ax2 + 4, 60, 2, 2); }
+  // the floor in perspective, converging on the egg
+  x.fillStyle = "#3a2c52"; x.fillRect(0, 74, W, H - 74);
+  x.strokeStyle = "rgba(200,170,255,.18)";
+  for (i = -12; i <= 12; i++){ x.beginPath(); x.moveTo(128 + i * 6, 74); x.lineTo(128 + i * 40, H); x.stroke(); }
+  for (var fy = 76, step = 3; fy < H; fy += step, step += 1.4){ x.beginPath(); x.moveTo(0, fy + .5); x.lineTo(W, fy + .5); x.stroke(); }
+  // colonnades receding into the distance
+  [[4, 222, 18], [30, 176, 12], [48, 140, 8], [60, 112, 5], [68, 94, 3]].forEach(function(cl){ [cl[0], W - cl[0] - cl[2]].forEach(function(cx2){
+    x.fillStyle = "#cfc4e8"; x.fillRect(cx2, 30, cl[2], cl[1] - 30); x.fillStyle = "#9a8ec0"; x.fillRect(cx2 + cl[2] * .65 | 0, 30, Math.max(1, cl[2] * .35 | 0), cl[1] - 30);
+    x.fillStyle = "#e0b040"; x.fillRect(cx2 - 1, cl[1] - 3, cl[2] + 2, 3); x.fillRect(cx2 - 1, 30, cl[2] + 2, 2); }); });
+  // the thank-you plaque on the far wall
+  x.fillStyle = "#e0b040"; x.fillRect(80, 18, 96, 16); x.fillStyle = "#2a1a10"; x.fillRect(82, 20, 92, 12);
+  pxSign(x, "THANK YOU FOR PLAYING", 128, 24, "#ffe9a8", 1);
+  // where the passage came in (bottom left)
+  x.fillStyle = "#08040e"; x.fillRect(0, 196, 14, 28);
+  ROOMS.vault = { bg:c, ambient:.25, floor:[16, 80, 240, 214], solids:[[92, 66, 164, 150]], lights:[{ x:128, y:110, r:110, c:"255,220,160", steady:1 }] };
+
+  /* ----- inside the egg ----- */
+  rnd = mulberry(13); c = mk(W, H); x = c.getContext("2d");
+  x.fillStyle = "#0c0614"; x.fillRect(0, 0, W, H);
+  for (var sh2 = 0; sh2 < 6; sh2++){ x.strokeStyle = ["#3a2050", "#4a2a62", "#5a3474", "#4a2a62", "#3a2050", "#2a1640"][sh2]; x.lineWidth = 3; x.beginPath(); x.ellipse(128, 120, 118 - sh2 * 4, 104 - sh2 * 4, 0, 0, Math.PI * 2); x.stroke(); }
+  x.fillStyle = "#24163a"; x.beginPath(); x.ellipse(128, 150, 84, 46, 0, 0, Math.PI * 2); x.fill();
+  x.strokeStyle = "#e0b040"; x.lineWidth = 1; x.beginPath(); x.ellipse(128, 150, 84, 46, 0, 0, Math.PI * 2); x.stroke();
+  x.beginPath(); x.ellipse(128, 150, 40, 22, 0, 0, Math.PI * 2); x.stroke();
+  for (i = 0; i < 40; i++){ x.fillStyle = "rgba(255,220,140," + (.2 + rnd() * .4).toFixed(2) + ")"; x.fillRect(20 + rnd() * 216 | 0, 20 + rnd() * 100 | 0, 1, 1); }
+  x.fillStyle = "#08040e"; x.fillRect(118, 196, 20, 28);
+  ROOMS.egg = { bg:c, ambient:.35, floor:[60, 116, 196, 214], lights:[{ x:128, y:140, r:90, c:"255,210,150", steady:1 }] };
 }
 
 /* ---- battle backdrops, one per opponent ---- */
@@ -1184,6 +1315,7 @@ function npcSprite(){
     case "hannah": return SPR.han[NPC.pose] || SPR.han.down;
     case "myvi": return SPR.myv[NPC.pose] || SPR.myv.down;
     case "lightbox": return S.lbOn ? SPR.lbOn : SPR.lbOff;
+    case "altrad": return SPR.altrad;
   }
   return null;
 }
@@ -1191,7 +1323,7 @@ function npcDraw(){
   var s = npcSprite(); if (!s || NPC.hidden) return;
   var x = NPC.x - s.width / 2, y = NPC.y - s.height + 1 + NPC.yoff;
   if (NPC.rope){ g.fillStyle = "#8a8e9a"; g.fillRect(Math.round(NPC.x + (NPC.kind === "domonic" ? 5 : 0)), 0, 1, Math.max(0, Math.round(y + 2))); }
-  if (NPC.yoff > -4) drawShadow(NPC.x, NPC.y, Math.min(16, s.width - 4));
+  if (NPC.yoff > -4 && NPC.alpha > .5) drawShadow(NPC.x, NPC.y, Math.min(16, s.width - 4));
   g.globalAlpha = NPC.alpha; blit(s, x, y); g.globalAlpha = 1;
   if (NPC.kind === "lightbox" && S.lbOn) lbFace(g, x, y, 1, S.lbTalk && Math.floor(S.t * 9) % 2 === 0, S.lbMood);
   if (NPC.kind === "matilda" && NPC.buddy && NPC.buddy.on){ blit(SPR.buddy.front, NPC.x + 3, y); }
@@ -1207,14 +1339,40 @@ var GLYPH_SHAPES = [
   [[0,0],[0,6],[6,6],[6,0]], [[3,0],[0,3],[3,6],[6,3],[3,0]], [[0,0],[6,6],[3,3],[6,0],[0,6]]
 ];
 function glyphDraw(gl){
-  var a = gl.lit, pts = GLYPH_SHAPES[gl.kind], col = a > 0 ? "rgba(127,243,255," + (.35 + a * .65).toFixed(2) + ")" : "rgba(90,100,150,.55)";
+  var a = gl.lit, pts = GLYPH_SHAPES[gl.kind], col = a > 0 ? "rgba(125,255,176," + (.35 + a * .65).toFixed(2) + ")" : "rgba(120,110,80,.6)";
   if (a > 0){ g.save(); g.globalCompositeOperation = "lighter";
-    var gr = g.createRadialGradient(gl.x, gl.y, 0, gl.x, gl.y, 10); gr.addColorStop(0, "rgba(127,243,255," + (.45 * a).toFixed(2) + ")"); gr.addColorStop(1, "rgba(127,243,255,0)");
+    var gr = g.createRadialGradient(gl.x, gl.y, 0, gl.x, gl.y, 10); gr.addColorStop(0, "rgba(125,255,176," + (.45 * a).toFixed(2) + ")"); gr.addColorStop(1, "rgba(125,255,176,0)");
     g.fillStyle = gr; g.fillRect(gl.x - 10, gl.y - 10, 20, 20); g.restore(); }
   g.fillStyle = col;
   for (var i = 0; i < pts.length - 1; i++) bres([Math.round(gl.x - 3 + pts[i][0]), Math.round(gl.y - 3 + pts[i][1])], [Math.round(gl.x - 3 + pts[i + 1][0]), Math.round(gl.y - 3 + pts[i + 1][1])], function(px, py){ g.fillRect(px, py, 1, 1); });
 }
 
+function flame(x0, y0, t, col){ // tiny flickering candle flame
+  var q = Math.floor(t * 12 + x0), h = 2 + (q % 3 === 0 ? 1 : 0);
+  g.fillStyle = col || "#ffb040"; g.fillRect(x0, y0 - h, 2, h); g.fillStyle = "#fff2b0"; g.fillRect(x0, y0 - 1, 1, 1);
+}
+function twinkle(list, t){ list.forEach(function(st){ var a = .35 + .65 * Math.max(0, Math.sin(t * 2.2 + st[2])); g.fillStyle = "rgba(255,250,220," + a.toFixed(2) + ")"; g.fillRect(st[0], st[1], st[3] ? 2 : 1, st[3] ? 2 : 1); }); }
+function glowAt(x0, y0, r, col, a){ g.save(); g.globalCompositeOperation = "lighter"; var gr = g.createRadialGradient(x0, y0, 0, x0, y0, r); gr.addColorStop(0, "rgba(" + col + "," + a + ")"); gr.addColorStop(1, "rgba(" + col + ",0)"); g.fillStyle = gr; g.fillRect(x0 - r, y0 - r, r * 2, r * 2); g.restore(); }
+function drawEgg(t){
+  var cx = 128, cy = 104, rx = 36, ry = 48;
+  g.save(); g.beginPath(); g.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); g.clip();
+  g.fillStyle = "#f4e6ff"; g.fillRect(cx - rx, cy - ry, rx * 2, ry * 2);
+  var bands = [[70, 6, "#9a5ad8"], [82, 3, "#e0b040"], [96, 8, "#5ad0c0"], [112, 4, "#ff9ac0"], [126, 7, "#9a5ad8"], [140, 3, "#e0b040"]];
+  bands.forEach(function(b){ g.fillStyle = b[2]; g.fillRect(cx - rx, b[0], rx * 2, b[1]); });
+  g.fillStyle = "#e0b040"; for (var zx = cx - rx; zx < cx + rx; zx += 6){ g.fillRect(zx, 89, 3, 2); g.fillRect(zx + 3, 91, 3, 2); }
+  g.fillStyle = "#ffffff"; for (var dx = cx - rx + 3; dx < cx + rx; dx += 8){ g.fillRect(dx, 99, 2, 2); g.fillRect(dx + 4, 116, 2, 2); }
+  var sh = g.createLinearGradient(cx - rx, 0, cx + rx, 0); sh.addColorStop(0, "rgba(255,255,255,.35)"); sh.addColorStop(.35, "rgba(255,255,255,0)"); sh.addColorStop(1, "rgba(40,10,60,.45)");
+  g.fillStyle = sh; g.fillRect(cx - rx, cy - ry, rx * 2, ry * 2);
+  g.restore();
+  g.strokeStyle = "#e0b040"; g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); g.stroke();
+  // the doorway at its base
+  var o = S.eggOpen || 0, dw = 7;
+  g.fillStyle = "#e0b040"; g.fillRect(cx - dw - 1, 132, dw * 2 + 2, 20); g.beginPath(); g.ellipse(cx, 132, dw + 1, 6, 0, Math.PI, 0); g.fill();
+  g.fillStyle = o > 0 ? "#2a1238" : "#d8c4f0"; g.fillRect(cx - dw, 132, dw * 2, 20); g.beginPath(); g.ellipse(cx, 132, dw, 5, 0, Math.PI, 0); g.fill();
+  if (o > 0){ glowAt(cx, 142, 14 + 6 * o, "255,220,150", (.5 * o).toFixed(2)); }
+  else { g.fillStyle = "#b49ad8"; g.fillRect(cx, 128, 1, 24); }
+  if (!REDUCED && Math.floor(t * 3) % 4 === 0){ g.fillStyle = "#fff"; g.fillRect(cx - 18, 76, 1, 3); g.fillRect(cx - 19, 77, 3, 1); }
+}
 function renderRoom(){
   var R = S.room; if (!R) return;
   var t = S.t, id = S.roomId;
@@ -1226,6 +1384,19 @@ function renderRoom(){
     SKY.wins.forEach(function(w){ var on = S.domLights > w[2]; g.fillStyle = on ? (w[2] > .85 ? "#fff3c0" : "#ffd25a") : "#1a1e3a"; g.fillRect(w[0], w[1], 2, 2); });
     if (S.exitOpen){ g.fillStyle = "#08080e"; g.fillRect(114, 24, 28, 32); }
   } else if (id === "matilda"){
+    twinkle(MATROOM.stars, t);
+    // chandelier
+    g.fillStyle = "#c09030"; g.fillRect(127, 0, 2, 6); g.fillRect(114, 6, 28, 2); g.fillRect(118, 8, 2, 3); g.fillRect(127, 8, 2, 4); g.fillRect(136, 8, 2, 3);
+    [[118, 11], [127, 12], [136, 11], [114, 6], [140, 6]].forEach(function(f){ flame(f[0], f[1], t); });
+    g.fillStyle = "#e0d0ff"; [116, 122, 133, 139].forEach(function(cx3){ g.fillRect(cx3, 9 + (cx3 % 3), 1, 2); });
+    // sconces, candelabra, crystal ball, potions, glowing plant buds
+    [[76, 30], [180, 30]].forEach(function(sc){ g.fillStyle = "#c09030"; g.fillRect(sc[0] - 3, sc[1], 7, 2); g.fillRect(sc[0], sc[1] - 4, 2, 4); flame(sc[0], sc[1] - 4, t); });
+    [161, 166, 171].forEach(function(cx4, k){ g.fillStyle = "#f4f0e0"; g.fillRect(cx4, 47 + (k === 1 ? -1 : 0), 1, 4); flame(cx4, 47 + (k === 1 ? -1 : 0), t + k); });
+    var pulse = .6 + .4 * Math.sin(t * 2);
+    g.fillStyle = "#b58ae8"; g.beginPath(); g.arc(92, 55, 5, 0, Math.PI * 2); g.fill(); g.fillStyle = "#e8d4ff"; g.fillRect(89, 52, 2, 2);
+    glowAt(92, 55, 14, "200,120,255", (.45 * pulse).toFixed(2));
+    MATROOM.potions.forEach(function(pt, k){ glowAt(pt[0], pt[1] - 2, 6, pt[2], (.35 + .25 * Math.sin(t * 3 + k)).toFixed(2)); });
+    [[22, 184], [28, 182], [226, 184], [232, 182]].forEach(function(b, k){ glowAt(b[0], b[1], 5, k % 2 ? "255,150,230" : "150,230,255", (.5 + .3 * Math.sin(t * 2.5 + k)).toFixed(2)); g.fillStyle = "#fff"; g.fillRect(b[0], b[1], 1, 1); });
     if (S.exitOpen){ g.fillStyle = "#1a0e20"; g.fillRect(114, 24, 28, 32); }
     if (S.padlock > 0){ g.globalAlpha = S.padlock; g.fillStyle = "#e0c060"; g.fillRect(124, 36, 8, 7); g.fillStyle = "#3a2a10"; g.fillRect(127, 38, 2, 3);
       g.strokeStyle = "#c0c0c8"; g.lineWidth = 1; g.strokeRect(125.5, 32.5, 5, 4); g.globalAlpha = 1; }
@@ -1248,19 +1419,53 @@ function renderRoom(){
       g.fillStyle = "#1a0030"; g.beginPath(); g.ellipse(px, py, pr * .25, pr * .32, 0, 0, Math.PI * 2); g.fill();
     }
   } else if (id === "myvi"){
+    twinkle(MYROOM.stars, t);
+    [[60, 60], [196, 60]].forEach(function(bz){ for (var fl = 0; fl < 5; fl++){ var hh = 4 + ((Math.floor(t * 10) + fl * 3) % 4); g.fillStyle = fl % 2 ? "#3aff9a" : "#b8ffd8"; g.fillRect(bz[0] - 4 + fl * 2, bz[1] - hh, 2, hh); } });
+    [103, 153].forEach(function(px0, k){ var fy = 8 + Math.sin(t * 1.6 + k * 2) * 2; g.fillStyle = "#7dffb0"; g.fillRect(px0 - 1, fy | 0, 4, 5); g.fillStyle = "#d8ffe8"; g.fillRect(px0, (fy | 0) + 1, 1, 2); glowAt(px0 + 1, fy + 2, 10, "125,255,176", ".4"); });
+    var lit = GLYPHS.reduce(function(sum, gl){ return sum + gl.lit; }, 0) / GLYPHS.length;
+    MYROOM.ring.forEach(function(rn, k){ var ang = t * .25, rx2 = 128 + (rn.x - 128) * Math.cos(ang) - 0, ry2 = rn.y; glyphDraw({ x:rn.x, y:rn.y, kind:rn.kind, lit:.25 + .6 * lit + .15 * Math.sin(t * 2 + k) }); });
+    for (var orb = 0; orb < 6; orb++){ var oa = t * .8 + orb * Math.PI / 3; g.fillStyle = "rgba(200,255,220,.8)"; g.fillRect(128 + Math.cos(oa) * 56 | 0, 136 + Math.sin(oa) * 34 | 0, 1, 1); }
     if (S.glyphDoor > 0){
       var a2 = S.glyphDoor; g.save(); g.globalCompositeOperation = "lighter";
-      var dg = g.createLinearGradient(0, 24, 0, 58); dg.addColorStop(0, "rgba(127,243,255," + (.8 * a2).toFixed(2) + ")"); dg.addColorStop(1, "rgba(127,243,255," + (.2 * a2).toFixed(2) + ")");
+      var dg = g.createLinearGradient(0, 24, 0, 58); dg.addColorStop(0, "rgba(125,255,176," + (.8 * a2).toFixed(2) + ")"); dg.addColorStop(1, "rgba(125,255,176," + (.2 * a2).toFixed(2) + ")");
       g.fillStyle = dg; g.fillRect(116, 24, 24, 32); g.restore();
     }
     GLYPHS.forEach(glyphDraw);
   } else if (id === "lightbox"){
+    // wall lightboxes in the alcoves switch on one by one, then the chandeliers
+    LBROOM.alcoves.forEach(function(ax, k){
+      if (S.partyLights <= k) return;
+      g.fillStyle = "#eef4ff"; g.fillRect(ax - 7, 20, 14, 18);
+      g.fillStyle = "#9aa8c0"; g.fillRect(ax - 5, 23, 4, 12); g.fillRect(ax + 1, 23, 4, 12); g.fillStyle = "#c8d4e8"; g.fillRect(ax - 1, 21, 2, 16);
+      glowAt(ax, 29, 22, "230,240,255", ".35");
+    });
+    [[80, 4], [176, 4]].forEach(function(ch, k){
+      g.fillStyle = "#c09030"; g.fillRect(ch[0] - 1, 0, 2, ch[1]); g.fillRect(ch[0] - 10, ch[1], 20, 2); g.fillRect(ch[0] - 10, ch[1] - 2, 2, 2); g.fillRect(ch[0] + 8, ch[1] - 2, 2, 2); g.fillRect(ch[0] - 1, ch[1] - 2, 2, 2);
+      if (S.partyLights > 4 + k){ flame(ch[0] - 10, ch[1] - 2, t); flame(ch[0] + 8, ch[1] - 2, t + 1); flame(ch[0] - 1, ch[1] - 2, t + 2); glowAt(ch[0], ch[1], 30, "255,220,150", ".3"); }
+    });
+    // the light switch (just an ordinary-looking plate on the back wall, far right)
+    g.fillStyle = "#f4f0f8"; g.fillRect(233, 40, 5, 7); g.fillStyle = "#8a8496"; g.fillRect(233, 40, 5, 1);
+    g.fillStyle = "#5a5468"; g.fillRect(235, S.switchOn ? 44 : 42, 1, 2);
     if (S.party > 0){
       g.globalAlpha = Math.min(1, S.party);
       for (var s2 = 0; s2 < 9; s2++){ var sx = 16 + s2 * 28; g.strokeStyle = ["#ff5a7a", "#ffd25a", "#5ad0ff", "#7dff9a", "#b058ff"][s2 % 5]; g.lineWidth = 2;
         g.beginPath(); g.moveTo(sx, 0); g.quadraticCurveTo(sx + 14, 26, sx + 28, 0); g.stroke(); }
+      [[30, 120, "#ff5a7a"], [36, 124, "#ffd25a"], [222, 118, "#5ad0ff"], [228, 124, "#b058ff"]].forEach(function(bl, k){
+        var by = bl[1] + Math.sin(t * 1.5 + k) * 2; g.strokeStyle = "#ddd"; g.lineWidth = 1; g.beginPath(); g.moveTo(bl[0] + .5, by + 6); g.lineTo(bl[0] + .5, by + 16); g.stroke();
+        g.fillStyle = bl[2]; g.beginPath(); g.ellipse(bl[0] + .5, by, 4, 5, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = "rgba(255,255,255,.6)"; g.fillRect(bl[0] - 2, by - 3, 1, 2); });
       g.globalAlpha = 1;
     }
+    // the hidden doorway in the left wall
+    if (S.secretDoor > 0){
+      var dh = Math.round(30 * Math.min(1, S.secretDoor));
+      g.fillStyle = "#06030c"; g.fillRect(0, 146 - dh, 17, dh);
+      glowAt(6, 140, 16 * S.secretDoor, "200,150,255", ".45");
+    }
+  } else if (id === "vault"){
+    list.push({ y:150, d:function(){ drawShadow(128, 152, 60); drawEgg(t); } });
+  } else if (id === "egg"){
+    glowAt(128, 150, 70, "255,200,140", (.25 + .08 * Math.sin(t * 1.5)).toFixed(2));
+    if (NPC.kind === "altrad" && NPC.alpha > 0) glowAt(NPC.x, NPC.y - 12, 26, "140,90,200", (.55 * NPC.alpha).toFixed(2));
   }
   if (NPC.kind && NPC.kind !== "lightbox") list.push({ y:NPC.y, d:npcDraw });
   if (NPC.kind === "lightbox") list.push({ y:NPC.y, d:npcDraw });
@@ -1273,12 +1478,18 @@ function renderRoom(){
   // darkness + light pools
   var amb = R.ambient;
   if (id === "domonic") amb = .55 - S.domLights * .25;
-  if (id === "lightbox") amb = R.ambient * (1 - Math.min(1, S.party));
+  if (id === "lightbox") amb = S.party > 0 ? R.ambient * (1 - Math.min(1, S.party)) : S.blackout ? 1 : R.ambient;
   if (amb > 0){
     lg.globalCompositeOperation = "source-over"; lg.clearRect(0, 0, W, H);
     lg.fillStyle = "rgba(4,4,12," + amb + ")"; lg.fillRect(0, 0, W, H);
     lg.globalCompositeOperation = "destination-out";
-    var lights = R.lights.concat([{ x:P.x, y:P.y - 8, r:id === "lightbox" ? 34 : 40 }]);
+    // in the champion's hall only the Lightbox lights the room (the player gets the faintest halo to find themselves)
+    var lights = R.lights.concat([{ x:P.x, y:P.y - 8, r:id === "lightbox" && !S.partyLights ? 14 : 40 }]);
+    if (id === "lightbox"){
+      LBROOM.alcoves.forEach(function(ax, k){ if (S.partyLights > k) lights.push({ x:ax, y:40, r:52 }); });
+      [80, 176].forEach(function(cx5, k){ if (S.partyLights > 4 + k) lights.push({ x:cx5, y:20, r:90 }); });
+      if (S.secretDoor > 0) lights.push({ x:8, y:132, r:34 * S.secretDoor });
+    }
     if (id === "lightbox" && S.lbOn && NPC.kind === "lightbox") lights.push({ x:NPC.x, y:NPC.y - 14, r:46 + Math.sin(t * 2) * 3 });
     if (id === "myvi") GLYPHS.forEach(function(gl){ if (gl.lit > 0) lights.push({ x:gl.x, y:gl.y, r:26 * gl.lit }); });
     if (id === "myvi" && S.glyphDoor > 0) lights.push({ x:128, y:44, r:60 * S.glyphDoor });
@@ -1289,6 +1500,13 @@ function renderRoom(){
       lg.fillStyle = gr; lg.fillRect(l.x - r, l.y - r, r * 2, r * 2);
     });
     g.drawImage(lightC, 0, 0);
+  }
+  // decorative coloured light (candles, braziers, moonlight)
+  if (R.lights.length && id !== "lightbox"){
+    g.save(); g.globalCompositeOperation = "lighter";
+    R.lights.forEach(function(l){ if (!l.c) return; var fl2 = l.steady ? 1 : 1 + .06 * Math.sin(Math.floor(t * 11) * 1.7 + (l.ph || 0) * 5), r2 = l.r * .8 * fl2;
+      var gr2 = g.createRadialGradient(l.x, l.y, 0, l.x, l.y, r2); gr2.addColorStop(0, "rgba(" + l.c + ",.2)"); gr2.addColorStop(1, "rgba(" + l.c + ",0)"); g.fillStyle = gr2; g.fillRect(l.x - r2, l.y - r2, r2 * 2, r2 * 2); });
+    g.restore();
   }
   if (id === "lightbox" && S.lbOn && NPC.kind === "lightbox"){ // the glow itself
     g.save(); g.globalCompositeOperation = "lighter";
@@ -1401,10 +1619,13 @@ function blocked(nx, ny){
   var walk = R.walk ? R.walk.slice() : [R.floor];
   if (S.exitOpen && S.roomId !== "hannah") walk.push([118, 40, 138, 70]);
   if (S.roomId === "hall" && S.hallOpen >= 1) walk.push([118, 40, 138, 70]);
+  if (S.roomId === "lightbox" && S.secretDoor >= 1) walk.push([0, 118, 30, 146]);
+  if (S.roomId === "vault") walk.push([0, 196, 30, 226]);
+  if (S.roomId === "egg") walk.push([116, 190, 140, 226]);
   inside = inRects(l, t, walk) && inRects(r, t, walk) && inRects(l, b, walk) && inRects(r, b, walk);
   if (!inside) return true;
   var sol = (R.solids || []).slice();
-  if (NPC.kind && !NPC.hidden && NPC.yoff > -4){ var hw = NPC.kind === "lightbox" ? 10 : 6; sol.push([NPC.x - hw, NPC.y - 5, NPC.x + hw, NPC.y + 1]); }
+  if (NPC.kind && NPC.kind !== "altrad" && !NPC.hidden && NPC.yoff > -4){ var hw = NPC.kind === "lightbox" ? 10 : 6; sol.push([NPC.x - hw, NPC.y - 5, NPC.x + hw, NPC.y + 1]); }
   for (var i = 0; i < sol.length; i++){ var s = sol[i]; if (r > s[0] && l < s[2] && b > s[1] && t < s[3]) return true; }
   return false;
 }
@@ -1470,7 +1691,15 @@ function update(dt){
   if (B){ ["oppShake", "meShake", "oppBlink", "meBlink", "hitFx"].forEach(function(k){ if (B[k] > 0) B[k] -= dt * (k === "hitFx" ? 2.2 : 1); }); }
   // particles
   if (S.confetti && !REDUCED && Math.random() < dt * 40){
-    S.parts.push({ x:Math.random() * W, y:-4, vx:(Math.random() - .5) * 20, vy:30 + Math.random() * 30, life:3, w:2, h:2, col:pick(["#ff5a7a", "#ffd25a", "#5ad0ff", "#7dff9a", "#b058ff", "#ffffff"]), conf:1 });
+    var streamer = Math.random() < .35;
+    S.parts.push({ x:Math.random() * W, y:-8, vx:(Math.random() - .5) * 20, vy:(streamer ? 22 : 30) + Math.random() * 30, life:3, w:streamer ? 1 : 2, h:streamer ? 7 : 2, col:pick(["#ff5a7a", "#ffd25a", "#5ad0ff", "#7dff9a", "#b058ff", "#ffffff"]), conf:1 });
+  }
+  if (S.mode === "room" && !REDUCED){
+    if (S.roomId === "matilda" && Math.random() < dt * 6) S.parts.push({ x:30 + Math.random() * 196, y:80 + Math.random() * 120, vx:(Math.random() - .5) * 4, vy:-6 - Math.random() * 6, life:1.2, col:pick(["240,200,255", "255,220,160", "200,240,255"]) });
+    if (S.roomId === "myvi" && Math.random() < dt * 9){ var ma = Math.random() * Math.PI * 2; S.parts.push({ x:128 + Math.cos(ma) * 46, y:136 + Math.sin(ma) * 28, vx:0, vy:-8 - Math.random() * 8, life:1.4, col:"125,255,176" }); }
+    if (S.roomId === "myvi" && Math.random() < dt * 3) S.parts.push({ x:20 + Math.random() * 216, y:200, vx:(Math.random() - .5) * 3, vy:-5, life:1.5, col:"255,220,140" });
+    if (S.roomId === "vault" && Math.random() < dt * 8) S.parts.push({ x:Math.random() * W, y:60 + Math.random() * 150, vx:0, vy:-4, life:1.2, col:"255,220,150" });
+    if (S.roomId === "egg" && NPC.kind === "altrad" && NPC.alpha > .05 && Math.random() < dt * 30) S.parts.push({ x:NPC.x + (Math.random() - .5) * 18, y:NPC.y - Math.random() * 22, vx:(Math.random() - .5) * 6, vy:-6, life:1, col:"90,60,120" });
   }
   if (S.roomId === "hannah" && S.portal > .5 && !REDUCED && Math.random() < dt * 20){
     var an = Math.random() * Math.PI * 2; S.parts.push({ x:128 + Math.cos(an) * 30, y:84 + Math.sin(an) * 34, vx:-Math.cos(an) * 30, vy:-Math.sin(an) * 34, life:1, col:"200,120,255" });
@@ -1479,7 +1708,8 @@ function update(dt){
   // interaction prompt (the Lightbox)
   S.interact = null;
   if (S.free && S.mode === "room" && NPC.kind === "lightbox" && NPC.talkable && Math.hypot(P.x - NPC.x, P.y - (NPC.y + 12)) < 22) S.interact = "lightbox";
-  if (S.interact !== S.lastInteract){ S.lastInteract = S.interact; if (S.interact) hint(TOUCH ? "Press A to inspect the Lightbox" : "Press Space to inspect the Lightbox"); else if (S.lbHint) hint(S.lbHint); }
+  if (S.free && S.mode === "room" && S.roomId === "lightbox" && S.party >= 1 && !S.switchOn && P.x > 214 && P.y < 76) S.interact = "switch";
+  if (S.interact !== S.lastInteract){ S.lastInteract = S.interact; if (S.interact === "lightbox") hint(TOUCH ? "Press A to inspect the Lightbox" : "Press Space to inspect the Lightbox"); else if (S.lbHint) hint(S.lbHint); }
   S.waiters = S.waiters.filter(function(wt){ if (wt.fn()){ wt.res(); return false; } return true; });
 }
 function waitFor(fn){ return new Promise(function(res){ S.waiters.push({ fn:fn, res:res }); }); }
@@ -1499,6 +1729,7 @@ var SPEAK = {
   hannah:   { name:"HANNAH",   col:"#ff9a4a", voice:"blip",  spr:function(){ return SPR.han.down; }, crop:[1, 0, 16, 13] },
   myvi:     { name:"MY-VI",    col:"#7ff3ff", voice:"blip",  spr:function(){ return SPR.myv.down; }, crop:[1, 0, 16, 13] },
   lightbox: { name:"???",      col:"#fff3c0", voice:"buzz",  spr:function(){ return SPR.lbOn; }, crop:[0, 0, 24, 21], lb:true },
+  altrad:   { name:"???",      col:"#9a8ab0", voice:"blipL", spr:function(){ return SPR.altrad; }, crop:[1, 0, 16, 13] },
   sys:      { name:"",         col:"#ffd25a", voice:"blip" }
 };
 var portC = $("dlgPort"), pg = portC.getContext("2d"); pg.imageSmoothingEnabled = false;
@@ -1547,7 +1778,7 @@ function hud(){
 var toastQ = Promise.resolve();
 function toast(m){
   var w = $("ach");
-  $("achTitle").textContent = m.title; $("achShare").textContent = m.title; $("achSub").textContent = "The Critical Four · " + m.how;
+  $("achTitle").textContent = m.title; $("achShare").textContent = m.title; $("achSub").textContent = m.sub || ("The Critical Four · " + m.how);
   $("achMarker").innerHTML = '<img alt="" src="' + MARKIMG[m.id] + '">';
   clearTimeout(w._t);
   w._t = setTimeout(function(){ w.classList.remove("on", "is-playing"); }, 8000);
@@ -1565,7 +1796,8 @@ function award(id){
 }
 function marksPanel(){
   var body = $("mBody"); body.innerHTML = "";
-  [["CHAMPIONSHIP", function(m){ return !m.bonus; }], ["BONUS AND CONSOLATION", function(m){ return m.bonus; }]].forEach(function(sec){
+  [["CHAMPIONSHIP", function(m){ return !m.bonus && !m.hidden; }], ["BONUS AND CONSOLATION", function(m){ return m.bonus; }], ["SECRET", function(m){ return m.hidden && UNLOCKED[m.id]; }]].forEach(function(sec){
+    if (!MARKERS.filter(sec[1]).length) return;
     var h = document.createElement("h3"); h.textContent = sec[0]; body.appendChild(h);
     var grid = document.createElement("div"); grid.className = "mgrid";
     MARKERS.filter(sec[1]).forEach(function(m){
@@ -1953,6 +2185,7 @@ async function leaveBattle(){
 function resetRoomFx(){
   S.domLights = 0; S.cracks = 0; S.crackLines = []; S.portal = 0; S.glyphDoor = 0; S.lbOn = true; S.lbMood = ""; S.party = 0;
   S.padlock = 1; S.exitOpen = false; S.hallOpen = 0; S.confetti = false; S.parts = []; S.hideHero = false; S.lbHint = null; S.lbNamed = false;
+  S.partyLights = 0; S.blackout = 0; S.switchOn = false; S.secretDoor = 0; S.eggOpen = 0; S.wantInteract = false;
   GLYPHS.forEach(function(gl){ gl.x = gl.hx; gl.y = gl.hy; gl.lit = 0; });
   DOLLS.forEach(function(d){ d.on = 0; d.bounce = 0; d.ear = 0; d.bounceT = 0; });
   NPC.kind = null; NPC.hidden = false; NPC.yoff = 0; NPC.rope = 0; NPC.alpha = 1; NPC.buddy = null; NPC.talkable = false;
@@ -1967,6 +2200,7 @@ function setRoom(id){
   else if (id === "hannah"){ NPC.kind = "hannah"; NPC.y = 104; }
   else if (id === "myvi"){ NPC.kind = "myvi"; NPC.y = 100; }
   else if (id === "lightbox"){ NPC.kind = "lightbox"; NPC.y = 78; NPC.talkable = true; }
+  else if (id === "egg"){ NPC.kind = "altrad"; NPC.y = 120; NPC.alpha = 0; }
 }
 async function walkIn(){ await fadeTo(0, 500); await walkTo(128, 192, "up"); }
 async function freeUntil(fn, msg){
@@ -2099,10 +2333,13 @@ async function ending(){
   S.lbMood = "sad"; await sleep(300);
   SFX.play("power");
   for (var i = 0; i < 6; i++){ S.lbOn = !S.lbOn; await sleep(i < 3 ? 160 : 260); }
-  S.lbOn = false; NPC.alpha = 1; S.fadeCol = null;
-  await tween(function(k){ S.fade = k; }, 600);
-  await sleep(REDUCED ? 300 : 1400);
-  SFX.play("lights"); S.party = 1; S.fade = 0; S.flash = .8; tween(function(k){ S.flash = .8 * (1 - k); }, 500);
+  S.lbOn = false; NPC.alpha = 1; NPC.talkable = false; S.fadeCol = null; S.blackout = 1; hint("");
+  await sleep(REDUCED ? 300 : 1600);
+  // the hall reveals itself: alcove lightboxes one by one, then the chandeliers, then everything
+  for (var lp = 1; lp <= 6; lp++){ S.partyLights = lp; SFX.play("lamp"); await sleep(REDUCED ? 60 : lp < 5 ? 380 : 520); }
+  SFX.play("lights"); S.flash = .7; tween(function(k){ S.flash = .7 * (1 - k); }, 600);
+  await tween(function(k){ S.party = k; }, 900);
+  S.party = 1; S.blackout = 0;
   S.confetti = true; SFX.play("fanfare");
   P.dir = "down";
   banner("CONGRATULATIONS, RADIOGRAPHER!", playerName(), "scroll");
@@ -2112,12 +2349,63 @@ async function ending(){
   GAME.done = true; GAME.beaten = 5; saveGame(); hud();
   await sleep(REDUCED ? 1500 : 4200);
   unbanner();
-  var got = MARKERS.filter(function(m){ return UNLOCKED[m.id]; }).length;
+  var shown = MARKERS.filter(function(m){ return !m.hidden; }), got = shown.filter(function(m){ return UNLOCKED[m.id]; }).length;
   return endCard("You've graduated!",
     "<p>" + esc(playerName()) + ", you've cleared all four examiners and beaten the champion. Welcome to the profession.</p>" +
     "<p>" + (GAME.clean ? "A flawless run: every study correct on the first attempt." : "Every finding counts, and you found them all.") + "</p>" +
-    "<p>Markers collected: " + got + " of " + MARKERS.length + ".</p>",
+    "<p>Markers collected: " + got + " of " + shown.length + ".</p>",
     [{ label:"Stay and celebrate", val:"stay", pri:1 }, { label:"View markers", val:"marks" }, { label:"Title screen", val:"title" }]);
+}
+
+/* ======================================================================
+   THE SECRET: switch -> passage -> chamber -> giant egg -> Altrad
+   ====================================================================== */
+function partyRoom(fromSecret){
+  setRoom("lightbox"); S.party = 1; S.partyLights = 6; S.lbOn = false; NPC.talkable = false; S.confetti = true;
+  if (GAME.secret){ S.switchOn = true; S.secretDoor = 1; }
+  if (fromSecret){ P.x = 36; P.y = 136; P.dir = "right"; }   // just inside the hall, clear of the doorway trigger
+}
+var secretRunning = false;
+async function secretLoop(){
+  if (secretRunning) return; secretRunning = true;
+  for (;;){
+    if (!S.switchOn){
+      await waitFor(function(){ return S.roomId === "lightbox" && S.interact === "switch" && S.wantInteract; });
+      S.wantInteract = false; S.free = false; S.target = null; P.dir = "up";
+      SFX.play("click"); S.switchOn = true; await sleep(500);
+      S.shake = 1.2; SFX.play("rumble"); await sleep(500);
+      SFX.play("door"); await tween(function(k){ S.secretDoor = k; }, 1400);
+      SFX.play("glyph"); S.free = true;
+    }
+    await waitFor(function(){ return S.roomId === "lightbox" && S.secretDoor >= 1 && P.x < 22 && P.y > 118 && P.y < 148; });
+    S.free = false; S.target = null; KEY = {}; PAD = {};
+    await walkTo(4, 134, "left"); await fadeTo(1, 600);
+    GAME.secret = true; saveGame();
+    setRoom("vault"); P.x = 12; P.y = 210; P.dir = "right";
+    await fadeTo(0, 900); await walkTo(60, 196, "up");
+    S.free = true;
+    await waitFor(function(){ return S.roomId === "vault" && Math.abs(P.x - 128) < 14 && P.y < 172 && P.y > 150; });
+    S.free = false; S.target = null; P.dir = "up";
+    SFX.play("unlock"); await tween(function(k){ S.eggOpen = k; }, 900); SFX.play("portal");
+    await walkTo(128, 154, "up"); S.hideHero = true; await sleep(300); await fadeTo(1, 700, "255,240,220");
+    setRoom("egg"); P.x = 128; P.y = 222;
+    await fadeTo(0, 900); S.fadeCol = null;
+    await walkTo(128, 176, "up");
+    award("beyond");
+    await sleep(1200);
+    SFX.play("eerie"); await tween(function(k){ NPC.alpha = k; }, 1400);
+    await sleep(500);
+    await say("altrad", "No, not yet.");
+    await say("altrad", "Soon.");
+    await tween(function(k){ NPC.alpha = 1 - k; }, 1600);
+    NPC.kind = null; await sleep(800);
+    var v = await endCard("Thank you for playing",
+      "<p>You finished <b>The Critical Four</b>, and you still went looking for more. Thank you for playing, and for exploring every corner.</p>" +
+      "<p>Every finding counts. So does curiosity.</p><p>Rad-Lad</p>",
+      [{ label:"Back to the celebration", val:"back", pri:1 }, { label:"Title screen", val:"title" }]);
+    if (v === "title"){ location.reload(); return; }
+    await fadeTo(1, 400); partyRoom(true); await fadeTo(0, 600); S.free = true;
+  }
 }
 
 /* ======================================================================
@@ -2146,6 +2434,7 @@ async function roomScene(id){
     if (e === "title"){ location.reload(); return "title"; }
     S.free = true; running = false; $("bMenu").hidden = false;
     hint("You did it! Walk around and enjoy the party."); setTimeout(function(){ hint(""); }, 5000);
+    secretLoop();
     return "done";
   }
   await OUTRO[id]();
@@ -2158,15 +2447,15 @@ async function play(){
   SFX.ensure(); S.fade = 1;
   if (!GAME.hall){ await hallScene(); GAME.hall = true; saveGame(); }
   while (GAME.beaten < 5){ if (await roomScene(ORDER[GAME.beaten]) === "title") return; }
-  if (GAME.done && S.roomId !== "lightbox"){ setRoom("lightbox"); S.party = 1; S.lbOn = false; NPC.talkable = false; S.confetti = true; await walkIn(); S.free = true; }
+  if (GAME.done && S.roomId !== "lightbox"){ partyRoom(); await walkIn(); S.free = true; running = false; secretLoop(); }
 }
 
 /* title + graduate registration */
 function showTitle(){
   setRoom("hall"); P.y = 170; S.free = false; S.fade = .45;
-  var c = GAME && (GAME.hall || GAME.beaten > 0) && !GAME.done;
+  var c = GAME && (GAME.hall || GAME.beaten > 0);
   $("tCont").hidden = !c;
-  if (c) $("tContS").textContent = esc(playerName()) + " · " + (GAME.beaten === 4 ? "the final room" : GAME.beaten + " of 4 examiners");
+  if (c) $("tContS").textContent = esc(playerName()) + " · " + (GAME.done ? "back to the celebration" : GAME.beaten === 4 ? "the final room" : GAME.beaten + " of 4 examiners");
   $("title").classList.add("on"); $("bMenu").hidden = true; hud();
   setTimeout(function(){ (c ? $("tCont") : $("tNew")).focus({ preventScroll:true }); }, 30);
 }
@@ -2243,6 +2532,10 @@ cv.addEventListener("pointerdown", function(e){
   if (S.dlg){ dlgAdvance(); return; }
   if (!S.free || S.mode !== "room") return;
   var r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  if (S.roomId === "lightbox" && S.party >= 1 && !S.switchOn && x > 226 && y > 34 && y < 54){
+    if (S.interact === "switch"){ S.wantInteract = true; return; }
+    S.target = { x:220, y:66 }; return;
+  }
   if (NPC.kind === "lightbox" && NPC.talkable && Math.abs(x - NPC.x) < 16 && y > NPC.y - 30 && y < NPC.y + 4){
     if (S.interact) { S.wantInteract = true; return; }
     S.target = { x:NPC.x, y:NPC.y + 14 }; return;
