@@ -44,7 +44,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("case"); ap.add_argument("out")
     ap.add_argument("--ref", default="DWI"); ap.add_argument("--series", nargs="+", default=["DWI", "FLAIR"])
-    ap.add_argument("--mask", default="Lesion_Mask"); ap.add_argument("--inplane", type=float, default=0.75)
+    ap.add_argument("--mask", default="Lesion_Mask"); ap.add_argument("--step", type=int, default=1); ap.add_argument("--inplane", type=float, default=0.75)
     a = ap.parse_args()
     ref = load(os.path.join(a.case, a.ref))
     K, Hr, Wr = ref["vol"].shape
@@ -58,13 +58,14 @@ def main():
         os.makedirs(os.path.join(a.out, name), exist_ok=True)
         os.makedirs(os.path.join(a.out, name + "_mask"), exist_ok=True)
         slices, masks = [], []
-        for k in range(K):
+        for k in range(0, K, a.step):
             pts = ref["ipp0"] + (k * ref["dz"]) * ref["n"] + (jj[..., None] * ref["dc"]) * ref["r"] + (ii[..., None] * ref["dr"]) * ref["c"]
             idx = patient_to_index(src, pts.reshape(-1, 3))
             slices.append(map_coordinates(src["vol"], idx, order=1, mode="constant", cval=0).reshape(H, Wd))
             if msk is not None:
                 midx = patient_to_index(msk, pts.reshape(-1, 3))
-                masks.append(map_coordinates(msk["vol"] / max(msk["vol"].max(), 1), midx, order=1, mode="constant").reshape(H, Wd) > .5)
+                # any non-zero label counts (multi-label tumour masks: core, oedema, enhancing)
+                masks.append(map_coordinates((msk["vol"] > 0).astype(np.float32), midx, order=1, mode="constant").reshape(H, Wd) > .5)
         img = window(np.stack(slices))
         if crop is None:
             ys, xs = np.nonzero(img.max(0) > 12)
@@ -73,10 +74,11 @@ def main():
             y0, x0 = max(0, int(cy) - half), max(0, int(cx) - half)
             crop = (y0, min(H, y0 + 2 * half), x0, min(Wd, x0 + 2 * half))
         y0, y1, x0, x1 = crop
-        for k in range(K):
+        for k in range(len(img)):
             Image.fromarray(img[k, y0:y1, x0:x1]).save(os.path.join(a.out, name, f"{k:03d}.png"))
             if msk is not None: Image.fromarray((masks[k][y0:y1, x0:x1] * 255).astype(np.uint8)).save(os.path.join(a.out, name + "_mask", f"{k:03d}.png"))
-        print(name, img.shape, "lesion slices:", [k for k in range(K) if msk is not None and masks[k].any()][:1], "...", sum(m.any() for m in masks))
+        hit = [k for k in range(len(masks)) if masks[k].any()]
+        print(name, img.shape, "lesion slices:", (hit[0], hit[-1]) if hit else None, "count", len(hit))
 
 
 if __name__ == "__main__":

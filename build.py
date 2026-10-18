@@ -117,7 +117,28 @@ CASES = [
         },
         "source": "isles2022",
     },
-    ph("mat2", "matilda", "CT", "CT head, non-contrast"),
+    {
+        "id": "mat2", "opponent": "matilda", "modality": "MRI", "label": "MRI brain, T1 post-contrast and FLAIR", "patient": "patient 0004",
+        "history": "66-year-old man with headaches over a few weeks and new difficulty finding words.",
+        "question": "What is the most likely diagnosis?",
+        "options": ["High-grade glioma (glioblastoma)", "Acute ischaemic stroke", "Meningioma", "Subdural haematoma"],
+        "answer": 0,
+        "finding": "A mass in the left parietal lobe with a thick, irregular enhancing rim around a dark necrotic centre, and abnormal FLAIR signal spreading into the brain around it. Pathology confirmed glioblastoma, IDH-wildtype (WHO grade 4).",
+        "clue": "On the post-contrast T1 the rim enhances irregularly and the middle does not (necrosis). FLAIR shows how far the abnormal signal spreads. The mass sits within the brain itself, unlike a meningioma, which grows from the dura on the brain's surface.",
+        "why": "Glioblastoma is the commonest primary malignant brain tumour in adults and grows quickly. Swelling and mass effect can raise the pressure inside the skull, so it needs prompt referral to neurosurgery and oncology.",
+        "series": [{"label": "T1 post-contrast", "dir": "mat2/T1c"}, {"label": "FLAIR", "dir": "mat2/FLAIR"}],
+        "reveal": {
+            "series": [{"label": "T1 post-contrast, marked", "dir": "mat2/T1c", "overlay_dir": "mat2/T1c_mask", "start": 52},
+                       {"label": "FLAIR, marked", "dir": "mat2/FLAIR", "overlay_dir": "mat2/FLAIR_mask", "start": 52}],
+            "lines": [
+                "There it is, in the left parietal lobe. See that thick, ragged ring of enhancement on the post-contrast T1?",
+                "The dark middle is necrosis: the tumour has outgrown its blood supply. That's a big hint it's high grade.",
+                "Flip to FLAIR. The bright signal around it is tumour and swelling spreading into the brain. I've shaded the segmented tumour.",
+                "This one was confirmed as a glioblastoma. It needs the neurosurgeons and oncologists, fast.",
+            ],
+        },
+        "source": "ucsfpdgm",
+    },
     ph("mat3", "matilda", "CT", "CT angiogram, circle of Willis"),
     ph("mat4", "matilda", "MRI", "MRI brain, DWI"),
     ph("mat5", "matilda", "CT", "CT head, non-contrast"),
@@ -231,6 +252,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "ucsfpdgm": {
+        "short": "Calabrese et al. (2022), UCSF-PDGM (v5), The Cancer Imaging Archive",
+        "citation": "Calabrese, E., Villanueva-Meyer, J., Rudie, J., Rauschecker, A., Baid, U., Bakas, S., Cha, S., Mongan, J., Hess, C. (2022). "
+                    "The University of California San Francisco Preoperative Diffuse Glioma MRI (UCSF-PDGM) (Version 5) [dataset]. The Cancer Imaging Archive.",
+        "url": "https://doi.org/10.7937/tcia.bdgf-8v37",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "every second 1 mm axial slice, windowed to 8-bit and cropped; tumour segmentation drawn as an overlay; diagnosis from the collection's clinical metadata",
+    },
     "kidneystone_axial": {
         "short": "Abdalla, Mahmood & Hama (2025), Mendeley Data",
         "citation": "Abdalla, P. A., Mahmood, B. S., & Hama, N. R. (2025). Axial CT Imaging Dataset for AI-Powered Kidney Stone Detection: "
