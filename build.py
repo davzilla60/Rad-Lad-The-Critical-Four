@@ -170,7 +170,27 @@ CASES = [
         },
         "source": "kidneystone_axial",
     },
-    ph("han3", "hannah", "CT", "CT abdomen and pelvis, portal venous"),
+    {
+        "id": "han3", "opponent": "hannah", "modality": "CT", "label": "CT pulmonary angiogram, axial", "patient": "patient 7",
+        "history": "Adult with sudden shortness of breath and sharp chest pain on breathing in.",
+        "question": "What is the urgent finding?",
+        "options": ["Bilateral pulmonary emboli", "Contrast mixing artefact, no embolus", "Aortic dissection", "Pneumonia"],
+        "answer": 0,
+        "finding": "Pulmonary emboli in both lungs: a large clot in the right pulmonary artery, extending into lobar and segmental branches on both sides.",
+        "clue": "In the bright, contrast-filled pulmonary arteries, look for grey filling defects that keep their shape as you scroll through several slices. Mixing artefact fades and changes shape from slice to slice; a clot doesn't.",
+        "why": "Pulmonary embolism can cause sudden collapse and death, especially when a large central clot strains the right side of the heart. The team needs the result straight away so treatment can start.",
+        "series": [{"label": "CTPA", "dir": "han3/CTA"}],
+        "reveal": {
+            "series": [{"label": "CTPA, clots marked", "dir": "han3/CTA", "overlay_dir": "han3/CTA_mask", "start": 42}],
+            "lines": [
+                "There they are: grey clots sitting inside the bright pulmonary arteries. I've shaded the ones the radiologists marked.",
+                "The big one is in the right pulmonary artery, near the heart. Scroll up and down and you'll find more on the left too.",
+                "Real clots keep their shape slice after slice. Mixing artefact blurs and fades as you scroll.",
+                "Clots on both sides, one of them central. That's a call to the team straight away, not a note in the queue.",
+            ],
+        },
+        "source": "fumpe",
+    },
     {
         "id": "han4", "opponent": "hannah", "modality": "CT", "label": "CT aortogram, axial", "patient": "patient 4",
         "history": "Adult with sudden tearing chest pain going through to the back.",
@@ -256,6 +276,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "fumpe": {
+        "short": "Masoudi & Saadatmand-Tarzjan (2018), FUMPE, figshare",
+        "citation": "Masoudi, M., & Saadatmand-Tarzjan, M. (2018). FUMPE: Ferdowsi University of Mashhad's PE dataset [Data collection]. figshare. "
+                    "Images: Patient 7; ground truth by two radiologists.",
+        "url": "https://doi.org/10.6084/m9.figshare.c.4107803.v1",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "averaged into 2 mm axial slabs, windowed (700/100) and resized; the dataset's ground-truth clot mask drawn as an overlay",
+    },
     "ucsfpdgm": {
         "short": "Calabrese et al. (2022), UCSF-PDGM (v5), The Cancer Imaging Archive",
         "citation": "Calabrese, E., Villanueva-Meyer, J., Rudie, J., Rauschecker, A., Baid, U., Bakas, S., Cha, S., Mongan, J., Hess, C. (2022). "

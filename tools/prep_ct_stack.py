@@ -27,11 +27,23 @@ def main():
     ap.add_argument("--window", type=float, nargs=2, default=[600, 150], metavar=("WIDTH", "LEVEL"))
     ap.add_argument("--margin", type=float, default=20.0); ap.add_argument("--size", type=int, default=384)
     ap.add_argument("--label", default="CTA")
+    ap.add_argument("--mat", help="label volume in a MATLAB .mat file instead of --seg (e.g. FUMPE ground truth): "
+                                  "array (rows, cols, slices) with slices in the CT folder's filename order")
+    ap.add_argument("--mat-key", default="Mask")
     a = ap.parse_args()
     vol, z, sp = load(a.ct)
     vol[vol < -1024] = -1024                                             # outside the scan field of view
     seg = None
-    if a.seg:
+    if a.mat:
+        import scipy.io as sio
+        m = sio.loadmat(a.mat)[a.mat_key].transpose(2, 0, 1).astype(np.float32)        # (slice, row, col), filename order
+        files = sorted(glob.glob(os.path.join(a.ct, "**", "*.dcm"), recursive=True))
+        zf = np.array([float(pydicom.dcmread(f, stop_before_pixels=True).ImagePositionPatient[2]) for f in files])
+        assert len(zf) == len(m), f"{len(m)} mask slices for {len(zf)} CT slices"
+        seg = m[np.argsort(-zf)]                                                    # same superior-first order as load()
+        hit = np.where(seg.reshape(len(seg), -1).max(1) > 0)[0]
+        lo, hi = z.max(), z.min()
+    elif a.seg:
         seg, zs, _ = load(a.seg)
         assert np.allclose(z, zs, atol=.01), "SEG and CT slices do not line up"
         hit = np.where(seg.reshape(len(seg), -1).max(1) > 0)[0]
@@ -57,7 +69,8 @@ def main():
     if seg is not None: os.makedirs(os.path.join(a.out, a.label + "_mask"), exist_ok=True)
     for k in range(len(img)):
         im = Image.fromarray(img[k, y0:y1, x0:x1])
-        if max(im.size) > a.size: im = im.resize((a.size, a.size), Image.LANCZOS)
+        if max(im.size) > a.size:                                        # keep the aspect ratio
+            f = a.size / max(im.size); im = im.resize((round(im.width * f), round(im.height * f)), Image.LANCZOS)
         im.save(os.path.join(a.out, a.label, f"{k:03d}.png"))
         if seg is not None:
             m = Image.fromarray((masks[k][y0:y1, x0:x1] * 255).astype(np.uint8)).resize(im.size, Image.NEAREST)
