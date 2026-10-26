@@ -216,7 +216,33 @@ CASES = [
     ph("han6", "hannah", "CT", "CT abdomen, arterial phase"),
     # My-Vi: musculoskeletal
     ph("myv1", "myvi", "X-ray", "Pelvis, AP"),
-    ph("myv2", "myvi", "X-ray", "Elbow, lateral"),
+    {
+        "id": "myv2", "opponent": "myvi", "modality": "X-ray", "label": "Knee, horizontal-beam (cross-table) lateral", "patient": "patient 3",
+        "history": "Adult with a painful, swollen knee after a fall. Unable to bear weight.",
+        "question": "What sign is this?",
+        "options": ["Lipohaemarthrosis (fat-fluid level)", "Simple joint effusion", "Deep sulcus sign", "Segond fracture"],
+        "answer": 0,
+        "finding": "Lipohaemarthrosis: a straight fat-fluid level in the suprapatellar pouch, with fat floating on top of blood.",
+        "clue": "Only a horizontal-beam (cross-table) lateral shows it. The beam runs parallel to the fluid level, so the lighter fat layer sits above the denser blood in a perfectly straight line. Fat in the joint means marrow has escaped from a bone.",
+        "why": "Marrow fat can only get into the joint through a fracture that reaches the joint surface, so this sign means an intra-articular fracture even when you can't see one. Here the source describes a subtle tibial plateau fracture. Look hard for it; the patient may need CT.",
+        "series": [{"label": "X-table lateral", "file": "myv2/lipohaemarthrosis_no_arrow.png"}],
+        "reveal": {
+            "series": [{"label": "X-table lateral, arrowed", "file": "myv2/lipohaemarthrosis_arrow.png"}],
+            "lines": [
+                "There: see that perfectly straight line in the pouch above the kneecap? My arrow's on it.",
+                "Fat on top, blood underneath. That's a lipohaemarthrosis, and the fat came out of the bone marrow.",
+                "Marrow fat only escapes through a fracture into the joint. Here it was a subtle tibial plateau fracture.",
+                "You'll only catch this on a horizontal-beam lateral. Some breaks whisper; this one left a level.",
+            ],
+        },
+        # links offered with the credit, as the licence advises
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/6/60/Lipohemarthrosis.png"},
+            {"label": "adapted image, arrow removed (PNG)", "file": "myv2/lipohaemarthrosis_no_arrow.png",
+             "name": "Lipohaemarthrosis_arrow-removed_adapted-from-James-Heilman_CC-BY-SA-3.0.png"},
+        ],
+        "source": "heilman_lipo",
+    },
     {
         "id": "myv3", "opponent": "myvi", "modality": "X-ray", "label": "Wrist, lateral",
         "history": "Adult, fell onto an outstretched hand. Tender over the distal radius, no obvious deformity.",
@@ -276,6 +302,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "heilman_lipo": {
+        "short": "James Heilman, MD, Wikimedia Commons",
+        "adapted": True,
+        "citation": "James Heilman, MD (2011). Lipohemarthrosis. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Lipohemarthrosis.png",
+        "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "changes": "the arrow was removed from the first image shown (the arrowed image is the original); both converted to greyscale JPEG for display. "
+                   "These adaptations are shared under the same licence, CC BY-SA 3.0",
+    },
     "fumpe": {
         "short": "Masoudi & Saadatmand-Tarzjan (2018), FUMPE, figshare",
         "citation": "Masoudi, M., & Saadatmand-Tarzjan, M. (2018). FUMPE: Ferdowsi University of Mashhad's PE dataset [Data collection]. figshare. "
@@ -463,6 +498,10 @@ def main():
         e["series"] = convert(c, c["series"], "s")
         if c.get("reveal"):
             e["reveal"] = {"lines": c["reveal"]["lines"], "series": convert(c, c["reveal"]["series"], "r")}
+        if c.get("downloads"):     # local files are offered as-is (lossless), not the display JPEG
+            e["downloads"] = [{"label": d["label"], "name": d.get("name"),
+                               "url": d["url"] if "url" in d else (f"assets/src/{d['file']}" if preview else ref(data_uri(A / "src" / d["file"])))}
+                              for d in c["downloads"]]
         out_cases.append(e)
 
     used = set()

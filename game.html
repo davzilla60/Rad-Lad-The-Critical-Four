@@ -443,6 +443,7 @@ CASES.forEach(function(c){
   function fix(list){ (list || []).forEach(function(se){ se.images = se.images.map(function(u){ return typeof u === "number" ? POOL[u] : u; });
     if (se.overlays) se.overlays = se.overlays.map(function(u){ return typeof u === "number" ? POOL[u] : u; }); }); }
   fix(c.series); if (c.reveal) fix(c.reveal.series);
+  (c.downloads || []).forEach(function(d){ if (typeof d.url === "number") d.url = POOL[d.url]; });
 });
 var W = 256, H = 224;
 function $(id){ return document.getElementById(id); }
@@ -2609,10 +2610,13 @@ document.addEventListener("touchstart", function once(){ if (!TOUCH){ TOUCH = tr
 function creditHTML(c){
   var src = [].concat(c.source || []).map(function(k){ return SOURCES[k]; }).filter(Boolean);
   if (!src.length) return c.placeholder ? "Placeholder image: the real study and its credit are still to come." : "";
+  var dl = (c.downloads || []).map(function(d){
+    return '<a href="' + d.url + '"' + (d.name ? ' download="' + esc(d.name) + '"' : ' target="_blank" rel="noopener"') + ">" + esc(d.label) + "</a>";
+  });
   return "Image credit" + (c.patient ? " (" + esc(c.patient) + ")" : "") + ": " + src.map(function(s2){
-    return esc(s2.citation) + ' <a href="' + s2.url + '" target="_blank" rel="noopener">' + esc(s2.url.replace("https://", "")) + "</a>. Licence: " +
-      '<a href="' + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>. Changes: " + esc(s2.changes) + ".";
-  }).join(" ");
+    return (s2.adapted ? "Adapted from: " : "") + esc(s2.citation) + ' <a href="' + s2.url + '" target="_blank" rel="noopener">' + esc(s2.url.replace("https://", "")) + "</a>. Licence: " +
+      '<a href="' + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>. " + (s2.adapted ? "Adaptations: " : "Changes: ") + esc(s2.changes) + ".";
+  }).join(" ") + (dl.length ? " Download: " + dl.join(" &middot; ") + "." : "");
 }
 function footer(c){
   $("foot").innerHTML = "Educational use only; not for clinical decisions. " + (c ? creditHTML(c) : "Image credits are shown with each study.");
