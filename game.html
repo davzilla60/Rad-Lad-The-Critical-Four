@@ -126,6 +126,13 @@ html,body{background:#08070d;height:100%}
 #rl .study.col .s-view{flex:1 1 55%}
 #rl .study.col .s-side{flex:0 1 auto;max-height:48%}
 #rl .s-pt{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.5px;color:var(--dim);text-transform:lowercase;margin-bottom:2px}
+#rl details.cred{display:inline}
+#rl details.cred summary{cursor:pointer;display:inline;color:var(--dim);text-decoration:underline dotted;list-style:none}
+#rl details.cred summary::-webkit-details-marker{display:none}
+#rl details.cred summary::after{content:" \25B8"}
+#rl details.cred[open] summary::after{content:" \25BE"}
+#rl details.cred > div{margin-top:4px}
+#rl .foot details.cred{display:inline-block}
 #rl .s-cred{margin-top:auto;padding-top:6px;border-top:1px solid #22223a;font-size:11px;line-height:1.45;color:var(--dim);user-select:text;-webkit-user-select:text}
 #rl .s-cred a{color:var(--dim)}
 #rl .foot a{word-break:break-all}
@@ -2087,7 +2094,7 @@ function runStudy(c, num){
   });
 }
 function openStudy(c, series){
-  $("sCred").innerHTML = creditHTML(c); footer(c);
+  $("sCred").innerHTML = creditBox(c); footer(c);
   $("study").classList.add("on"); $("rl").classList.add("nopad"); layout();
   vOpen(c, series); setTimeout(vFit, 300); SFX.play("open"); say_live("Study: " + c.label + ". " + (c.question || ""));
   setTimeout(function(){ var b = $("sOpts").querySelector("button:not(:disabled)"); if (b) b.focus({ preventScroll:true }); }, 40);
@@ -2140,7 +2147,7 @@ $("sBack").onclick = function(){ var r = S.study && S.study.review; if (!r) retu
 function showCard(c){
   return new Promise(function(res){
     $("cTitle").textContent = c.options[c.answer];
-    $("cCred").innerHTML = creditHTML(c);
+    $("cCred").innerHTML = creditBox(c);
     $("cFind").textContent = c.finding || ""; $("cClue").textContent = c.clue || ""; $("cWhy").textContent = c.why || "";
     $("cNext").innerHTML = B.hp > 0 ? "Next study &#9654;" : "Continue &#9654;";
     $("card").classList.add("on"); S.cardRes = res;
@@ -2665,8 +2672,12 @@ function creditHTML(c){
       '<a href="' + s2.licence_url + '" target="_blank" rel="noopener">' + esc(s2.licence) + "</a>. " + (s2.adapted ? "Adaptations: " : "Changes: ") + esc(s2.changes) + ".";
   }).join(" ") + (dl.length ? " Download: " + dl.join(" &middot; ") + "." : "");
 }
+function creditBox(c){
+  var h = creditHTML(c); if (!h) return "";
+  return '<details class="cred"><summary>Image credit &amp; licence</summary><div>' + h + "</div></details>";
+}
 function footer(c){
-  $("foot").innerHTML = "Educational use only; not for clinical decisions. " + (c ? creditHTML(c) : "Image credits are shown with each study.");
+  $("foot").innerHTML = "Educational use only; not for clinical decisions. " + (c && creditHTML(c) ? creditBox(c) : "Image credits are shown with each study.");
 }
 buildSprites(); buildRooms(); buildBattleBGs();
 if (ART.altrad && ART.altrad.scene){ ALTRAD_IMG = new Image(); ALTRAD_IMG.src = ART.altrad.scene; }

@@ -195,7 +195,27 @@ CASES = [
     ph("mat3", "matilda", "CT", "CT angiogram, circle of Willis"),
     ph("mat4", "matilda", "MRI", "MRI brain, DWI"),
     ph("mat5", "matilda", "CT", "CT head, non-contrast"),
-    ph("mat6", "matilda", "MRI", "MRI spine, sagittal T2"),
+    {
+        "id": "mat6", "opponent": "matilda", "modality": "MRI", "label": "MRI lumbar spine, sagittal fat-suppressed T2",
+        "history": "Adult with worsening low back pain and fever, now with numbness between the legs, leg weakness and difficulty passing urine.",
+        "question": "What is the urgent finding?",
+        "options": ["Cauda equina syndrome from an epidural abscess", "Degenerative disc disease only", "Spondylolisthesis", "Normal lumbar spine"],
+        "answer": 0,
+        "finding": "Cauda equina compression: an epidural collection (abscess) in the lower lumbar canal compresses the thecal sac and the cauda equina nerve roots. High signal in the soft tissues behind the spine shows inflammation there too.",
+        "clue": "Follow the bright CSF of the thecal sac down the canal. Where it is pinched and displaced by an abnormal collection, the nerve roots are being squeezed. With fever and new bladder or saddle symptoms, think infection and compression together.",
+        "why": "Cauda equina syndrome is a surgical emergency: delays risk permanent leg weakness and loss of bladder, bowel and sexual function. The scan needs reporting and acting on straight away, and an abscess also needs antibiotics.",
+        "series": [{"label": "Sagittal T2 FS", "file": "mat6/sag_t2fs.jpg"}],
+        "reveal": {
+            "series": [{"label": "Sagittal T2 FS", "file": "mat6/sag_t2fs.jpg"}],
+            "lines": [
+                "Follow the bright CSF down the canal. See where it gets pinched and pushed aside low down? That's the collection.",
+                "It's an epidural abscess, squeezing the cauda equina nerve roots. Notice the bright, inflamed tissues behind the spine too.",
+                "Back pain plus fever, numbness in the saddle area and bladder trouble: that's the story that should make you look here first.",
+                "This is a race against time. Tell the team now, before those nerves stop working for good.",
+            ],
+        },
+        "source": "chan_oh_ces",
+    },
     # Hannah: abdominal and vascular emergencies
     ph("han1", "hannah", "X-ray", "Abdominal X-ray, supine"),
     {
@@ -375,6 +395,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "chan_oh_ces": {
+        "short": "Chan & Oh (2016), Int J Emerg Med",
+        "citation": "Chan, J., Oh, J.J. A rare case of multiple spinal epidural abscesses and cauda equina syndrome presenting to the emergency department following acupuncture. "
+                    "Int J Emerg Med 9, 22 (2016). Figure from the article.",
+        "url": "https://doi.org/10.1186/s12245-016-0116-5",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG for display",
+    },
     "nih_skull": {
         "short": "National Institutes of Health, Wikimedia Commons (public domain)",
         "adapted": True,
