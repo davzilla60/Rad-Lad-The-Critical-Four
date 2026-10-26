@@ -117,7 +117,31 @@ CASES = [
     },
     ph("dom3", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
     ph("dom4", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
-    ph("dom5", "domonic", "X-ray", "Chest X-ray, PA"),
+    {
+        "id": "dom5", "opponent": "domonic", "modality": "X-ray", "label": "Chest and upper abdomen X-ray, AP (child)",
+        "history": "Toddler brought in after a parent found an open pack of button batteries. Currently well.",
+        "question": "What is the finding?",
+        "options": ["Ingested button battery", "Ingested coin", "ECG electrode on the skin", "Normal study"],
+        "answer": 0,
+        "finding": "An ingested button battery, a dense smooth-edged disc projected over the upper abdomen just below the left hemidiaphragm, in the stomach (as described by the image source).",
+        "clue": "Batteries and coins look alike. Seen face-on, a button battery shows a double-ring (halo) edge; seen side-on it has a stepped rim. A coin has neither. Then pin down where it is: oesophagus, stomach or beyond.",
+        "why": "Button batteries can burn through tissue within hours. One in the oesophagus is an emergency needing removal straight away. Even past the chest, young children and larger batteries may still need urgent endoscopy, so image the whole route from neck to abdomen and escalate the result immediately.",
+        "series": [{"label": "AP", "file": "dom3/no_arrow.png"}],
+        "reveal": {
+            "series": [{"label": "AP, arrowed", "file": "dom3/original_arrow.png"}],
+            "lines": [
+                "There, just under the diaphragm on the left: a dense, smooth-edged disc. That's a button battery, sitting in the stomach.",
+                "Coins and batteries look alike. Look for the double-ring halo face-on, or a stepped rim side-on. A coin has neither.",
+                "It's below the chest, but only just. Always image the whole route, neck to abdomen, so you know exactly where it is.",
+                "In the oesophagus a battery can burn through within hours, and little ones may need it out even from the stomach. Escalate it now.",
+            ],
+        },
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/ButtonBatteryIngestion.png"},
+            {"label": "adapted image, arrow removed (PNG)", "file": "dom3/no_arrow.png", "name": "Button-battery_arrow-removed_adapted-from-Doc-James_CC-BY-SA-4.0.png"},
+        ],
+        "source": "docjames_battery",
+    },
     ph("dom6", "domonic", "CT", "CT chest, axial"),
     # Matilda: neurological emergencies
     {
@@ -327,6 +351,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "docjames_battery": {
+        "short": "Doc James, Wikimedia Commons",
+        "adapted": True,
+        "citation": "Doc James (2024). ButtonBatteryIngestion. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:ButtonBatteryIngestion.png",
+        "licence": "CC BY-SA 4.0", "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "the red arrow was digitally removed from the first image shown (filled in to match the surrounding film); the arrowed image is the original; "
+                   "both converted to greyscale JPEG for display. These adaptations are shared under the same licence, CC BY-SA 4.0",
+    },
     "hellerhoff_pmed": {
         "short": "Hellerhoff, Wikimedia Commons",
         "adapted": True,
