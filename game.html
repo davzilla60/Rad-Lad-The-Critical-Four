@@ -723,6 +723,19 @@ function domonic(pose){
   });
 }
 
+/* classmates waiting for their own assessment in the exam hall */
+var STUDENTS = [
+  { name:"PRIYA",       x:51,  y:124, o:{ skin:"#c8875a", hair:"#1a1414", style:"long",  top:"#2a8a7a", leg:"#1f6a5e", shoe:"#e8e8f0" },
+    lines:["I've read the chest chapter four times. Is that normal? It doesn't feel like enough."] },
+  { name:"TOM",         x:205, y:124, o:{ skin:"#7a4a2e", hair:"#141010", style:"short", top:"#8a2a3a", leg:"#6a1e2c", shoe:"#2a2030" },
+    lines:["My hands won't stop shaking.", "Pretty sure that's not one of the findings they want me to spot."] },
+  { name:"SIOBHAN",     x:75,  y:160, o:{ skin:"#f4d2bc", hair:"#c0582a", style:"curly", top:"#5a3a8a", leg:"#42286a", shoe:"#e8e8f0" },
+    lines:["Someone said the champion's been doing this since before PACS.", "What does that even mean? Who's been around that long?"] },
+  { name:"MEI",         x:181, y:160, o:{ skin:"#f0d2b4", hair:"#1a1418", style:"bun",   top:"#3a6aa8", leg:"#2a4e80", shoe:"#2a2030", glasses:true },
+    lines:["If I see one more pneumothorax tonight, I'm going to dream in pleural lines."] },
+  { name:"ALDEN VIDAL", x:205, y:196, o:{ skin:"#eec0a0", hair:"#3a2a20", style:"short", top:"#24305a", leg:"#1a2244", shoe:"#2a2030" },
+    lines:["You only have three hearts. Good luck Buddy!"] }
+];
 var LECT = { skin:"#f0c8a0", hair:"#c8c8d0", style:"grey", top:"#7a5a3a", leg:"#8a7a62", shoe:"#3a2418", glasses:true,
   extra:function(R, dir){ if (dir === "down"){ R(7,8,2,4,"#e8e0d0"); R(7,9,2,3,"#8a2a2a"); } } };
 var MATILDA = { skin:"#f0c4a4", hair:"#22182a", style:"streak", top:"#1c1c24", leg:"#2a3a6a", shoe:"#3a2418", sleeve:false,
@@ -890,6 +903,8 @@ function buildSprites(){
   SPR.grad = LOOKS.map(function(L, i){ var o = gradOpts(i);
     return { down:[person(o,"down",0), person(o,"down",1)], up:[person(o,"up",0), person(o,"up",1)], side:[person(o,"side",0), person(o,"side",1)] }; });
   SPR.lect = { down:person(LECT,"down",0), point:person(LECT,"down",0,"point") };
+  STUDENTS.forEach(function(st, k){ st.spr = person(st.o, "down", 0); st.sprB = person(st.o, "down", 1);
+    SPEAK["st" + k] = { name:st.name, col:"#c8d4f0", voice:"blip", spr:function(){ return st.spr; }, crop:[1, 0, 16, 13] }; });
   SPR.dom = {}; ["idle","point","spread","battle","swing","nod"].forEach(function(p){ SPR.dom[p] = domonic(p); });
   SPR.mat = { down:person(MATILDA,"down",0), stance:person(MATILDA,"down",0,"stance"), side:person(MATILDA,"side",0), wave:person(MATILDA,"down",0,"wave") };
   SPR.han = { down:person(HANNAH,"down",0), stance:person(HANNAH,"down",0,"stance"), hand:person(HANNAH,"down",0,"hand"), cross:person(HANNAH,"down",0,"cross") };
@@ -1391,6 +1406,13 @@ function renderRoom(){
   g.drawImage(R.bg, 0, 0);
   var list = [];
   if (id === "hall"){
+    STUDENTS.forEach(function(st, k){
+      list.push({ y:st.y, d:function(){
+        var fidget = Math.floor(t * 1.3 + k * 1.7) % 5 === 0;
+        drawShadow(st.x, st.y, 10); blit(fidget ? st.sprB : st.spr, st.x - 9, st.y - 19);
+        if (k !== 4 && Math.floor(t * .7 + k) % 4 === 0){ g.fillStyle = "#9ad8ff"; g.fillRect(st.x + 6, st.y - 20, 1, 2); g.fillRect(st.x + 5, st.y - 18, 3, 2); }   // a bead of nervous sweat
+      } });
+    });
     if (S.hallOpen > 0){ var oh = Math.round(32 * S.hallOpen); g.fillStyle = "#0a0a14"; g.fillRect(128 - Math.round(14 * S.hallOpen), 24, Math.round(28 * S.hallOpen), 32); }
   } else if (id === "domonic"){
     SKY.wins.forEach(function(w){ var on = S.domLights > w[2]; g.fillStyle = on ? (w[2] > .85 ? "#fff3c0" : "#ffd25a") : "#1a1e3a"; g.fillRect(w[0], w[1], 2, 2); });
@@ -1471,9 +1493,9 @@ function renderRoom(){
     }
     // the hidden doorway in the left wall
     if (S.secretDoor > 0){
-      var dh = Math.round(30 * Math.min(1, S.secretDoor));
-      g.fillStyle = "#06030c"; g.fillRect(0, 146 - dh, 17, dh);
-      glowAt(6, 140, 16 * S.secretDoor, "200,150,255", ".45");
+      var dh = Math.round(28 * Math.min(1, S.secretDoor));     // between the pillars (they stand at y 58-92 and 126-160)
+      g.fillStyle = "#06030c"; g.fillRect(0, 124 - dh, 18, dh);
+      glowAt(6, 112, 16 * S.secretDoor, "200,150,255", ".45");
     }
   } else if (id === "vault"){
     list.push({ y:150, d:function(){ drawShadow(128, 152, 60); drawEgg(t); } });
@@ -1502,7 +1524,7 @@ function renderRoom(){
     if (id === "lightbox"){
       LBROOM.alcoves.forEach(function(ax, k){ if (S.partyLights > k) lights.push({ x:ax, y:40, r:52 }); });
       [80, 176].forEach(function(cx5, k){ if (S.partyLights > 4 + k) lights.push({ x:cx5, y:20, r:90 }); });
-      if (S.secretDoor > 0) lights.push({ x:8, y:132, r:34 * S.secretDoor });
+      if (S.secretDoor > 0) lights.push({ x:8, y:110, r:34 * S.secretDoor });
     }
     if (id === "lightbox" && S.lbOn && NPC.kind === "lightbox") lights.push({ x:NPC.x, y:NPC.y - 14, r:46 + Math.sin(t * 2) * 3 });
     if (id === "myvi") GLYPHS.forEach(function(gl){ if (gl.lit > 0) lights.push({ x:gl.x, y:gl.y, r:26 * gl.lit }); });
@@ -1634,12 +1656,13 @@ function blocked(nx, ny){
   var walk = R.walk ? R.walk.slice() : [R.floor];
   if (S.exitOpen && S.roomId !== "hannah") walk.push([118, 40, 138, 70]);
   if (S.roomId === "hall" && S.hallOpen >= 1) walk.push([118, 40, 138, 70]);
-  if (S.roomId === "lightbox" && S.secretDoor >= 1) walk.push([0, 118, 30, 146]);
+  if (S.roomId === "lightbox" && S.secretDoor >= 1) walk.push([0, 96, 32, 124]);
   if (S.roomId === "vault") walk.push([0, 196, 30, 226]);
   if (S.roomId === "egg") walk.push([116, 190, 140, 226]);
   inside = inRects(l, t, walk) && inRects(r, t, walk) && inRects(l, b, walk) && inRects(r, b, walk);
   if (!inside) return true;
   var sol = (R.solids || []).slice();
+  if (S.roomId === "hall") STUDENTS.forEach(function(st){ sol.push([st.x - 5, st.y - 4, st.x + 5, st.y + 1]); });
   if (NPC.kind && NPC.kind !== "altrad" && !NPC.hidden && NPC.yoff > -4){ var hw = NPC.kind === "lightbox" ? 10 : 6; sol.push([NPC.x - hw, NPC.y - 5, NPC.x + hw, NPC.y + 1]); }
   for (var i = 0; i < sol.length; i++){ var s = sol[i]; if (r > s[0] && l < s[2] && b > s[1] && t < s[3]) return true; }
   return false;
@@ -1724,7 +1747,15 @@ function update(dt){
   S.interact = null;
   if (S.free && S.mode === "room" && NPC.kind === "lightbox" && NPC.talkable && Math.hypot(P.x - NPC.x, P.y - (NPC.y + 12)) < 22) S.interact = "lightbox";
   if (S.free && S.mode === "room" && S.roomId === "lightbox" && S.party >= 1 && !S.switchOn && Math.hypot(P.x - 154, P.y - 86) < 13) S.interact = "switch";
-  if (S.interact !== S.lastInteract){ S.lastInteract = S.interact; if (S.interact === "lightbox") hint(TOUCH ? "Press A to inspect the Lightbox" : "Press Space to inspect the Lightbox"); else if (S.lbHint) hint(S.lbHint); }
+  if (S.free && S.mode === "room" && S.roomId === "hall" && !S.chatting){
+    var best = null, bd2 = 20;
+    STUDENTS.forEach(function(st, k){ var dd = Math.hypot(P.x - st.x, P.y - st.y); if (dd < bd2){ bd2 = dd; best = "st" + k; } });
+    if (best) S.interact = best;
+  }
+  if (S.interact !== S.lastInteract){ S.lastInteract = S.interact;
+    if (S.interact === "lightbox") hint(TOUCH ? "Press A to inspect the Lightbox" : "Press Space to inspect the Lightbox");
+    else if (S.interact && S.interact.indexOf("st") === 0) hint((TOUCH ? "Press A to talk to " : "Press Space to talk to ") + titleCase(STUDENTS[+S.interact.slice(2)].name));
+    else hint(S.lbHint || S.baseHint || ""); }
   S.waiters = S.waiters.filter(function(wt){ if (wt.fn()){ wt.res(); return false; } return true; });
 }
 function waitFor(fn){ return new Promise(function(res){ S.waiters.push({ fn:fn, res:res }); }); }
@@ -2208,7 +2239,7 @@ function resetRoomFx(){
   NPC.kind = null; NPC.hidden = false; NPC.yoff = 0; NPC.rope = 0; NPC.alpha = 1; NPC.buddy = null; NPC.talkable = false;
 }
 function setRoom(id){
-  resetRoomFx(); S.mode = "room"; S.roomId = id; S.room = ROOMS[id];
+  resetRoomFx(); S.mode = "room"; S.roomId = id; S.room = ROOMS[id]; S.baseHint = null; S.lastInteract = undefined; hint("");
   P.x = 128; P.y = 222; P.dir = "up"; P.walk = null; S.target = null;
   NPC.x = 128; NPC.y = 96; NPC.pose = "down";
   if (id === "hall"){ NPC.kind = "lect"; NPC.y = 99; }
@@ -2220,10 +2251,18 @@ function setRoom(id){
   else if (id === "egg"){ NPC.kind = "altrad"; NPC.y = 120; NPC.alpha = 0; }
 }
 async function walkIn(){ await fadeTo(0, 500); await walkTo(128, 192, "up"); }
+function titleCase(n){ return n.toLowerCase().replace(/\b\w/g, function(ch){ return ch.toUpperCase(); }); }
+async function talkStudent(id){
+  if (S.chatting) return; S.chatting = true; S.free = false; S.target = null; KEY = {}; PAD = {};
+  var st = STUDENTS[+id.slice(2)];
+  P.dir = Math.abs(P.x - st.x) > Math.abs(P.y - st.y) ? (st.x > P.x ? "right" : "left") : (st.y > P.y ? "down" : "up");
+  for (var i = 0; i < st.lines.length; i++) await say(id, st.lines[i]);
+  S.chatting = false; S.free = true; S.lastInteract = undefined;
+}
 async function freeUntil(fn, msg){
-  S.free = true; if (msg) hint(msg);
+  S.free = true; S.baseHint = msg || null; if (msg) hint(msg);
   await waitFor(fn);
-  hint(""); S.free = false; S.target = null; KEY = {}; PAD = {}; P.moving = false;
+  hint(""); S.baseHint = null; S.free = false; S.target = null; KEY = {}; PAD = {}; P.moving = false;
 }
 async function exitThroughDoor(){
   await freeUntil(function(){ return P.y < 66 && Math.abs(P.x - 128) < 14; }, "Head through the door");
@@ -2380,7 +2419,7 @@ async function ending(){
 function partyRoom(fromSecret){
   setRoom("lightbox"); S.party = 1; S.partyLights = 6; S.lbOn = false; NPC.talkable = false; S.confetti = true;
   if (GAME.secret){ S.switchOn = true; S.secretDoor = 1; }
-  if (fromSecret){ P.x = 36; P.y = 136; P.dir = "right"; }   // just inside the hall, clear of the doorway trigger
+  if (fromSecret){ P.x = 40; P.y = 112; P.dir = "right"; }   // just inside the hall, clear of the doorway trigger
 }
 var secretRunning = false;
 async function secretLoop(){
@@ -2394,9 +2433,9 @@ async function secretLoop(){
       SFX.play("door"); await tween(function(k){ S.secretDoor = k; }, 1400);
       SFX.play("glyph"); S.free = true;
     }
-    await waitFor(function(){ return S.roomId === "lightbox" && S.secretDoor >= 1 && P.x < 22 && P.y > 118 && P.y < 148; });
+    await waitFor(function(){ return S.roomId === "lightbox" && S.secretDoor >= 1 && P.x < 24 && P.y > 98 && P.y < 126; });
     S.free = false; S.target = null; KEY = {}; PAD = {};
-    await walkTo(4, 134, "left"); await fadeTo(1, 600);
+    await walkTo(4, 112, "left"); await fadeTo(1, 600);
     GAME.secret = true; saveGame();
     setRoom("vault"); P.x = 12; P.y = 210; P.dir = "right";
     await fadeTo(0, 900); await walkTo(60, 196, "up");
@@ -2517,6 +2556,7 @@ function action(){
   if (studyOpen()) return;
   if (S.dlg){ dlgAdvance(); return; }
   if ($("card").classList.contains("on")){ cardNext(); return; }
+  if (S.interact && S.interact.indexOf("st") === 0){ talkStudent(S.interact); return; }
   if (S.interact){ S.wantInteract = true; return; }
 }
 document.addEventListener("keydown", function(e){
@@ -2553,6 +2593,13 @@ cv.addEventListener("pointerdown", function(e){
   if (S.dlg){ dlgAdvance(); return; }
   if (!S.free || S.mode !== "room") return;
   var r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  if (S.roomId === "hall"){
+    for (var si = 0; si < STUDENTS.length; si++){ var st = STUDENTS[si];
+      if (Math.abs(x - st.x) < 9 && y > st.y - 22 && y < st.y + 4){
+        if (S.interact === "st" + si){ talkStudent(S.interact); return; }
+        S.target = { x:st.x, y:st.y + 12 }; return;
+      } }
+  }
   if (S.roomId === "lightbox" && S.party >= 1 && !S.switchOn && x > 147 && x < 161 && y > 56 && y < 78){
     if (S.interact === "switch"){ S.wantInteract = true; return; }
     S.target = { x:154, y:86 }; return;
