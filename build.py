@@ -342,7 +342,31 @@ CASES = [
     ph("myv6", "myvi", "MRI", "MRI knee, sagittal PD"),
     # The Lightbox (champion): mixed
     ph("lbx1", "lightbox", "X-ray", "Chest X-ray, PA"),
-    ph("lbx2", "lightbox", "CT", "CT head, non-contrast"),
+    {
+        "id": "lbx2", "opponent": "lightbox", "modality": "X-ray", "label": "Skull, lateral (infant)",
+        "history": "Infant who rolled off a changing table, now with a soft swelling on the side of the head.",
+        "question": "What is the finding?",
+        "options": ["Depressed skull fracture", "Linear skull fracture", "Normal cranial suture", "Vascular groove"],
+        "answer": 0,
+        "finding": "A depressed skull fracture of the vault: a segment of bone is pushed inwards, seen as a curved line where the edges overlap.",
+        "clue": "Where a fragment is pushed in, its edge overlaps the neighbouring bone, so the line looks denser rather than darker. A simple linear fracture is a sharp dark line. Sutures zig-zag in predictable places, and vascular grooves branch and taper.",
+        "why": "A depressed fragment can tear the dura or press on the brain, so it needs CT and a neurosurgical opinion. In an infant, also make sure someone asks how the injury happened.",
+        "series": [{"label": "Lateral", "file": "lbx2/no_arrow.png"}],
+        "reveal": {
+            "series": [{"label": "Lateral, arrowed", "file": "lbx2/original_arrow.jpg"}],
+            "lines": [
+                "Lights on. See where my arrow points? That curved line is the edge of a piece of bone pushed inwards.",
+                "Where the pieces overlap, bone sits on bone, so the line looks denser, not darker. That's how you know it's depressed, not just a crack.",
+                "Sutures zig-zag in places you can predict, and vascular grooves branch. This does neither.",
+                "Next stop: CT and the neurosurgeons. And in a baby, always ask how it happened. I've hung on enough ward walls to know.",
+            ],
+        },
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Skull_Fracture.jpg"},
+            {"label": "adapted image, arrow removed (PNG)", "file": "lbx2/no_arrow.png", "name": "Depressed-skull-fracture_arrow-removed_public-domain_NIH.png"},
+        ],
+        "source": "nih_skull",
+    },
     ph("lbx3", "lightbox", "CT", "CT abdomen and pelvis"),
     ph("lbx4", "lightbox", "X-ray", "Shoulder, AP"),
     ph("lbx5", "lightbox", "MRI", "MRI brain"),
@@ -351,6 +375,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "nih_skull": {
+        "short": "National Institutes of Health, Wikimedia Commons (public domain)",
+        "adapted": True,
+        "citation": "National Institutes of Health. Skull Fracture (depressed skull fracture in an infant). Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Skull_Fracture.jpg",
+        "licence": "Public domain", "licence_url": "https://commons.wikimedia.org/wiki/File:Skull_Fracture.jpg",
+        "changes": "the arrow was digitally removed from the first image shown (the arrowed image is the original); converted to greyscale JPEG for display. "
+                   "No attribution is required; the source is listed so the image can be traced",
+    },
     "docjames_battery": {
         "short": "Doc James, Wikimedia Commons",
         "adapted": True,
