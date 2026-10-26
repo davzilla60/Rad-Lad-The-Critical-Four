@@ -89,7 +89,32 @@ CASES = [
         },
         "source": "ptx498",
     },
-    ph("dom2", "domonic", "X-ray", "Chest X-ray, AP supine"),
+    {
+        "id": "dom2", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray (left side shown)",
+        "history": "Young adult with sudden chest pain and a feeling of crackling under the skin of the neck after a bout of severe coughing.",
+        "question": "The red arrows are your hint. What is the finding?",
+        "options": ["Pneumomediastinum", "Left pneumothorax", "Pneumopericardium", "Skin fold"],
+        "answer": 0,
+        "finding": "Pneumomediastinum: free air in the mediastinum. On the X-ray it shows as a thin lucent line running parallel to the left heart and mediastinal border (arrows). The coronal CT confirms air around the mediastinal structures, tracking up into the neck as soft-tissue emphysema, and also shows a small right interlobar pneumothorax.",
+        "clue": "Look for a thin white line (the mediastinal pleura) with dark air beside it, hugging the heart and mediastinal borders rather than the chest wall, and for air streaking up into the neck. A pneumopericardium stays around the heart and doesn't track above it.",
+        "why": "It is often benign, for example after severe coughing or asthma, but it can be the first sign of a ruptured oesophagus or a torn airway, which are emergencies. It needs escalating so the cause is found.",
+        "series": [{"label": "Chest X-ray", "file": "dom2/xray_arrows.jpg"}],
+        "reveal": {
+            "series": [{"label": "CT, coronal (lung window)", "file": "dom2/ct_coronal.jpg"}],
+            "lines": [
+                "Here's the CT. See the black air tracking around the middle of the chest, outlining the mediastinal structures?",
+                "Follow it up: the air spreads into the neck as soft-tissue emphysema. On the X-ray it made that thin line beside the heart border.",
+                "Pneumopericardium hugs the heart only; this climbs past it into the neck. Bonus spot: a small right interlobar pneumothorax.",
+                "Usually it's benign, but it can mean a torn airway or a ruptured oesophagus. Nothing slips past me, so escalate it.",
+            ],
+        },
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/7/76/Mediastinalemphysem_-_Roe_vs_CT_LF.jpg"},
+            {"label": "adapted X-ray panel (JPEG)", "file": "dom2/xray_arrows.jpg", "name": "Pneumomediastinum_X-ray-panel_adapted-from-Hellerhoff_CC-BY-SA-3.0.jpg"},
+            {"label": "adapted CT panel (JPEG)", "file": "dom2/ct_coronal.jpg", "name": "Pneumomediastinum_CT-panel_adapted-from-Hellerhoff_CC-BY-SA-3.0.jpg"},
+        ],
+        "source": "hellerhoff_pmed",
+    },
     ph("dom3", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
     ph("dom4", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
     ph("dom5", "domonic", "X-ray", "Chest X-ray, PA"),
@@ -302,6 +327,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "hellerhoff_pmed": {
+        "short": "Hellerhoff, Wikimedia Commons",
+        "adapted": True,
+        "citation": "Hellerhoff (2015). Mediastinalemphysem - Roe vs CT LF. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Mediastinalemphysem_-_Roe_vs_CT_LF.jpg",
+        "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "changes": "the side-by-side original was split into its X-ray panel (shown first, arrows kept) and its CT panel (shown after a correct answer); "
+                   "converted to JPEG for display. These adaptations are shared under the same licence, CC BY-SA 3.0",
+    },
     "heilman_lipo": {
         "short": "James Heilman, MD, Wikimedia Commons",
         "adapted": True,
