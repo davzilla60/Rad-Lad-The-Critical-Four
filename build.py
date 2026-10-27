@@ -384,7 +384,27 @@ CASES = [
         "source": "fracatlas",
     },
     ph("myv5", "myvi", "CT", "CT cervical spine, sagittal"),
-    ph("myv6", "myvi", "MRI", "MRI knee, sagittal PD"),
+    {
+        "id": "myv6", "opponent": "myvi", "modality": "X-ray", "label": "Right hand, PA",
+        "history": "Young adult with a painful, swollen hand after punching a wall.",
+        "question": "The arrow points to the fracture. What is this type of fracture commonly known as?",
+        "options": ["Boxer's fracture", "Bennett's fracture", "Rolando fracture", "Colles' fracture"],
+        "answer": 0,
+        "finding": "Boxer's fracture: a fracture of the neck of the fifth metacarpal (the little-finger side), with the head tipped towards the palm.",
+        "clue": "Follow the little finger's metacarpal back from the knuckle: the neck is angled and its cortex broken just behind the head. Bennett's and Rolando fractures involve the base of the thumb metacarpal, and a Colles' fracture is at the wrist.",
+        "why": "It usually comes from punching something hard. Check how angled it is and whether the finger is rotated, and look for a wound over the knuckle: a cut from a tooth (a 'fight bite') needs urgent washout and antibiotics.",
+        "series": [{"label": "PA", "file": "myv6/hand_pa.jpg"}],
+        "reveal": {
+            "series": [{"label": "PA", "file": "myv6/hand_pa.jpg"}],
+            "lines": [
+                "Little finger, just behind the knuckle: the neck of the fifth metacarpal is broken and the head is tipped towards the palm.",
+                "That's a boxer's fracture, named after the punch that usually causes it.",
+                "Bennett's and Rolando fractures live at the base of the thumb. Colles' is down at the wrist. Know your names!",
+                "And always check that knuckle for a cut. A tooth wound from a punch can turn a simple break into a nasty infection.",
+            ],
+        },
+        "source": "kaggle_fracture_multiregion",
+    },
     # The Lightbox (champion): mixed
     ph("lbx1", "lightbox", "X-ray", "Chest X-ray, PA"),
     {
@@ -420,6 +440,13 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "kaggle_fracture_multiregion": {
+        "short": "Rodrigo (2024), Bone Fracture Multi-Region X-ray Data, Kaggle",
+        "citation": "Madushani Rodrigo (2024). Bone Fracture Multi-Region X-ray Data [Data set]. Kaggle.",
+        "url": "https://www.kaggle.com/datasets/bmadushanirodrigo/fracture-multi-region-x-ray-data",
+        "licence": "ODC Public Domain Dedication and Licence (PDDL) 1.0", "licence_url": "https://opendatacommons.org/licenses/pddl/1-0/",
+        "changes": "black side borders cropped; converted to JPEG for display. No attribution is required under the PDDL; the source is listed so the image can be traced",
+    },
     "openstax_hstroke": {
         "short": "OpenStax College, Anatomy & Physiology, Wikimedia Commons",
         "adapted": True,
