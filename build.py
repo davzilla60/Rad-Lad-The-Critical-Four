@@ -242,7 +242,28 @@ CASES = [
         "source": "chan_oh_ces",
     },
     # Hannah: abdominal and vascular emergencies
-    ph("han1", "hannah", "X-ray", "Abdominal X-ray, supine"),
+    {
+        "id": "han1", "opponent": "hannah", "modality": "X-ray", "label": "Abdominal X-ray, supine",
+        "history": "Older adult with several days of a swollen, painful abdomen, vomiting, and no bowel motions or wind.",
+        "question": "What is the urgent finding?",
+        "options": ["Large bowel obstruction", "Small bowel obstruction", "Pneumoperitoneum", "Normal bowel gas pattern"],
+        "answer": 0,
+        "finding": "Large bowel obstruction: the colon is markedly dilated, with gas-filled loops framing the edges of the abdomen and haustral folds that only partly cross the bowel.",
+        "clue": "Large bowel sits around the outside of the abdomen and its haustra are thick and only partly cross the lumen. Small bowel sits centrally, with thin folds that cross the full width (the 'stack of coins'). A colon wider than about 6 cm (9 cm for the caecum) is dilated.",
+        "why": "If the ileocaecal valve holds, the obstruction becomes a closed loop and the caecum can stretch until it perforates. The patient needs urgent surgical review, usually with CT to find the cause, such as a tumour or a volvulus.",
+        "series": [{"label": "Supine AXR", "file": "han1/LargeBowelObsFlat2008.jpg"}],
+        "reveal": {
+            "series": [{"label": "Supine AXR", "file": "han1/LargeBowelObsFlat2008.jpg"}],
+            "lines": [
+                "Look at the frame: big, gas-filled loops running round the edge of the abdomen. That's colon, and it's very dilated.",
+                "See the folds? They only go partway across the bowel. Haustra, not the full-width folds of small bowel.",
+                "Large bowel obstruction. The big worry is the caecum stretching until it bursts.",
+                "Surgical review, and usually a CT to find the cause. Feeling the pressure? So is that bowel. Move fast.",
+            ],
+        },
+        "downloads": [{"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/LargeBowelObsFlat2008.jpg"}],
+        "source": "heilman_lbo",
+    },
     {
         "id": "han2", "opponent": "hannah", "modality": "CT", "label": "CT kidneys, ureters and bladder (non-contrast), axial", "patient": "image 23",
         "history": "Adult with left loin pain coming in waves, spreading to the groin, and blood in the urine.",
@@ -480,6 +501,13 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "heilman_lbo": {
+        "short": "James Heilman, MD, Wikimedia Commons",
+        "citation": "James Heilman, MD. LargeBowelObsFlat2008. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:LargeBowelObsFlat2008.jpg",
+        "licence": "CC BY-SA 3.0", "licence_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "changes": "converted to greyscale JPEG and resized for display",
+    },
     "surmanowicz_weber": {
         "short": "Surmanowicz et al. (2025), Diagnostics",
         "citation": "Surmanowicz P, Hamilton AM, Mondal P, Kulyk P, Sahota N, Obaid H. Correlation Between Weber Classification of Ankle Fractures and Medial Clear Space Widening on Radiography. "
