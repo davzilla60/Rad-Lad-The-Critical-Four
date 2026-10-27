@@ -309,7 +309,27 @@ CASES = [
     ph("han5", "hannah", "CT", "CT abdomen and pelvis"),
     ph("han6", "hannah", "CT", "CT abdomen, arterial phase"),
     # My-Vi: musculoskeletal
-    ph("myv1", "myvi", "X-ray", "Pelvis, AP"),
+    {
+        "id": "myv1", "opponent": "myvi", "modality": "X-ray", "label": "Right ankle, mortise view",
+        "history": "Adult who rolled their ankle stepping off a kerb. Tender over the tip of the outer ankle bone.",
+        "question": "The arrow marks the fibular fracture. How would you classify it?",
+        "options": ["Weber A", "Weber B", "Weber C", "No fracture"],
+        "answer": 0,
+        "finding": "A Weber A fracture: the lateral malleolus is broken below the level of the ankle joint, so below the syndesmosis.",
+        "clue": "Find the tibial plafond, the flat roof of the ankle joint, and compare. Weber A is below it, Weber B starts at it, and Weber C is above it. Then check the mortise: the gaps around the talus should be even.",
+        "why": "With the syndesmosis intact, a Weber A fracture is usually stable and often managed in a boot. Still check the medial side and the medial clear space: widening means a less stable injury than it first looks.",
+        "series": [{"label": "Mortise", "file": "myv1/weber_a_mortise.jpg"}],
+        "reveal": {
+            "series": [{"label": "Mortise", "file": "myv1/weber_a_mortise.jpg"}],
+            "lines": [
+                "Find the roof of the ankle joint, the tibial plafond. Now look at the fibular fracture: it's well below that line.",
+                "Below the joint means below the syndesmosis. That's Weber A.",
+                "The gaps around the talus are even, so the mortise looks intact. Usually a stable injury.",
+                "Weber A, B, C: below, at and above the joint. Learn it once and every ankle gets easier.",
+            ],
+        },
+        "source": "surmanowicz_weber",
+    },
     {
         "id": "myv2", "opponent": "myvi", "modality": "X-ray", "label": "Knee, horizontal-beam (cross-table) lateral", "patient": "patient 3",
         "history": "Adult with a painful, swollen knee after a fall. Unable to bear weight.",
@@ -383,7 +403,27 @@ CASES = [
         },
         "source": "fracatlas",
     },
-    ph("myv5", "myvi", "CT", "CT cervical spine, sagittal"),
+    {
+        "id": "myv5", "opponent": "myvi", "modality": "X-ray", "label": "Right ankle, mortise view",
+        "history": "Adult who twisted their ankle playing football. Swollen and tender over the outer ankle.",
+        "question": "The arrow marks the fibular fracture. How would you classify it?",
+        "options": ["Weber A", "Weber B", "Weber C", "No fracture"],
+        "answer": 1,
+        "finding": "A Weber B fracture: an oblique fracture of the distal fibula starting at the level of the ankle joint, at the syndesmosis.",
+        "clue": "The fracture line begins level with the tibial plafond, the roof of the ankle joint, and runs obliquely upwards. At the joint means Weber B; below it would be A, and above it C.",
+        "why": "Weber B fractures may be stable or unstable. The deciding factor is the medial side: if the medial clear space is widened (or the medial malleolus is broken), the ankle is unstable and usually needs surgery.",
+        "series": [{"label": "Mortise", "file": "myv5/weber_b_mortise.jpg"}],
+        "reveal": {
+            "series": [{"label": "Mortise", "file": "myv5/weber_b_mortise.jpg"}],
+            "lines": [
+                "Trace the fibular fracture to where it starts: right at the level of the joint roof. That's the syndesmosis.",
+                "At the joint is Weber B. Below would be A, above would be C.",
+                "Now the important bit: check the medial clear space. Here it's normal, but if it widens, this one is unstable.",
+                "Some breaks whisper; this one asks a question. Always check the other side of the ankle for the answer.",
+            ],
+        },
+        "source": "surmanowicz_weber",
+    },
     {
         "id": "myv6", "opponent": "myvi", "modality": "X-ray", "label": "Right hand, PA",
         "history": "Young adult with a painful, swollen hand after punching a wall.",
@@ -440,6 +480,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "surmanowicz_weber": {
+        "short": "Surmanowicz et al. (2025), Diagnostics",
+        "citation": "Surmanowicz P, Hamilton AM, Mondal P, Kulyk P, Sahota N, Obaid H. Correlation Between Weber Classification of Ankle Fractures and Medial Clear Space Widening on Radiography. "
+                    "Diagnostics. 2025;15(16):2085. Figures 1 and 2.",
+        "url": "https://doi.org/10.3390/diagnostics15162085",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG for display",
+    },
     "kaggle_fracture_multiregion": {
         "short": "Rodrigo (2024), Bone Fracture Multi-Region X-ray Data, Kaggle",
         "citation": "Madushani Rodrigo (2024). Bone Fracture Multi-Region X-ray Data [Data set]. Kaggle.",
