@@ -115,7 +115,31 @@ CASES = [
         ],
         "source": "hellerhoff_pmed",
     },
-    ph("dom3", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
+    {
+        "id": "dom3", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, AP (ward film after intubation)",
+        "history": "Ventilated adult on the intensive care unit whose oxygen levels have dropped since being moved.",
+        "question": "What is the urgent finding?",
+        "options": ["Endotracheal tube in the right main bronchus", "Endotracheal tube correctly placed", "Endotracheal tube in the oesophagus", "Right pneumothorax"],
+        "answer": 0,
+        "finding": "The endotracheal tube tip lies in the right main bronchus, below the carina. The left lung is poorly aerated, with opacity at the left base.",
+        "clue": "Find the carina, where the trachea splits in two. The tube tip should sit about 3-5 cm above it. The right main bronchus is wider and straighter than the left, so a tube pushed too far usually goes right.",
+        "why": "Only one lung is being ventilated. The other collapses and oxygen levels fall, and the ventilated lung can be over-inflated. The tube needs pulling back and its position rechecking, so tell the team straight away.",
+        "series": [{"label": "AP", "file": "dom3/ett_clean.jpg"}],
+        "reveal": {
+            "series": [{"label": "AP, arrowed", "file": "dom3/ett_annotated.jpg"}],
+            "lines": [
+                "Follow the tube down. See my arrow? The tip has slipped past the carina into the right main bronchus.",
+                "The right bronchus is wider and straighter, so that's where an over-eager tube ends up.",
+                "Now the left lung: it's barely getting any air and it's collapsing at the base.",
+                "Tip 3 to 5 cm above the carina. Tell the team now so they can pull it back. Nothing slips past me, not even a tube.",
+            ],
+        },
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/7/76/Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001.jpg"},
+            {"label": "original annotated image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001_-_Annotation.jpg"},
+        ],
+        "source": ["hellerhoff_ett", "hellerhoff_ett_ann"],
+    },
     ph("dom4", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
     {
         "id": "dom5", "opponent": "domonic", "modality": "X-ray", "label": "Chest and upper abdomen X-ray, AP (child)",
@@ -527,6 +551,20 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "hellerhoff_ett": {
+        "short": "Hellerhoff, Wikimedia Commons",
+        "citation": "Hellerhoff (2022). Tubusspitze im rechten Hauptbronchus 64W - CR ap - 001. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001.jpg",
+        "licence": "CC BY-SA 4.0", "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "converted to greyscale JPEG and resized for display",
+    },
+    "hellerhoff_ett_ann": {
+        "short": "Hellerhoff, Wikimedia Commons",
+        "citation": "Hellerhoff (2022). Tubusspitze im rechten Hauptbronchus 64W - CR ap - 001 - Annotation. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001_-_Annotation.jpg",
+        "licence": "CC BY-SA 4.0", "licence_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "changes": "resized for display",
+    },
     "yigit_volvulus": {
         "short": "Yigit & Turkdogan (2014), Pan Afr Med J",
         "adapted": True,
