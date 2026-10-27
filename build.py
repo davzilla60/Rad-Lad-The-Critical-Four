@@ -327,7 +327,33 @@ CASES = [
         },
         "source": "aortaseg60",
     },
-    ph("han5", "hannah", "CT", "CT abdomen and pelvis"),
+    {
+        "id": "han5", "opponent": "hannah", "modality": "X-ray", "label": "Abdominal X-ray, supine (CT shown after a correct answer)",
+        "history": "Older adult from a care home with a hugely swollen abdomen, colicky pain and no bowel motions for several days.",
+        "question": "What is the urgent finding?",
+        "options": ["Sigmoid volvulus", "Caecal volvulus", "Small bowel obstruction", "Pneumoperitoneum"],
+        "answer": 0,
+        "finding": "Sigmoid volvulus: the sigmoid colon has twisted on its mesentery, forming one huge gas-filled loop rising out of the pelvis (the coffee bean sign). CT shows the twist (the whirl sign) and the bowel tapering at it (the bird's beak sign).",
+        "clue": "On the X-ray, look for a massive inverted-U loop of bowel rising out of the pelvis, its two walls meeting in the middle like a coffee bean. A caecal volvulus usually sits in the mid or left upper abdomen and looks more like a kidney bean, with small bowel dilated rather than colon.",
+        "why": "The twist can cut off the bowel's blood supply, leading to ischaemia and perforation. It needs urgent surgical review; many are untwisted endoscopically, but signs of ischaemia mean surgery.",
+        "series": [{"label": "AXR", "file": "han5/xray.jpg"}],
+        "reveal": {
+            "series": [{"label": "AXR", "file": "han5/xray.jpg"}, {"label": "CT axial", "file": "han5/ct_axial.jpg"}, {"label": "CT sagittal", "file": "han5/ct_sagittal.jpg"}],
+            "lines": [
+                "On the X-ray: one enormous loop rising out of the pelvis, its walls meeting in the middle. That's the coffee bean.",
+                "Open the axial CT. See the swirl? The mesentery and vessels are twisted round on themselves: the whirl sign.",
+                "Now the sagittal: the bowel narrows to a point right at the twist. That's the bird's beak.",
+                "Coffee bean, whirl, bird's beak: one twisted sigmoid. Get the surgeons in before it loses its blood supply.",
+            ],
+        },
+        "downloads": [
+            {"label": "original figure (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4317068/"},
+            {"label": "adapted X-ray panel (JPEG)", "file": "han5/xray.jpg", "name": "Sigmoid-volvulus_X-ray-panel_adapted-from-Yigit-Turkdogan_CC-BY-2.0.jpg"},
+            {"label": "adapted axial CT panel (JPEG)", "file": "han5/ct_axial.jpg", "name": "Sigmoid-volvulus_axial-CT-panel_adapted-from-Yigit-Turkdogan_CC-BY-2.0.jpg"},
+            {"label": "adapted sagittal CT panel (JPEG)", "file": "han5/ct_sagittal.jpg", "name": "Sigmoid-volvulus_sagittal-CT-panel_adapted-from-Yigit-Turkdogan_CC-BY-2.0.jpg"},
+        ],
+        "source": "yigit_volvulus",
+    },
     ph("han6", "hannah", "CT", "CT abdomen, arterial phase"),
     # My-Vi: musculoskeletal
     {
@@ -501,6 +527,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "yigit_volvulus": {
+        "short": "Yigit & Turkdogan (2014), Pan Afr Med J",
+        "adapted": True,
+        "citation": "Yigit M, Turkdogan KA. Coffee bean sign, whirl sign and bird's beak sign in the diagnosis of sigmoid volvulus. Pan Afr Med J. 2014;19:56. Figure 1.",
+        "url": "https://doi.org/10.11604/pamj.2014.19.56.5142",
+        "licence": "CC BY 2.0", "licence_url": "https://creativecommons.org/licenses/by/2.0/",
+        "changes": "the three-panel figure was split into its X-ray panel (shown first) and its axial and sagittal CT panels (shown after a correct answer); panel letters removed; the original arrows kept",
+    },
     "heilman_lbo": {
         "short": "James Heilman, MD, Wikimedia Commons",
         "citation": "James Heilman, MD. LargeBowelObsFlat2008. Wikimedia Commons.",
