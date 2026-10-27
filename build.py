@@ -192,7 +192,32 @@ CASES = [
         },
         "source": "ucsfpdgm",
     },
-    ph("mat3", "matilda", "CT", "CT angiogram, circle of Willis"),
+    {
+        "id": "mat3", "opponent": "matilda", "modality": "CT", "label": "CT head, non-contrast, axial",
+        "history": "Adult on a blood thinner, found confused with sudden left-sided weakness and a severe headache.",
+        "question": "What is the urgent finding?",
+        "options": ["Acute intracerebral haemorrhage", "Acute ischaemic stroke", "Subdural haematoma", "Calcified brain tumour"],
+        "answer": 0,
+        "finding": "Acute intracerebral haemorrhage: a large, bright collection of fresh blood within the right side of the brain (on the image's left).",
+        "clue": "On a non-contrast CT, fresh blood is bright (hyperdense). An ischaemic stroke is dark or may look normal early on, and a subdural haematoma is a crescent along the inside of the skull rather than inside the brain.",
+        "why": "A bleed changes everything: no clot-busting treatment, urgent blood-pressure control, reversal of any blood thinner, and a neurosurgical opinion. The stroke team needs this result straight away.",
+        "series": [{"label": "CT", "file": "mat3/ct.jpg"}],
+        "reveal": {
+            "series": [{"label": "Illustration", "file": "mat3/illustration.jpg"}, {"label": "CT", "file": "mat3/ct.jpg"}],
+            "lines": [
+                "Bright white on a non-contrast CT means fresh blood. Here it's a big bleed in the right side of the brain.",
+                "Flip between the drawing and the CT: the red patch is the same bleed, sitting inside the brain tissue, not on its surface.",
+                "An ischaemic stroke would look dark, not bright. A subdural would be a crescent hugging the skull.",
+                "No clot-busters for this one! Blood pressure, reversing any blood thinner, neurosurgeons. Tell the team now.",
+            ],
+        },
+        "downloads": [
+            {"label": "original image (Wikimedia Commons)", "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/1602_The_Hemorrhagic_Stroke-02.jpg"},
+            {"label": "adapted CT panel (JPEG)", "file": "mat3/ct.jpg", "name": "Haemorrhagic-stroke_CT-panel_adapted-from-OpenStax_CC-BY-3.0.jpg"},
+            {"label": "adapted illustration panel (JPEG)", "file": "mat3/illustration.jpg", "name": "Haemorrhagic-stroke_illustration-panel_adapted-from-OpenStax_CC-BY-3.0.jpg"},
+        ],
+        "source": "openstax_hstroke",
+    },
     ph("mat4", "matilda", "MRI", "MRI brain, DWI"),
     ph("mat5", "matilda", "CT", "CT head, non-contrast"),
     {
@@ -395,6 +420,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "openstax_hstroke": {
+        "short": "OpenStax College, Anatomy & Physiology, Wikimedia Commons",
+        "adapted": True,
+        "citation": "OpenStax College (2013). 1602 The Hemorrhagic Stroke-02. Anatomy & Physiology, Connexions Web site, http://cnx.org/content/col11496/1.6/. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/File:1602_The_Hemorrhagic_Stroke-02.jpg",
+        "licence": "CC BY 3.0", "licence_url": "https://creativecommons.org/licenses/by/3.0/",
+        "changes": "the two-panel figure was split into its CT panel (shown first, converted to greyscale) and its illustration panel (shown after a correct answer), and the (a)/(b) labels cropped off; converted to JPEG",
+    },
     "chan_oh_ces": {
         "short": "Chan & Oh (2016), Int J Emerg Med",
         "citation": "Chan, J., Oh, J.J. A rare case of multiple spinal epidural abscesses and cauda equina syndrome presenting to the emergency department following acupuncture. "
