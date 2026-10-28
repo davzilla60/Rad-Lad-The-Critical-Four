@@ -286,8 +286,57 @@ CASES = [
         ],
         "source": "openstax_hstroke",
     },
-    ph("mat4", "matilda", "MRI", "MRI brain, DWI"),
-    ph("mat5", "matilda", "CT", "CT head, non-contrast"),
+    # mat4 and mat5: one CT head slice, two questions, always asked back to back (group)
+    {
+        "id": "mat4", "opponent": "matilda", "modality": "CT", "label": "CT head, non-contrast, axial (circled area)",
+        "group": "basit", "group_order": 1,
+        "history": "65-year-old driver, unrestrained, in a road traffic collision. GCS 7, left pupil dilated. Takes aspirin and clopidogrel.",
+        "question": "What is the pathology inside the black circle?",
+        "options": ["Haemorrhagic contusions", "Extradural haematoma", "Subarachnoid haemorrhage", "Calcified meningioma"],
+        "answer": 0,
+        "finding": "Haemorrhagic contusions of the left frontal lobe: patchy bright blood inside the brain tissue, with darker swelling around it.",
+        "clue": "Contusions are bruises of the brain itself: bright spots of blood within the tissue, often at the frontal and temporal poles where the brain hits the rough inside of the skull. Collections outside the brain hug the skull instead, and subarachnoid blood traces the sulci.",
+        "why": "Contusions often 'blossom', growing over the first day or two, especially in a patient on antiplatelets, so they need repeat imaging. And where there are contusions, look for the rest of the injury: this scan isn't finished.",
+        "series": [{"label": "Axial", "file": "mat4/q1_black_circle.jpg"}],
+        "reveal": {
+            "series": [{"label": "Axial", "file": "mat4/q1_black_circle.jpg"}],
+            "lines": [
+                "Look inside my circle: bright blobs of blood sitting in the brain itself, with dark swelling round them.",
+                "That's bruised brain. Haemorrhagic contusions in the left frontal lobe, where it hit the inside of the skull.",
+                "On aspirin and clopidogrel, they can grow. Repeat the scan.",
+                "But a GCS of 7 and a blown pupil? Contusions don't explain all of that. Keep looking.",
+            ],
+        },
+        "source": "basit_edh_sdh",
+    },
+    {
+        "id": "mat5", "opponent": "matilda", "modality": "CT", "label": "CT head, non-contrast, axial (same slice, circled area)",
+        "group": "basit", "group_order": 2,
+        "history": "Same patient, same slice. Now look further back on the left.",
+        "question": "What is the pathology inside the red circle?",
+        "options": ["Extradural haematoma", "Acute subdural haematoma", "Haemorrhagic contusion", "Chronic subdural haematoma"],
+        "answer": 0,
+        "finding": "An acute extradural haematoma in the left temporoparietal region: a bright, lens-shaped (biconvex) collection against the skull. In theatre the bleeding was from the middle meningeal artery. Just in front of it is a second collection: an acute-on-chronic subdural haematoma with a fluid level.",
+        "clue": "Extradural blood bulges inwards as a lens because the dura is stuck to the skull at the sutures, so it can't spread far. Subdural blood spreads freely around the brain as a crescent. Fresh blood is bright, older blood darker: that is how you separate acute from chronic.",
+        "why": "An extradural haematoma from an arterial bleed can expand fast. With a GCS of 7, a dilated pupil and midline shift, he went straight to theatre, where both collections were evacuated through one craniotomy.",
+        "series": [{"label": "Axial", "file": "mat4/q2_red_circle.jpg"}],
+        "reveal": {
+            "series": [{"label": "Axial, all labels", "file": "mat4/fig1_original.jpg"}, {"label": "Red circle", "file": "mat4/q2_red_circle.jpg"}],
+            "lines": [
+                "Bright, lens-shaped, pressed against the skull. An extradural haematoma. In theatre, the middle meningeal artery.",
+                "Now open 'All labels'. Just in front of it, the red, green and yellow arrows mark a subdural: dark old blood on top, fresh bright blood below.",
+                "Acute-on-chronic subdural, extradural and contusions, all on one side. The blue arrow shows the midline pushed across.",
+                "One slice, three kinds of bleeding. Never stop at the first answer. That's what I wanted to teach you.",
+            ],
+        },
+        "downloads": [
+            {"label": "original figure (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10332251/figure/ccr37684-fig-0001/"},
+            {"label": "adapted image, black circle only (JPEG)", "file": "mat4/q1_black_circle.jpg", "name": "CT-head_black-circle-only_adapted-from-Basit-2023_CC-BY-4.0.jpg"},
+            {"label": "adapted image, red circle only (JPEG)", "file": "mat4/q2_red_circle.jpg", "name": "CT-head_red-circle-only_adapted-from-Basit-2023_CC-BY-4.0.jpg"},
+            {"label": "adapted image, all labels removed (JPEG)", "file": "mat4/clean_no_marks.jpg", "name": "CT-head_labels-removed_adapted-from-Basit-2023_CC-BY-4.0.jpg"},
+        ],
+        "source": "basit_edh_sdh",
+    },
     {
         "id": "mat6", "opponent": "matilda", "modality": "MRI", "label": "MRI lumbar spine, sagittal fat-suppressed T2",
         "history": "Adult with worsening low back pain and fever, now with numbness between the legs, leg weakness and difficulty passing urine.",
@@ -726,6 +775,15 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "basit_edh_sdh": {
+        "short": "Basit et al. (2023), Clin Case Rep",
+        "adapted": True,
+        "citation": "Basit J, Javed S, Shahzad F, Yaqoob E, Saeed S, Anand A. Coexistence of ipsilateral acute-on-chronic subdural hematoma and acute extradural hematoma: A case report. "
+                    "Clinical Case Reports. 2023;11(7):e7684. Figure 1.",
+        "url": "https://doi.org/10.1002/ccr3.7684",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "the authors' arrows and circles digitally removed, keeping only the black circle for the first question and only the red circle for the second (the fully labelled original is shown after the second answer); first question image converted to greyscale JPEG",
+    },
     "sahan_nof": {
         "short": "Sahan, De Deken & Anagnostakos (2019), Case Rep Orthop",
         "adapted": True,

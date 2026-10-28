@@ -61,11 +61,11 @@ The marker icons are first drafts drawn in code (`MARK_ART` in `game.html`).
 
 ## Linked cases
 
-Cases that share a `"group"` (with `"group_order"` 1, 2, ...) are shuffled as a single unit, so they always play back to back in order, for example one patient asked about twice (`lbx3` then `lbx4`).
+Cases that share a `"group"` (with `"group_order"` 1, 2, ...) are shuffled as a single unit, so they always play back to back in order, for example one patient asked about twice (`lbx3` then `lbx4`, and `mat4` then `mat5`).
 
 ## Adding the real studies
 
-Every case in `build.py` is a placeholder at the moment. The game draws a labelled stand-in film or fake CT stack for each one, so the whole game can be played end to end. To make a case real:
+All 30 cases are real now. The placeholder helper `ph(...)` is still in `build.py`: it draws a labelled stand-in film or fake CT stack, so a new slot can be played before its images arrive. To make a case real:
 
 1. Put its images in `assets/src/<case id>/`. Use one file per X-ray view, and one folder of slices per CT/MRI series.
 2. Replace its `ph(...)` line with a full entry:
@@ -113,6 +113,8 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 | dom5 | Domonic | Child's chest and upper abdomen AP, red arrow digitally removed (the original arrowed image is shown after a correct answer) | Ingested button battery, in the stomach just below the left hemidiaphragm | Adapted from Doc James (2024), [ButtonBatteryIngestion](https://commons.wikimedia.org/wiki/File:ButtonBatteryIngestion.png), Wikimedia Commons, CC BY-SA 4.0. The arrow-removed version is shared under the same licence; both images can be downloaded from the credit. |
 | dom6 | Domonic | Child's neck X-ray, AP (halo) and lateral (step-off), with the authors' annotations | A trick: two coins stuck together (coin stack) mimicking a button battery | Ware PJ et al. (2026), A Case Report of a Coin Stack Masquerading as a Button Battery, J Educ Teach Emerg Med 11(3):V31-V34, [doi:10.5070/M5.53886](https://doi.org/10.5070/M5.53886), CC BY 4.0 |
 | mat3 | Matilda | CT head, non-contrast (the labelled illustration is shown after a correct answer) | Acute intracerebral haemorrhage | Adapted from OpenStax College (2013), [1602 The Hemorrhagic Stroke-02](https://commons.wikimedia.org/wiki/File:1602_The_Hemorrhagic_Stroke-02.jpg), Anatomy & Physiology, Wikimedia Commons, CC BY 3.0. The two panels were split and the labels cropped; the original and both panels can be downloaded from the credit. |
+| mat4 | Matilda | CT head, one axial slice with only the black circle kept (first of a linked pair) | Haemorrhagic frontal contusions | Adapted from Basit J, Javed S, Shahzad F, Yaqoob E, Saeed S, Anand A (2023), Coexistence of ipsilateral acute-on-chronic subdural hematoma and acute extradural hematoma: A case report, Clin Case Rep 11(7):e7684, Figure 1, [doi:10.1002/ccr3.7684](https://doi.org/10.1002/ccr3.7684), CC BY 4.0. The other arrows and circle were digitally removed. |
+| mat5 | Matilda | Same slice with only the red circle kept (second of the pair; the fully labelled original is shown after a correct answer) | Acute extradural haematoma (with an acute-on-chronic subdural in front of it) | Same article and figure, CC BY 4.0 |
 | mat6 | Matilda | MRI lumbar spine, sagittal fat-suppressed T2 | Cauda equina syndrome from an epidural abscess | Chan, J., Oh, J.J. (2016). A rare case of multiple spinal epidural abscesses and cauda equina syndrome presenting to the emergency department following acupuncture. Int J Emerg Med 9, 22. [doi:10.1186/s12245-016-0116-5](https://doi.org/10.1186/s12245-016-0116-5), CC BY 4.0 |
 | han1 | Hannah | Supine abdominal X-ray (original yellow arrow kept) | Large bowel obstruction | James Heilman, MD, [LargeBowelObsFlat2008](https://commons.wikimedia.org/wiki/File:LargeBowelObsFlat2008.jpg), Wikimedia Commons, CC BY-SA 3.0 |
 | han2 | Hannah | **image 23**: non-contrast CT KUB, single axial image (stones outlined after a correct answer) | Left renal calculi, plus a tiny right renal stone | Abdalla, Mahmood & Hama (2025), Axial CT Imaging Dataset for AI-Powered Kidney Stone Detection, [Mendeley Data V1](https://doi.org/10.17632/fwhytt5mzd.1), CC BY 4.0. The outline is drawn for the game (bright pixels inside each kidney), not supplied with the dataset. |
