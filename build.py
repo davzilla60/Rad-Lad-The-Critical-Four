@@ -581,7 +581,27 @@ CASES = [
         "source": "kaggle_fracture_multiregion",
     },
     # The Lightbox (champion): mixed
-    ph("lbx1", "lightbox", "X-ray", "Chest X-ray, PA"),
+    {
+        "id": "lbx1", "opponent": "lightbox", "modality": "CT", "label": "CT cervical spine, axial (C1) and coronal",
+        "history": "Adult who dived into a shallow pool and hit the top of their head. Neck pain, no weakness or numbness.",
+        "question": "What is this injury called?",
+        "options": ["Jefferson fracture (C1 burst)", "Hangman's fracture (C2)", "Odontoid peg fracture", "Clay-shoveler's fracture"],
+        "answer": 0,
+        "finding": "A Jefferson fracture: a burst fracture of the atlas (C1), with breaks through the anterior arch and a fracture of the right lateral mass, and mild lateral spread of the lateral masses.",
+        "clue": "A vertical blow through the top of the head drives the skull down onto C1 and bursts the ring apart. On the axial, look for breaks in the ring of C1. On the coronal, check whether the lateral masses overhang C2: a large combined overhang suggests the transverse ligament has torn and the injury is unstable.",
+        "why": "Whether it is stable depends on the transverse atlantal ligament, so these patients stay immobilised until it is assessed, often with MRI. This patient's ligament was intact and they were treated in a hard collar without any neurological problems.",
+        "series": [{"label": "Axial (C1)", "file": "lbx1/ct_axial_c1.jpg"}, {"label": "Coronal", "file": "lbx1/ct_coronal.jpg"}],
+        "reveal": {
+            "series": [{"label": "Axial (C1)", "file": "lbx1/ct_axial_c1.jpg"}, {"label": "Coronal", "file": "lbx1/ct_coronal.jpg"}],
+            "lines": [
+                "A ring of bone can't break in just one place. See the arrows? C1's anterior arch is cracked through.",
+                "Flip to the coronal. The right lateral mass is broken too, and both masses are sliding out past C2.",
+                "A blow straight down on the head, bursting the atlas open. That's a Jefferson fracture.",
+                "Collar on and keep them still until the ligament's checked. I've seen a lot of necks on my screen; this one deserved respect.",
+            ],
+        },
+        "source": "martinez_jefferson",
+    },
     {
         "id": "lbx2", "opponent": "lightbox", "modality": "X-ray", "label": "Skull, lateral (infant)",
         "history": "Infant who rolled off a changing table, now with a soft swelling on the side of the head.",
@@ -615,6 +635,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "martinez_jefferson": {
+        "short": "Martinez-Romo & McCoy (2021), J Educ Teach Emerg Med",
+        "citation": "Martinez-Romo MA, McCoy CE. Jefferson Fracture and the Classification System for Atlas Fractures, A Case Report. "
+                    "J Educ Teach Emerg Med. 2021;6(2):V16-V19. Figures 1 and 3.",
+        "url": "https://doi.org/10.21980/J88P9C",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG for display; the authors' arrows kept",
+    },
     "liu_pneumoperitoneum": {
         "short": "Liu, Auld & Stieler (2026), Cureus",
         "citation": "Liu Y, Auld M, Stieler G. The Silent Abdomen: The Conservative Management of Large Idiopathic Pneumoperitoneum. Cureus. 2026;18(5):e109171. Figures 1 and 3.",
