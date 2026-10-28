@@ -422,7 +422,27 @@ CASES = [
         ],
         "source": "yigit_volvulus",
     },
-    ph("han6", "hannah", "CT", "CT abdomen, arterial phase"),
+    {
+        "id": "han6", "opponent": "hannah", "modality": "CT", "label": "CT abdomen, portal venous phase, axial",
+        "history": "Older adult with vague abdominal discomfort. Surprisingly, the abdomen is soft and the observations are normal.",
+        "question": "What is the urgent finding?",
+        "options": ["Pneumoperitoneum (free intraperitoneal air)", "Large bowel obstruction", "Pneumatosis intestinalis (gas in the bowel wall)", "Normal CT abdomen"],
+        "answer": 0,
+        "finding": "A large-volume pneumoperitoneum: free gas fills the front of the abdominal cavity, outside the bowel, and outlines the falciform ligament.",
+        "clue": "With the patient lying flat, free air rises to sit under the anterior abdominal wall, outside the bowel loops. A lung window makes small amounts easier to see. Gas in the bowel wall (pneumatosis) instead follows the line of the bowel.",
+        "why": "Free air usually means a perforated bowel and needs urgent surgical review. In this case the oral contrast scan showed no leak and the patient stayed well, so it was managed without surgery as an idiopathic pneumoperitoneum. That is the surgical team's decision to make, not a reason to delay escalating.",
+        "series": [{"label": "Portal venous", "file": "han6/ct_portal_venous.jpg"}],
+        "reveal": {
+            "series": [{"label": "Portal venous", "file": "han6/ct_portal_venous.jpg"}, {"label": "Oral contrast", "file": "han6/ct_oral_contrast.jpg"}],
+            "lines": [
+                "See all that black at the front? That's air outside the bowel: a huge pneumoperitoneum. Look, it even outlines the falciform ligament.",
+                "Free air normally means a hole in the gut, so the surgeons need to know straight away.",
+                "Plot twist: open the oral contrast scan. No leak, and the patient stayed well. This one was idiopathic and managed without surgery.",
+                "But that's the surgeons' call, not ours. Under pressure, you still escalate. Every time.",
+            ],
+        },
+        "source": "liu_pneumoperitoneum",
+    },
     # My-Vi: musculoskeletal
     {
         "id": "myv1", "opponent": "myvi", "modality": "X-ray", "label": "Right ankle, mortise view",
@@ -595,6 +615,13 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "liu_pneumoperitoneum": {
+        "short": "Liu, Auld & Stieler (2026), Cureus",
+        "citation": "Liu Y, Auld M, Stieler G. The Silent Abdomen: The Conservative Management of Large Idiopathic Pneumoperitoneum. Cureus. 2026;18(5):e109171. Figures 1 and 3.",
+        "url": "https://doi.org/10.7759/cureus.109171",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG for display",
+    },
     "tritsch_tension": {
         "short": "Tritsch, Galan & Oates (2021), J Educ Teach Emerg Med",
         "adapted": True,
