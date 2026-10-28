@@ -672,12 +672,78 @@ CASES = [
         },
         "source": "voucharas_ett",
     },
-    ph("lbx5", "lightbox", "MRI", "MRI brain"),
-    ph("lbx6", "lightbox", "X-ray", "Abdominal X-ray"),
+    {
+        "id": "lbx5", "opponent": "lightbox", "modality": "CT", "label": "CT pelvis and hips, coronal and axial",
+        "history": "28-year-old woman, three days after giving birth. History of epilepsy. Pain in both hips and now unable to walk.",
+        "question": "What is the injury?",
+        "options": ["Bilateral femoral neck fractures", "Right femoral neck fracture only", "Bilateral posterior hip dislocation", "Bilateral intertrochanteric fractures"],
+        "answer": 0,
+        "finding": "Displaced fractures through both femoral necks. The heads sit in their sockets but the shafts have shifted. The right side is a 3-part fracture, with an extra fragment (arrows on the axial).",
+        "clue": "Never stop at one hip. On the coronal, follow each femoral neck from head to shaft: both are broken and shortened. The femoral heads stay in the acetabula, so this isn't a dislocation. The breaks are in the neck itself, above the trochanters, so they aren't intertrochanteric.",
+        "why": "Bilateral neck of femur fractures in a young woman need an explanation. Here, a seizure plus transient osteoporosis of pregnancy weakened the bone. Displaced neck fractures cut off the blood supply to the head, and the 3-part right side pushed the surgeons to replace both hips rather than fix them.",
+        "series": [{"label": "Coronal", "file": "lbx5/ct_coronal.jpg"}, {"label": "Axial", "file": "lbx5/ct_axial_no_arrows.jpg"}],
+        "reveal": {
+            "series": [{"label": "Coronal", "file": "lbx5/ct_coronal.jpg"}, {"label": "Axial, arrowed", "file": "lbx5/ct_axial_arrowed.jpg"}],
+            "lines": [
+                "Two hips, two breaks. Follow each femoral neck on the coronal: both snapped, both shafts shifted.",
+                "The heads are still in their sockets, so it's not a dislocation. Open the axial: my arrows mark a third piece on the right.",
+                "Three days after giving birth, with epilepsy. A seizure on bone thinned by pregnancy can do this.",
+                "Satisfaction of search catches everyone. Find one fracture, then go and look for the second. I always do.",
+            ],
+        },
+        "downloads": [
+            {"label": "original figure (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6612968/figure/fig2/"},
+            {"label": "adapted axial image, arrows removed (JPEG)", "file": "lbx5/ct_axial_no_arrows.jpg", "name": "Bilateral-NOF-axial_arrows-removed_Sahan-2019_CC-BY-4.0.jpg"},
+        ],
+        "source": "sahan_nof",
+    },
+    {
+        "id": "lbx6", "opponent": "lightbox", "modality": "CT", "label": "CT cervical spine, sagittal and coronal",
+        "history": "24-year-old man brought in after a fall, with a blow to the back of the neck. GCS 15, weakness down the right side.",
+        "question": "What is the injury, and what type?",
+        "options": ["Odontoid fracture, type II", "Odontoid fracture, type I", "Odontoid fracture, type III", "Hangman's fracture (C2 pars)"],
+        "answer": 0,
+        "finding": "A type II odontoid (dens) fracture: the break runs across the base of the dens where it joins the body of C2. Here it came with an atlantoaxial dislocation, with C1 shifted on C2.",
+        "clue": "Anderson and D'Alonzo: type I is an avulsion off the tip of the dens, type II goes through the base of the dens, and type III runs down into the body of C2. A hangman's fracture is through the pars of C2, behind the body. Find where the line crosses the dens on the sagittal.",
+        "why": "Type II is the most common type and the one most likely not to heal, because the base of the dens has a poor blood supply. With the dislocation and weakness, this man needed fusion of C1 and C2 with screws.",
+        "series": [{"label": "Sagittal", "file": "lbx6/ct_sagittal_no_arrow.jpg"}, {"label": "Coronal", "file": "lbx6/ct_coronal.jpg"}],
+        "reveal": {
+            "series": [{"label": "Sagittal, arrowed", "file": "lbx6/ct_sagittal_arrowed.jpg"}, {"label": "Coronal", "file": "lbx6/ct_coronal.jpg"}],
+            "lines": [
+                "Top of the neck. The dens has broken off at its base, right where it meets the body of C2.",
+                "Not the tip, that's type I. Not down into the body, that's type III. The base: type II.",
+                "And C1 has slid on C2, which my arrow shows from behind. A dislocation as well as a fracture.",
+                "Type II heals badly: poor blood supply. This one went to theatre for screws. Read the whole neck, every time.",
+            ],
+        },
+        "downloads": [
+            {"label": "original figure (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8047229/figure/F2/"},
+            {"label": "adapted sagittal image, arrow removed (JPEG)", "file": "lbx6/ct_sagittal_no_arrow.jpg", "name": "Type-II-odontoid-sagittal_arrow-removed_Budhi-2020_CC-BY-4.0.jpg"},
+        ],
+        "source": "budhi_odontoid",
+    },
 ]
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "sahan_nof": {
+        "short": "Sahan, De Deken & Anagnostakos (2019), Case Rep Orthop",
+        "adapted": True,
+        "citation": "Sahan I, De Deken J, Anagnostakos K. Bilateral Femoral Neck Fracture in a Postpartum Woman: Beware of the Risk Factors. "
+                    "Case Reports in Orthopedics. 2019;2019:4134351. Figure 2.",
+        "url": "https://doi.org/10.1155/2019/4134351",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "coronal and axial panels separated; the authors' arrows digitally removed from the axial for the question (the arrowed original is shown after answering); converted to greyscale JPEG",
+    },
+    "budhi_odontoid": {
+        "short": "Budhi et al. (2020), Ethiop J Health Sci",
+        "adapted": True,
+        "citation": "Budhi AT, Nasrullah, Islam AA, Widodo D, Adhimarta W, Ihwan A, Faruk M. Traumatic Atlantoaxial Dislocation with Type II Odontoid Fractures: A Case Report. "
+                    "Ethiopian Journal of Health Sciences. 2020;30(6):1047-1050. Figure 2.",
+        "url": "https://doi.org/10.4314/ejhs.v30i6.25",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "sagittal and coronal panels separated; the authors' red arrow digitally removed from the sagittal for the question (the arrowed original is shown after answering); question images converted to greyscale JPEG",
+    },
     "voucharas_ett": {
         "short": "Voucharas, Tagarakis & Vouchara (2024), Cureus",
         "citation": "Voucharas C, Tagarakis G, Vouchara A. Unexpected Lung Collapse Following Chest Tube Insertion for Pneumothorax Drainage in an Intubated Patient Due to Dislocation of the Endotracheal Tube. "
