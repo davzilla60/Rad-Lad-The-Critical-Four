@@ -140,7 +140,31 @@ CASES = [
         ],
         "source": ["hellerhoff_ett", "hellerhoff_ett_ann"],
     },
-    ph("dom4", "domonic", "X-ray", "Chest X-ray, AP (lines and tubes)"),
+    {
+        "id": "dom4", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, AP portable, upright (child)",
+        "history": "Child brought in after a road traffic collision, struggling to breathe, with a falling blood pressure.",
+        "question": "What is the urgent finding?",
+        "options": ["Right tension pneumothorax", "Left tension pneumothorax", "Large left pleural effusion", "Right lower lobe collapse"],
+        "answer": 0,
+        "finding": "Right tension pneumothorax: the right lung has collapsed towards the hilum, the right side of the chest is dark with no lung markings, and the heart and mediastinum are pushed across to the left.",
+        "clue": "Look beyond the black lung: a tension pneumothorax pushes things. The mediastinum and trachea shift away from the dark side, and the diaphragm may be flattened. The white left side here is the left lung and mediastinum squashed across, not a pleural effusion.",
+        "why": "Tension pneumothorax is an emergency that can stop the heart. It should be treated with immediate needle or finger decompression, ideally before any X-ray is taken. If you see these signs on an image, tell the team instantly.",
+        "series": [{"label": "AP", "file": "dom4/tension_clean.png"}],
+        "reveal": {
+            "series": [{"label": "AP, annotated", "file": "dom4/tension_annotated.png"}],
+            "lines": [
+                "Look at the right side: black, no lung markings, and the lung squashed down towards the hilum. The red line marks its edge.",
+                "Now the part that makes it tension: the heart and mediastinum are shoved across to the left. That's what the blue arrows show.",
+                "That white left side isn't an effusion. It's the left lung and heart squashed by the pressure.",
+                "This one can't wait for a report. Decompress it now. Nothing slips past me, and this can't slip past you.",
+            ],
+        },
+        "downloads": [
+            {"label": "original article (eScholarship)", "url": "https://escholarship.org/uc/item/5f444352"},
+            {"label": "adapted image, annotations removed (PNG)", "file": "dom4/tension_clean.png", "name": "Tension-pneumothorax_annotations-removed_adapted-from-Tritsch-Galan-Oates_CC-BY-4.0.png"},
+        ],
+        "source": "tritsch_tension",
+    },
     {
         "id": "dom5", "opponent": "domonic", "modality": "X-ray", "label": "Chest and upper abdomen X-ray, AP (child)",
         "history": "Toddler brought in after a parent found an open pack of button batteries. Currently well.",
@@ -571,6 +595,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "tritsch_tension": {
+        "short": "Tritsch, Galan & Oates (2021), J Educ Teach Emerg Med",
+        "adapted": True,
+        "citation": "Tritsch Z, Galan G, Oates G. Case Report: Traumatic Tension Pneumothorax in a Pediatric Patient. J Educ Teach Emerg Med. 2021;6(1).",
+        "url": "https://doi.org/10.5070/M561051823",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "the red line and blue arrows were digitally removed from the first image shown (the annotated image is the original); converted for display",
+    },
     "ware_coinstack": {
         "short": "Ware et al. (2026), J Educ Teach Emerg Med",
         "citation": "Ware PJ, Ware C, Bjornstad AH, Kuntz HM, Young TP. A Case Report of a Coin Stack Masquerading as a Button Battery. "
