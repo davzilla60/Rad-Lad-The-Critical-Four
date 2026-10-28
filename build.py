@@ -1,6 +1,6 @@
 """Build index.html / critical-four.embed.html from game.html + the case list below.
 
-Every case belongs to one opponent (domonic, matilda, hannah, myvi, lightbox) and has
+Every case belongs to one opponent (dominic, matilda, hannah, myvi, lightbox) and has
 one or more image SERIES. A series is either a single image (an X-ray view) or a
 folder of slices (a scrollable CT/MRI stack):
 
@@ -29,7 +29,7 @@ from PIL import Image, ImageChops, ImageFilter
 ROOT = Path(__file__).parent
 A = ROOT / "assets"
 XRAY_SIDE, STACK_SIDE = 1400, 768
-OPPONENTS = ["domonic", "matilda", "hannah", "myvi", "lightbox"]
+OPPONENTS = ["dominic", "matilda", "hannah", "myvi", "lightbox"]
 
 
 def ph(cid, opp, modality, label):
@@ -67,9 +67,9 @@ def ph(cid, opp, modality, label):
 #             the fracture behind a soft-tissue sign)
 # ---------------------------------------------------------------------------------
 CASES = [
-    # Domonic: chest pathology and chest lines/tubes
+    # Dominic: chest pathology and chest lines/tubes
     {
-        "id": "dom1", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, PA",
+        "id": "dom1", "opponent": "dominic", "modality": "X-ray", "label": "Chest X-ray, PA",
         "history": "Young adult with sudden right-sided chest pain and shortness of breath.",
         "question": "What is the urgent finding?",
         "options": ["Right pneumothorax", "Left pneumothorax", "Skin fold", "Normal chest X-ray"],
@@ -90,7 +90,7 @@ CASES = [
         "source": "ptx498",
     },
     {
-        "id": "dom2", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray (left side shown)",
+        "id": "dom2", "opponent": "dominic", "modality": "X-ray", "label": "Chest X-ray (left side shown)",
         "history": "Young adult with sudden chest pain and a feeling of crackling under the skin of the neck after a bout of severe coughing.",
         "question": "The red arrows are your hint. What is the finding?",
         "options": ["Pneumomediastinum", "Left pneumothorax", "Pneumopericardium", "Skin fold"],
@@ -116,7 +116,7 @@ CASES = [
         "source": "hellerhoff_pmed",
     },
     {
-        "id": "dom3", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, AP (ward film after intubation)",
+        "id": "dom3", "opponent": "dominic", "modality": "X-ray", "label": "Chest X-ray, AP (ward film after intubation)",
         "history": "Ventilated adult on the intensive care unit whose oxygen levels have dropped since being moved.",
         "question": "What is the urgent finding?",
         "options": ["Endotracheal tube in the right main bronchus", "Endotracheal tube correctly placed", "Endotracheal tube in the oesophagus", "Right pneumothorax"],
@@ -141,7 +141,7 @@ CASES = [
         "source": ["hellerhoff_ett", "hellerhoff_ett_ann"],
     },
     {
-        "id": "dom4", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, AP portable, upright (child)",
+        "id": "dom4", "opponent": "dominic", "modality": "X-ray", "label": "Chest X-ray, AP portable, upright (child)",
         "history": "Child brought in after a road traffic collision, struggling to breathe, with a falling blood pressure.",
         "question": "What is the urgent finding?",
         "options": ["Right tension pneumothorax", "Left tension pneumothorax", "Large left pleural effusion", "Right lower lobe collapse"],
@@ -166,7 +166,7 @@ CASES = [
         "source": "tritsch_tension",
     },
     {
-        "id": "dom5", "opponent": "domonic", "modality": "X-ray", "label": "Chest and upper abdomen X-ray, AP (child)",
+        "id": "dom5", "opponent": "dominic", "modality": "X-ray", "label": "Chest and upper abdomen X-ray, AP (child)",
         "history": "Toddler brought in after a parent found an open pack of button batteries. Currently well.",
         "question": "What is the finding?",
         "options": ["Ingested button battery", "Ingested coin", "ECG electrode on the skin", "Normal study"],
@@ -191,7 +191,7 @@ CASES = [
         "source": "docjames_battery",
     },
     {
-        "id": "dom6", "opponent": "domonic", "modality": "X-ray", "label": "Neck X-ray, AP and lateral (child)",
+        "id": "dom6", "opponent": "dominic", "modality": "X-ray", "label": "Neck X-ray, AP and lateral (child)",
         "history": "Young child seen swallowing something at home, now drooling and refusing to eat.",
         "question": "The AP shows a halo and the lateral a step-off. What was removed from this child's oesophagus?",
         "options": ["Two coins stuck together (a coin stack)", "A button battery", "A single coin", "A magnet"],

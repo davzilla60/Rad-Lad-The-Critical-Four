@@ -12,7 +12,7 @@ This is an embeddable, top-down pixel-art game in the style of the 90s Pokémon 
 
 | # | Opponent | Focus | Room | Intro | After defeat |
 |---|---|---|---|---|---|
-| 1 | Domonic | Chest, lines and tubes | City at night | A parody caped hero (teal suit, purple cape, domino mask, lungs on his chest). Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
+| 1 | Dominic | Chest, lines and tubes | City at night | A parody caped hero (teal suit, purple cape, domino mask, lungs on his chest). Swings down on a line, lands, points, spreads his cape and the city lights come on | Nods, swings away and reveals the door |
 | 2 | Matilda | Neuro emergencies | Enchanted purple parlour: chandelier, candles, potion shelf, crystal ball, moonlit windows; four original plush fox-like creatures | Fighting stance; the four big dolls twitch their ears, turn to face you and bounce | The dolls freeze; her shoulder companion runs to the door and unlocks it |
 | 3 | Hannah | Abdominal and vascular | Stone tournament ring on a grassy plain | Stomps forward, the screen shakes and cracks spread across the tiles | Opens a purple portal; you step in and the screen fades to purple |
 | 4 | My-Vi | Musculoskeletal | Star chamber: constellation mural, emerald braziers, floating crystals, a glowing rune circle and drifting motes | Raises her hands and the glyphs light up one by one | The glyphs fly across the room and form a glowing doorway |
@@ -33,7 +33,7 @@ Markers use the Rad-Lad "Marker Unlocked" stamp animation. The **MARKERS** butto
 
 | Marker | Unlock |
 |---|---|
-| The Dark Lung Rises | Defeat Domonic |
+| The Dark Lung Rises | Defeat Dominic |
 | Mind Over Matilda | Defeat Matilda |
 | Go With the Flow | Defeat Hannah |
 | Bone to Be Wild | Defeat My-Vi |
@@ -72,7 +72,7 @@ All 30 cases are real now. The placeholder helper `ph(...)` is still in `build.p
 
 ```python
 {
-    "id": "dom1", "opponent": "domonic", "modality": "X-ray", "label": "Chest X-ray, PA",
+    "id": "dom1", "opponent": "dominic", "modality": "X-ray", "label": "Chest X-ray, PA",
     "history": "Sudden breathlessness after a fall.",
     "question": "What is the urgent finding?",
     "options": ["Right tension pneumothorax", "Right pleural effusion", "Left lower lobe collapse", "Normal study"],
@@ -106,12 +106,12 @@ All 30 cases are real now. The placeholder helper `ph(...)` is still in `build.p
 
 | Case | Opponent | Study | Answer | Images |
 |---|---|---|---|---|
-| dom1 | Domonic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
-| dom2 | Domonic | Chest X-ray panel with the original red arrows as a hint (the coronal CT panel is shown after a correct answer) | Pneumomediastinum (plus a small right interlobar pneumothorax on CT) | Adapted from Hellerhoff (2015), [Mediastinalemphysem - Roe vs CT LF](https://commons.wikimedia.org/wiki/File:Mediastinalemphysem_-_Roe_vs_CT_LF.jpg), Wikimedia Commons, CC BY-SA 3.0. The original was split into its two panels, shared under the same licence; the original and both panels can be downloaded from the credit. |
-| dom3 | Domonic | Ward AP chest X-ray, clean (the original annotated version is shown after a correct answer) | Endotracheal tube in the right main bronchus, poorly aerated left lung | Hellerhoff (2022), [clean](https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001.jpg) and [annotated](https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001_-_Annotation.jpg) versions, Wikimedia Commons, CC BY-SA 4.0 |
-| dom4 | Domonic | Child's AP chest X-ray with the authors' red line and blue arrows digitally removed (the annotated original is shown after a correct answer) | Right tension pneumothorax with mediastinal shift to the left | Adapted from Tritsch Z, Galan G, Oates G (2021), Case Report: Traumatic Tension Pneumothorax in a Pediatric Patient, J Educ Teach Emerg Med 6(1), [doi:10.5070/M561051823](https://doi.org/10.5070/M561051823), CC BY 4.0 |
-| dom5 | Domonic | Child's chest and upper abdomen AP, red arrow digitally removed (the original arrowed image is shown after a correct answer) | Ingested button battery, in the stomach just below the left hemidiaphragm | Adapted from Doc James (2024), [ButtonBatteryIngestion](https://commons.wikimedia.org/wiki/File:ButtonBatteryIngestion.png), Wikimedia Commons, CC BY-SA 4.0. The arrow-removed version is shared under the same licence; both images can be downloaded from the credit. |
-| dom6 | Domonic | Child's neck X-ray, AP (halo) and lateral (step-off), with the authors' annotations | A trick: two coins stuck together (coin stack) mimicking a button battery | Ware PJ et al. (2026), A Case Report of a Coin Stack Masquerading as a Button Battery, J Educ Teach Emerg Med 11(3):V31-V34, [doi:10.5070/M5.53886](https://doi.org/10.5070/M5.53886), CC BY 4.0 |
+| dom1 | Dominic | Chest X-ray, PA (marked view with the pneumothorax overlay shown after a correct answer) | Right pneumothorax | PTX-498 (Wang 2021), [Zenodo](https://doi.org/10.5281/zenodo.8266529), CC BY 4.0 |
+| dom2 | Dominic | Chest X-ray panel with the original red arrows as a hint (the coronal CT panel is shown after a correct answer) | Pneumomediastinum (plus a small right interlobar pneumothorax on CT) | Adapted from Hellerhoff (2015), [Mediastinalemphysem - Roe vs CT LF](https://commons.wikimedia.org/wiki/File:Mediastinalemphysem_-_Roe_vs_CT_LF.jpg), Wikimedia Commons, CC BY-SA 3.0. The original was split into its two panels, shared under the same licence; the original and both panels can be downloaded from the credit. |
+| dom3 | Dominic | Ward AP chest X-ray, clean (the original annotated version is shown after a correct answer) | Endotracheal tube in the right main bronchus, poorly aerated left lung | Hellerhoff (2022), [clean](https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001.jpg) and [annotated](https://commons.wikimedia.org/wiki/File:Tubusspitze_im_rechten_Hauptbronchus_64W_-_CR_ap_-_001_-_Annotation.jpg) versions, Wikimedia Commons, CC BY-SA 4.0 |
+| dom4 | Dominic | Child's AP chest X-ray with the authors' red line and blue arrows digitally removed (the annotated original is shown after a correct answer) | Right tension pneumothorax with mediastinal shift to the left | Adapted from Tritsch Z, Galan G, Oates G (2021), Case Report: Traumatic Tension Pneumothorax in a Pediatric Patient, J Educ Teach Emerg Med 6(1), [doi:10.5070/M561051823](https://doi.org/10.5070/M561051823), CC BY 4.0 |
+| dom5 | Dominic | Child's chest and upper abdomen AP, red arrow digitally removed (the original arrowed image is shown after a correct answer) | Ingested button battery, in the stomach just below the left hemidiaphragm | Adapted from Doc James (2024), [ButtonBatteryIngestion](https://commons.wikimedia.org/wiki/File:ButtonBatteryIngestion.png), Wikimedia Commons, CC BY-SA 4.0. The arrow-removed version is shared under the same licence; both images can be downloaded from the credit. |
+| dom6 | Dominic | Child's neck X-ray, AP (halo) and lateral (step-off), with the authors' annotations | A trick: two coins stuck together (coin stack) mimicking a button battery | Ware PJ et al. (2026), A Case Report of a Coin Stack Masquerading as a Button Battery, J Educ Teach Emerg Med 11(3):V31-V34, [doi:10.5070/M5.53886](https://doi.org/10.5070/M5.53886), CC BY 4.0 |
 | mat3 | Matilda | CT head, non-contrast (the labelled illustration is shown after a correct answer) | Acute intracerebral haemorrhage | Adapted from OpenStax College (2013), [1602 The Hemorrhagic Stroke-02](https://commons.wikimedia.org/wiki/File:1602_The_Hemorrhagic_Stroke-02.jpg), Anatomy & Physiology, Wikimedia Commons, CC BY 3.0. The two panels were split and the labels cropped; the original and both panels can be downloaded from the credit. |
 | mat4 | Matilda | CT head, one axial slice with only the black circle kept (first of a linked pair) | Haemorrhagic frontal contusions | Adapted from Basit J, Javed S, Shahzad F, Yaqoob E, Saeed S, Anand A (2023), Coexistence of ipsilateral acute-on-chronic subdural hematoma and acute extradural hematoma: A case report, Clin Case Rep 11(7):e7684, Figure 1, [doi:10.1002/ccr3.7684](https://doi.org/10.1002/ccr3.7684), CC BY 4.0. The other arrows and circle were digitally removed. |
 | mat5 | Matilda | Same slice with only the red circle kept (second of the pair; the fully labelled original is shown after a correct answer) | Acute extradural haematoma (with an acute-on-chronic subdural in front of it) | Same article and figure, CC BY 4.0 |
@@ -174,7 +174,7 @@ The series then scroll in step: switching tabs keeps the same slice. Use `overla
 
 ## Testing shortcut
 
-Add `?jump=domonic` (or `hall`, `matilda`, `hannah`, `myvi`, `lightbox`) to the URL to start in that room. This overwrites the saved progress in that browser.
+Add `?jump=dominic` (or `hall`, `matilda`, `hannah`, `myvi`, `lightbox`) to the URL to start in that room. This overwrites the saved progress in that browser.
 
 ## Controls
 

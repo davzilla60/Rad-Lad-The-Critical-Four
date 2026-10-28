@@ -696,10 +696,10 @@ function gradOpts(i){
     extra:function(R, dir){ if (dir === "down") R(10,9,1,2,"#ffd34d"); } };
 }
 
-/* Domonic: a generic caped-hero parody (teal suit, purple cape, domino mask, lungs on the chest) */
+/* Dominic: a generic caped-hero parody (teal suit, purple cape, domino mask, lungs on the chest) */
 var DOM = { suit:"#1f7a7a", suitD:"#145252", cape:"#5a2a8a", capeL:"#8a4ac0", glove:"#e8e8f0", boot:"#2a1a3a", belt:"#e0b030",
             skin:"#e8b896", hair:"#2a1a12", mask:"#14141c", lung:"#ffd25a" };
-function domonic(pose){
+function dominic(pose){
   // 24 x 22, body centred at x = 12
   return bake(24, 22, function(R){
     var C = DOM, X = 4;
@@ -912,7 +912,7 @@ function buildSprites(){
   SPR.lect = { down:person(LECT,"down",0), point:person(LECT,"down",0,"point") };
   STUDENTS.forEach(function(st, k){ st.spr = person(st.o, "down", 0); st.sprB = person(st.o, "down", 1);
     SPEAK["st" + k] = { name:st.name, col:"#c8d4f0", voice:"blip", spr:function(){ return st.spr; }, crop:[1, 0, 16, 13] }; });
-  SPR.dom = {}; ["idle","point","spread","battle","swing","nod"].forEach(function(p){ SPR.dom[p] = domonic(p); });
+  SPR.dom = {}; ["idle","point","spread","battle","swing","nod"].forEach(function(p){ SPR.dom[p] = dominic(p); });
   SPR.mat = { down:person(MATILDA,"down",0), stance:person(MATILDA,"down",0,"stance"), side:person(MATILDA,"side",0), wave:person(MATILDA,"down",0,"wave") };
   SPR.han = { down:person(HANNAH,"down",0), stance:person(HANNAH,"down",0,"stance"), hand:person(HANNAH,"down",0,"hand"), cross:person(HANNAH,"down",0,"cross") };
   SPR.myv = { down:person(MYVI,"down",0), up:person(MYVI,"down",0,"up"), wave:person(MYVI,"down",0,"wave") };
@@ -929,16 +929,16 @@ function spriteURL(c, scale){
 /* ======================================================================
    GAME DATA
    ====================================================================== */
-var ORDER = ["domonic", "matilda", "hannah", "myvi", "lightbox"];
+var ORDER = ["dominic", "matilda", "hannah", "myvi", "lightbox"];
 var OPP = {
-  domonic:  { name:"DOMONIC",  tag:"EXAMINER DOMONIC",  focus:"Chest and chest lines",        col:"#8fa8ff", marker:"darklung", voice:"blipL" },
+  dominic:  { name:"DOMINIC",  tag:"EXAMINER DOMINIC",  focus:"Chest and chest lines",        col:"#8fa8ff", marker:"darklung", voice:"blipL" },
   matilda:  { name:"MATILDA",  tag:"EXAMINER MATILDA",  focus:"Neurological emergencies",     col:"#c890ff", marker:"matilda",  voice:"blip" },
   hannah:   { name:"HANNAH",   tag:"EXAMINER HANNAH",   focus:"Abdominal and vascular",       col:"#ff9a4a", marker:"flow",     voice:"blip" },
   myvi:     { name:"MY-VI",    tag:"EXAMINER MY-VI",    focus:"Musculoskeletal",              col:"#7ff3ff", marker:"bone",     voice:"blip" },
   lightbox: { name:"LIGHTBOX", tag:"CHAMPION LIGHTBOX", focus:"A bit of everything",          col:"#fff3c0", marker:"enlighten", voice:"buzz" }
 };
 var MARKERS = [
-  { id:"darklung",  title:"The Dark Lung Rises",            how:"Defeat Domonic" },
+  { id:"darklung",  title:"The Dark Lung Rises",            how:"Defeat Dominic" },
   { id:"matilda",   title:"Mind Over Matilda",              how:"Defeat Matilda" },
   { id:"flow",      title:"Go With the Flow",               how:"Defeat Hannah" },
   { id:"bone",      title:"Bone to Be Wild",                how:"Defeat My-Vi" },
@@ -1057,7 +1057,7 @@ function buildRooms(){
   ROOMS.hall = { bg:c, ambient:0, floor:[18, 60, 238, 206],
     solids: desks.map(function(d){ return [d[0], d[1] + 2, d[0] + 22, d[1] + 12]; }).concat([[114, 100, 142, 118]]), lights:[] };
 
-  /* ----- Domonic: a city at night ----- */
+  /* ----- Dominic: a city at night ----- */
   rnd = mulberry(11); c = mk(W, H); x = c.getContext("2d");
   slabs(x, 16, 56, 224, 152, "#3a3e4c", rnd);
   var sky = x.createLinearGradient(0, 0, 0, 56); sky.addColorStop(0, "#05061a"); sky.addColorStop(1, "#1c2450");
@@ -1080,7 +1080,7 @@ function buildRooms(){
   frameWalls(x, rnd, "#3a3e4c", "#2a2c38");
   // gargoyles on the ledge
   [[30, 44], [210, 44]].forEach(function(g){ x.fillStyle = "#4a4e5e"; x.fillRect(g[0], g[1], 14, 7); x.fillRect(g[0] + 2, g[1] - 5, 8, 6); x.fillRect(g[0] + 1, g[1] - 7, 2, 3); x.fillRect(g[0] + 9, g[1] - 7, 2, 3); x.fillStyle = "#ff4040"; x.fillRect(g[0] + 4, g[1] - 3, 1, 1); x.fillRect(g[0] + 7, g[1] - 3, 1, 1); });
-  ROOMS.domonic = { bg:c, ambient:.55, floor:[18, 60, 238, 206], lights:[{ x:128, y:30, r:60, c:"120,140,255", steady:1 }] };
+  ROOMS.dominic = { bg:c, ambient:.55, floor:[18, 60, 238, 206], lights:[{ x:128, y:30, r:60, c:"120,140,255", steady:1 }] };
 
   /* ----- Matilda: the enchanted parlour ----- */
   rnd = mulberry(23); c = mk(W, H); x = c.getContext("2d");
@@ -1260,7 +1260,7 @@ var BATBG = {};
 function buildBattleBGs(){
   ORDER.forEach(function(id, n){
     var c = mk(W, H), x = c.getContext("2d"), rnd = mulberry(100 + n), i;
-    if (id === "domonic"){
+    if (id === "dominic"){
       var gr = x.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#04051a"); gr.addColorStop(.6, "#1c2458"); gr.addColorStop(1, "#2a2e48");
       x.fillStyle = gr; x.fillRect(0, 0, W, H);
       for (i = 0; i < 50; i++){ x.fillStyle = "#c0c8ff"; x.fillRect(rnd() * W | 0, rnd() * 80 | 0, 1, 1); }
@@ -1344,7 +1344,7 @@ function heroDraw(){
 function npcSprite(){
   switch (NPC.kind){
     case "lect": return SPR.lect[NPC.pose] || SPR.lect.down;
-    case "domonic": return SPR.dom[NPC.pose] || SPR.dom.idle;
+    case "dominic": return SPR.dom[NPC.pose] || SPR.dom.idle;
     case "matilda": return SPR.mat[NPC.pose] || SPR.mat.down;
     case "hannah": return SPR.han[NPC.pose] || SPR.han.down;
     case "myvi": return SPR.myv[NPC.pose] || SPR.myv.down;
@@ -1356,7 +1356,7 @@ function npcSprite(){
 function npcDraw(){
   var s = npcSprite(); if (!s || NPC.hidden) return;
   var x = NPC.x - s.width / 2, y = NPC.y - s.height + 1 + NPC.yoff;
-  if (NPC.rope){ g.fillStyle = "#8a8e9a"; g.fillRect(Math.round(NPC.x + (NPC.kind === "domonic" ? 5 : 0)), 0, 1, Math.max(0, Math.round(y + 2))); }
+  if (NPC.rope){ g.fillStyle = "#8a8e9a"; g.fillRect(Math.round(NPC.x + (NPC.kind === "dominic" ? 5 : 0)), 0, 1, Math.max(0, Math.round(y + 2))); }
   if (NPC.yoff > -4 && NPC.alpha > .5) drawShadow(NPC.x, NPC.y, Math.min(16, s.width - 4));
   g.globalAlpha = NPC.alpha; blit(s, x, y); g.globalAlpha = 1;
   if (NPC.kind === "lightbox" && S.lbOn) lbFace(g, x, y, 1, S.lbTalk && Math.floor(S.t * 9) % 2 === 0, S.lbMood);
@@ -1421,7 +1421,7 @@ function renderRoom(){
       } });
     });
     if (S.hallOpen > 0){ var oh = Math.round(32 * S.hallOpen); g.fillStyle = "#0a0a14"; g.fillRect(128 - Math.round(14 * S.hallOpen), 24, Math.round(28 * S.hallOpen), 32); }
-  } else if (id === "domonic"){
+  } else if (id === "dominic"){
     SKY.wins.forEach(function(w){ var on = S.domLights > w[2]; g.fillStyle = on ? (w[2] > .85 ? "#fff3c0" : "#ffd25a") : "#1a1e3a"; g.fillRect(w[0], w[1], 2, 2); });
     if (S.exitOpen){ g.fillStyle = "#08080e"; g.fillRect(114, 24, 28, 32); }
   } else if (id === "matilda"){
@@ -1520,7 +1520,7 @@ function renderRoom(){
 
   // darkness + light pools
   var amb = R.ambient;
-  if (id === "domonic") amb = .55 - S.domLights * .25;
+  if (id === "dominic") amb = .55 - S.domLights * .25;
   if (id === "lightbox") amb = S.party > 0 ? R.ambient * (1 - Math.min(1, S.party)) : S.blackout ? 1 : R.ambient;
   if (amb > 0){
     lg.globalCompositeOperation = "source-over"; lg.clearRect(0, 0, W, H);
@@ -1536,7 +1536,7 @@ function renderRoom(){
     if (id === "lightbox" && S.lbOn && NPC.kind === "lightbox") lights.push({ x:NPC.x, y:NPC.y - 14, r:46 + Math.sin(t * 2) * 3 });
     if (id === "myvi") GLYPHS.forEach(function(gl){ if (gl.lit > 0) lights.push({ x:gl.x, y:gl.y, r:26 * gl.lit }); });
     if (id === "myvi" && S.glyphDoor > 0) lights.push({ x:128, y:44, r:60 * S.glyphDoor });
-    if (id === "domonic") lights.push({ x:128, y:150, r:60 + S.domLights * 60 });
+    if (id === "dominic") lights.push({ x:128, y:150, r:60 + S.domLights * 60 });
     lights.forEach(function(l){
       var r = l.r, gr = lg.createRadialGradient(l.x, l.y, 0, l.x, l.y, r);
       gr.addColorStop(0, "rgba(0,0,0,1)"); gr.addColorStop(.45, "rgba(0,0,0,1)"); gr.addColorStop(.45, "rgba(0,0,0,.7)"); gr.addColorStop(.75, "rgba(0,0,0,.7)"); gr.addColorStop(.75, "rgba(0,0,0,.35)"); gr.addColorStop(1, "rgba(0,0,0,0)");
@@ -1563,7 +1563,7 @@ function renderRoom(){
 function battleSprite(who){
   if (who === "me") return SPR.grad[(GAME && GAME.look) || 0].up[0];
   switch (who){
-    case "domonic": return SPR.dom.battle; case "matilda": return SPR.mat.stance; case "hannah": return SPR.han.cross;
+    case "dominic": return SPR.dom.battle; case "matilda": return SPR.mat.stance; case "hannah": return SPR.han.cross;
     case "myvi": return SPR.myv.down; case "lightbox": return B && !B.lbOn ? SPR.lbOff : SPR.lbOn;
   }
 }
@@ -1777,7 +1777,7 @@ function fadeTo(v, ms, col){
    ====================================================================== */
 var SPEAK = {
   lect:     { name:"LECTURER", col:"#e8d9b0", voice:"blipL", spr:function(){ return SPR.lect.down; }, crop:[1, 0, 16, 13] },
-  domonic:  { name:"DOMONIC",  col:"#8fa8ff", voice:"blipL", spr:function(){ return SPR.dom.idle; }, crop:[5, 0, 16, 13] },
+  dominic:  { name:"DOMINIC",  col:"#8fa8ff", voice:"blipL", spr:function(){ return SPR.dom.idle; }, crop:[5, 0, 16, 13] },
   matilda:  { name:"MATILDA",  col:"#c890ff", voice:"blip",  spr:function(){ return SPR.mat.down; }, crop:[1, 0, 16, 13] },
   hannah:   { name:"HANNAH",   col:"#ff9a4a", voice:"blip",  spr:function(){ return SPR.han.down; }, crop:[1, 0, 16, 13] },
   myvi:     { name:"MY-VI",    col:"#7ff3ff", voice:"blip",  spr:function(){ return SPR.myv.down; }, crop:[1, 0, 16, 13] },
@@ -2045,7 +2045,7 @@ async function battleTransition(id){
 
 var HIT_LINES = ["Critical finding! It's super effective!", "A clean read! It's super effective!", "Spotted it! It's super effective!", "Textbook call! It's super effective!", "Nothing slips past you! It's super effective!"];
 var BATTLE_INTRO = {
-  domonic: ["EXAMINER DOMONIC wants to assess you!", "DOMONIC sends out the first chest study!"],
+  dominic: ["EXAMINER DOMINIC wants to assess you!", "DOMINIC sends out the first chest study!"],
   matilda: ["EXAMINER MATILDA wants to assess you!", "MATILDA sends out the first neuro study!"],
   hannah:  ["EXAMINER HANNAH wants to assess you!", "HANNAH sends out the first abdominal study!"],
   myvi:    ["EXAMINER MY-VI wants to assess you!", "MY-VI sends out the first bone study!"],
@@ -2233,7 +2233,7 @@ async function battle(id, retry){
   return true;
 }
 var LOSE_LINES = {
-  domonic: "The night is darkest just before you spot the pneumothorax. Try again.",
+  dominic: "The night is darkest just before you spot the pneumothorax. Try again.",
   matilda: "Ooh, tough luck. Shake it off and come back swinging.",
   hannah: "Pressure gets to everyone. Catch your breath and step back in.",
   myvi: "The bones keep their secrets a little longer. Read them again.",
@@ -2262,7 +2262,7 @@ function setRoom(id){
   P.x = 128; P.y = 222; P.dir = "up"; P.walk = null; S.target = null;
   NPC.x = 128; NPC.y = 96; NPC.pose = "down";
   if (id === "hall"){ NPC.kind = "lect"; NPC.y = 99; }
-  else if (id === "domonic"){ NPC.kind = "domonic"; NPC.pose = "swing"; NPC.yoff = -150; NPC.rope = 1; NPC.y = 100; }
+  else if (id === "dominic"){ NPC.kind = "dominic"; NPC.pose = "swing"; NPC.yoff = -150; NPC.rope = 1; NPC.y = 100; }
   else if (id === "matilda"){ NPC.kind = "matilda"; NPC.y = 96; NPC.buddy = { on:true, x:0, y:0 }; }
   else if (id === "hannah"){ NPC.kind = "hannah"; NPC.y = 104; }
   else if (id === "myvi"){ NPC.kind = "myvi"; NPC.y = 100; }
@@ -2302,13 +2302,13 @@ async function hallScene(){
 }
 
 var INTRO = {
-  domonic: async function(){
+  dominic: async function(){
     await freeUntil(function(){ return P.y < 160; }, "Walk forward");
     P.dir = "up"; SFX.play("swing");
     await tween(function(k){ NPC.yoff = -150 * (1 - ease(k)); }, 900);
     NPC.yoff = 0; SFX.play("land"); S.shake = .25; NPC.rope = 0; NPC.pose = "idle"; await sleep(350);
     NPC.pose = "point";
-    await say("domonic", "Some people watch the streets. I watch the chest. Six studies. Let's see what slipped past you.");
+    await say("dominic", "Some people watch the streets. I watch the chest. Six studies. Let's see what slipped past you.");
     NPC.pose = "spread"; SFX.play("lights");
     await tween(function(k){ S.domLights = k; }, 1300); await sleep(300);
   },
@@ -2354,9 +2354,9 @@ var INTRO = {
   }
 };
 var OUTRO = {
-  domonic: async function(){
+  dominic: async function(){
     NPC.pose = "nod"; await sleep(400);
-    await say("domonic", "Well spotted. Head through—the next examiner's waiting.");
+    await say("dominic", "Well spotted. Head through—the next examiner's waiting.");
     award("darklung");
     NPC.pose = "swing"; NPC.rope = 1; SFX.play("swing");
     await tween(function(k){ NPC.yoff = -160 * k * k; }, 900);
@@ -2708,7 +2708,7 @@ footer(); layout(); hud();
 if (TOUCH) $("tKeys").innerHTML = "D-pad or tap to walk &middot; <kbd>A</kbd> talk &middot; tap an answer to choose";
 showTitle();
 
-// testing shortcut: ?jump=matilda (or hall/domonic/hannah/myvi/lightbox) starts in that room
+// testing shortcut: ?jump=matilda (or hall/dominic/hannah/myvi/lightbox) starts in that room
 if (QS.get("jump") && (ORDER.indexOf(QS.get("jump")) >= 0 || QS.get("jump") === "hall")){
   var j = QS.get("jump");
   GAME = GAME || JSON.parse(JSON.stringify(NEWGAME)); if (!GAME.name) GAME.name = "TESTER";
