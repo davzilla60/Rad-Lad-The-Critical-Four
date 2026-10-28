@@ -166,7 +166,27 @@ CASES = [
         ],
         "source": "docjames_battery",
     },
-    ph("dom6", "domonic", "CT", "CT chest, axial"),
+    {
+        "id": "dom6", "opponent": "domonic", "modality": "X-ray", "label": "Neck X-ray, AP and lateral (child)",
+        "history": "Young child seen swallowing something at home, now drooling and refusing to eat.",
+        "question": "The AP shows a halo and the lateral a step-off. What was removed from this child's oesophagus?",
+        "options": ["Two coins stuck together (a coin stack)", "A button battery", "A single coin", "A magnet"],
+        "answer": 0,
+        "finding": "A coin stack in the upper oesophagus: a quarter and a nickel stuck together with saliva. It mimicked a button battery, with a halo sign on the AP view and a step-off on the lateral.",
+        "clue": "A coin stack and a button battery can both show a halo (double ring) and a step-off. Here the steps on the lateral are uneven, which fits two coins of different sizes, but plain films cannot reliably tell the two apart.",
+        "why": "A button battery can burn through the oesophagus within hours, so anything that looks like one is treated as one and removed urgently. That was the right call here, even though it turned out to be coins.",
+        "series": [{"label": "AP", "file": "dom4/ap_halo.jpg"}, {"label": "Lateral", "file": "dom4/lateral_stepoff.jpg"}],
+        "reveal": {
+            "series": [{"label": "AP", "file": "dom4/ap_halo.jpg"}, {"label": "Lateral", "file": "dom4/lateral_stepoff.jpg"}],
+            "lines": [
+                "Gotcha. Halo on the AP, step-off on the lateral: everyone shouted 'button battery', and fair enough.",
+                "But look at the steps on the lateral. They're uneven. That's two coins of different sizes stuck together.",
+                "In theatre: a quarter and a nickel, glued together by spit. A coin stack in disguise.",
+                "Lesson: if it might be a battery, treat it like one. Better a rushed coin than a burnt oesophagus.",
+            ],
+        },
+        "source": "ware_coinstack",
+    },
     # Matilda: neurological emergencies
     {
         "id": "mat1", "opponent": "matilda", "modality": "MRI", "label": "MRI brain, DWI and FLAIR",
@@ -551,6 +571,14 @@ CASES = [
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "ware_coinstack": {
+        "short": "Ware et al. (2026), J Educ Teach Emerg Med",
+        "citation": "Ware PJ, Ware C, Bjornstad AH, Kuntz HM, Young TP. A Case Report of a Coin Stack Masquerading as a Button Battery. "
+                    "J Educ Teach Emerg Med. 2026;11(3):V31-V34. Figures 1 and 2.",
+        "url": "https://doi.org/10.5070/M5.53886",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to JPEG and resized for display; the authors' green arrow and stick-figure annotations kept",
+    },
     "hellerhoff_ett": {
         "short": "Hellerhoff, Wikimedia Commons",
         "citation": "Hellerhoff (2022). Tubusspitze im rechten Hauptbronchus 64W - CR ap - 001. Wikimedia Commons.",
