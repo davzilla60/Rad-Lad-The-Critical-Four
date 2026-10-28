@@ -2373,6 +2373,13 @@ var OUTRO = {
     await new Promise(function(r){ bd.walk = { x:128, y:62, res:r }; });
     SFX.play("unlock"); await tween(function(k){ S.padlock = 1 - k; }, 400);
     S.exitOpen = true; SFX.play("door");
+    // job done: the fox trots back and springs up onto Matilda's shoulder
+    await new Promise(function(r){ bd.walk = { x:NPC.x + 26, y:NPC.y - 14, res:r }; });
+    await new Promise(function(r){ bd.walk = { x:NPC.x + 12, y:NPC.y + 2, res:r }; });
+    var top = NPC.y - npcSprite().height + 1, x0 = bd.x, lift = bd.y - 10 - top;
+    bd.flip = true; SFX.play("pop");
+    await tween(function(k){ bd.x = x0 + (NPC.x + 9 - x0) * k; bd.hop = lift * k + 14 * Math.sin(Math.PI * k); }, 380);
+    bd.hop = 0; bd.on = true;
   },
   hannah: async function(){
     NPC.pose = "down"; await tween(function(k){ NPC.x = 128 - 44 * ease(k); NPC.y = 112 + 6 * ease(k); }, 600);
