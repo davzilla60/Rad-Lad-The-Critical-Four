@@ -59,6 +59,10 @@ The marker icons are first drafts drawn in code (`MARK_ART` in `game.html`).
 | `assets/src/` | Original images, one folder per case |
 | `assets/cases/` | Generated greyscale JPEGs |
 
+## Linked cases
+
+Cases that share a `"group"` (with `"group_order"` 1, 2, ...) are shuffled as a single unit, so they always play back to back in order, for example one patient asked about twice (`lbx3` then `lbx4`).
+
 ## Adding the real studies
 
 Every case in `build.py` is a placeholder at the moment. The game draws a labelled stand-in film or fake CT stack for each one, so the whole game can be played end to end. To make a case real:
@@ -123,6 +127,8 @@ Every case in `build.py` is a placeholder at the moment. The game draws a labell
 | myv6 | My-Vi | Right hand PA with the original arrow; the player names the fracture | Boxer's fracture (fifth metacarpal neck) | Madushani Rodrigo (2024), [Bone Fracture Multi-Region X-ray Data](https://www.kaggle.com/datasets/bmadushanirodrigo/fracture-multi-region-x-ray-data), Kaggle, ODC PDDL 1.0 (public domain; listed for traceability). |
 | myv1 | My-Vi | Right ankle mortise with the original arrow; the player classifies the fracture | Weber A (below the joint) | Surmanowicz et al. (2025), Diagnostics 15(16):2085, Figure 1, [doi:10.3390/diagnostics15162085](https://doi.org/10.3390/diagnostics15162085), CC BY 4.0 |
 | myv5 | My-Vi | Right ankle mortise with the original arrow; the player classifies the fracture | Weber B (at the joint) | Same article, Figure 2, CC BY 4.0 |
+| lbx3 | The Lightbox | Ventilated patient's portable chest X-ray (first of a linked pair) | Large (total) left pneumothorax | Voucharas C, Tagarakis G, Vouchara A (2024), Cureus 16(2):e55236, Figure 2, [doi:10.7759/cureus.55236](https://doi.org/10.7759/cureus.55236), CC BY 4.0 |
+| lbx4 | The Lightbox | Same patient after the chest drain (second of the pair; the corrected film is added after a correct answer) | Endotracheal tube too low, past the carina, so the left lung collapsed | Same article, Figures 3 and 4 |
 | myv2 | My-Vi | **patient 3**: knee, horizontal-beam lateral, arrow removed (the original arrowed image is shown after a correct answer) | Lipohaemarthrosis (fat-fluid level) | Adapted from James Heilman, MD (2011), [Lipohemarthrosis](https://commons.wikimedia.org/wiki/File:Lipohemarthrosis.png), Wikimedia Commons, CC BY-SA 3.0. The adaptation (arrow removed) is shared under the same licence, and both images can be downloaded from the credit. |
 | myv3 | My-Vi | Wrist, lateral (AP shown after a correct answer) | Pronator quadratus fat pad sign (undisplaced intra-articular distal radius fracture) | Hellerhoff, Wikimedia Commons, CC BY-SA 3.0 ([lateral](https://commons.wikimedia.org/wiki/File:Pronator_quadratus_-_fatpad-sign_pathologisch_bei_Fraktur_Erwachsener.png), [AP](https://commons.wikimedia.org/wiki/File:Distale_Radiusfraktur_laengs_zu_Fatpadsign_erwachsen.png)) |
 | myv4 | My-Vi | Ankle, lateral (lateral and AP with the fracture outlined, shown after a correct answer) | Distal fibula fracture | FracAtlas IMG0002348 (lateral) and IMG0002347 (AP), Abedeen et al. 2023, [figshare](https://doi.org/10.6084/m9.figshare.22363012), CC BY 4.0. The overlay is the dataset's own fracture outline. |

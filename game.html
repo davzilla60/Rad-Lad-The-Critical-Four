@@ -2172,8 +2172,20 @@ function endCard(head, html, buttons){
   });
 }
 
+// cases sharing a "group" (e.g. one patient, two questions) always play back to back, in group_order,
+// wherever the group lands in the shuffle
+function keepGroups(list){
+  // shuffle groups as single units so a pair is equally likely to come up anywhere
+  var units = [], seen = {};
+  list.forEach(function(c){
+    if (!c.group){ units.push([c]); return; }
+    if (seen[c.group]) return; seen[c.group] = true;
+    units.push(list.filter(function(x){ return x.group === c.group; }).sort(function(p, q){ return (p.group_order || 0) - (q.group_order || 0); }));
+  });
+  return [].concat.apply([], shuffle(units));
+}
 async function battle(id, retry){
-  var cases = shuffle(CASES.filter(function(c){ return c.opponent === id; }));
+  var cases = keepGroups(shuffle(CASES.filter(function(c){ return c.opponent === id; })));
   await battleTransition(id);
   var o = OPP[id];
   if (retry) await say("sys", o.tag + " shuffles six studies. Round two!");

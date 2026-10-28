@@ -627,14 +627,65 @@ CASES = [
         ],
         "source": "nih_skull",
     },
-    ph("lbx3", "lightbox", "CT", "CT abdomen and pelvis"),
-    ph("lbx4", "lightbox", "X-ray", "Shoulder, AP"),
+    # lbx3 and lbx4: the same patient, two questions, always asked back to back (group)
+    {
+        "id": "lbx3", "opponent": "lightbox", "modality": "X-ray", "label": "Chest X-ray, portable (ventilated, after heart surgery)",
+        "group": "voucharas", "group_order": 1,
+        "history": "Ventilated patient on intensive care after heart surgery. Oxygen levels have suddenly dropped.",
+        "question": "What is the urgent finding?",
+        "options": ["Large left pneumothorax", "Left lower lobe collapse", "Large left pleural effusion", "No acute abnormality"],
+        "answer": 0,
+        "finding": "A large (total) left pneumothorax: the left lung has collapsed back towards the hilum, its edge marked by the arrows, with no lung markings beyond it.",
+        "clue": "Follow the arrows: a thin white line with black, featureless space outside it. In a ventilated patient, also look for the mediastinum being pushed to the other side, the sign that it is turning into a tension pneumothorax.",
+        "why": "On a ventilator, every breath can push more air into the pleural space, so a pneumothorax can become life-threatening quickly. It needs a chest drain urgently.",
+        "series": [{"label": "Portable AP", "file": "lbx3/q1_left_pneumothorax.jpg"}],
+        "reveal": {
+            "series": [{"label": "Portable AP", "file": "lbx3/q1_left_pneumothorax.jpg"}],
+            "lines": [
+                "Light up the left side: the lung has shrunk back to the hilum. The arrows trace its edge.",
+                "No lung markings outside that line. That's a big left pneumothorax.",
+                "On a ventilator, every breath can push more air in. This can tip into tension fast.",
+                "They put a drain in. But don't get comfortable: this patient isn't finished with us yet.",
+            ],
+        },
+        "source": "voucharas_ett",
+    },
+    {
+        "id": "lbx4", "opponent": "lightbox", "modality": "X-ray", "label": "Chest X-ray, portable (same patient, after the chest drain)",
+        "group": "voucharas", "group_order": 2,
+        "history": "Same patient, after a left chest drain was inserted. The left lung still hasn't re-expanded.",
+        "question": "Why hasn't the left lung re-expanded?",
+        "options": ["Endotracheal tube too low, past the carina", "Chest drain in the wrong place", "Recurrent left pneumothorax", "Large left pleural effusion"],
+        "answer": 0,
+        "finding": "The endotracheal tube tip sits too low, past the carina (arrow). The left lung isn't being ventilated, so instead of re-expanding after the drain it has collapsed and whited out.",
+        "clue": "When a lung fails to re-expand after a drain, check the tube before blaming the drain. Find the carina and the tube tip: the tip should sit about 3-5 cm above it.",
+        "why": "Ventilating one lung lets the other collapse and oxygen levels fall. Pulling the tube back fixed it here: the next film showed the left lung fully re-expanded.",
+        "series": [{"label": "Portable AP", "file": "lbx3/q2_ett_too_low.jpg"}],
+        "reveal": {
+            "series": [{"label": "Tube too low", "file": "lbx3/q2_ett_too_low.jpg"}, {"label": "After correction", "file": "lbx3/q2_after_correction.jpg"}],
+            "lines": [
+                "Same patient. The drain's in, but the left lung has whited out instead of re-expanding. Why?",
+                "Follow the tube down to the arrow: the tip has slipped past the carina, so only one lung is getting the ventilator's breaths.",
+                "Now open 'After correction': tube pulled back, and the left lung has fully re-expanded.",
+                "When a lung won't behave, check the tube first. I needed a whole patient to show you that one.",
+            ],
+        },
+        "source": "voucharas_ett",
+    },
     ph("lbx5", "lightbox", "MRI", "MRI brain"),
     ph("lbx6", "lightbox", "X-ray", "Abdominal X-ray"),
 ]
 
 # Image source attribution, keyed by each case's "source".
 SOURCES = {
+    "voucharas_ett": {
+        "short": "Voucharas, Tagarakis & Vouchara (2024), Cureus",
+        "citation": "Voucharas C, Tagarakis G, Vouchara A. Unexpected Lung Collapse Following Chest Tube Insertion for Pneumothorax Drainage in an Intubated Patient Due to Dislocation of the Endotracheal Tube. "
+                    "Cureus. 2024;16(2):e55236. Figures 2, 3 and 4.",
+        "url": "https://doi.org/10.7759/cureus.55236",
+        "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+        "changes": "converted to greyscale JPEG for display; the authors' arrows kept",
+    },
     "martinez_jefferson": {
         "short": "Martinez-Romo & McCoy (2021), J Educ Teach Emerg Med",
         "citation": "Martinez-Romo MA, McCoy CE. Jefferson Fracture and the Classification System for Atlas Fractures, A Case Report. "
